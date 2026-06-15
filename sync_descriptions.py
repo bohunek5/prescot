@@ -195,7 +195,8 @@ print("Generated new Złączki")
 # 4.5. Remove spaces between numbers and units, remove uppercase, fix LM
 for sku in master_dict:
     # Remove text-transform:uppercase from badges
-    master_dict[sku] = master_dict[sku].replace('', '')
+    master_dict[sku] = master_dict[sku].replace('text-transform:uppercase;', '')
+    master_dict[sku] = master_dict[sku].replace('TEXT-TRANSFORM:UPPERCASE;', '')
     
     # Fix casing for lm/m, lm/W, lm and remove spaces
     master_dict[sku] = re.sub(r'(?i)(\d+)\s*lm/m\b', r'\1lm/m', master_dict[sku])
@@ -210,6 +211,7 @@ with open(INDEX_HTML, 'r', encoding='utf-8') as f:
     html_content = f.read()
 
 import vary_seo
+import vary_colors
 
 def inject_safely(html_str):
     updated = 0
@@ -220,10 +222,13 @@ def inject_safely(html_str):
             # Apply SEO variation
             if tab == 'tim':
                 platform_content = vary_seo.vary_text(content, 'tim')
+                platform_content = vary_colors.randomize_color_blocks(platform_content)
             elif tab == 'allegro':
                 platform_content = vary_seo.vary_text(content, 'allegro')
+                platform_content = vary_colors.randomize_color_blocks(platform_content)
             else:
-                platform_content = content
+                platform_content = vary_colors.randomize_color_blocks(content)
+                master_dict[sku] = platform_content  # Save back for Excel export
                 
             start_marker = f'<div class="model-block" id="desc-view-{tab}-{sku}">'
             end_marker = f'<div class="edit-block" id="desc-edit-{tab}-{sku}"'
