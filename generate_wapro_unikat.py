@@ -3,7 +3,6 @@ import random
 
 def spin(text, seed):
     random.seed(seed)
-    # Match innermost {a|b|c} to allow nested spins? We only need flat spins for now.
     while True:
         match = re.search(r'\{([^{}]+)\}', text)
         if not match:
@@ -85,66 +84,37 @@ SPIN_PATTERNS = [
 ]
 
 def generate_wapro_html(html, sku):
-    # 1. Strip badges and H3 tags to make it a simple list of plain paragraphs.
-    # The original HTML has <section> <span badge> <h3> <p>. 
-    # We want to convert this to just: <strong>Heading</strong><br>Paragraph<br><br>
+    # DONT STRIP SECTIONS. The user wants the original visual layout, but WITHOUT <h3> tags, 
+    # and WITH spun text inside the <p> tags.
     
-    # Actually, WAPRO user wants a very simple layout without huge H3s.
-    # Let's extract the H3 and P, and format them nicely.
+    # 1. Strip all <h3> tags completely.
+    # Wapro original description had NO <h3> tags, so removing them fixes the "2x to samo naglowki" problem.
+    html_no_h3 = re.sub(r'<h3[^>]*>.*?</h3>', '', html, flags=re.DOTALL)
     
-    sections = re.findall(r'<section[^>]*>(.*?)</section>', html, re.DOTALL)
-    if not sections:
-        return html # Fallback if no sections
+    # 2. Spin the content inside <p> tags.
+    def spin_p_tag(match):
+        p_attrs = match.group(1)
+        p_content = match.group(2)
         
-    wapro_blocks = []
-    
-    for sec in sections:
-        # Ignore "Praktyczne poradniki" section entirely for WAPRO! (Too much B2C content)
-        if "Praktyczne poradniki" in sec:
-            continue
+        # Apply spin patterns to p_content
+        for pattern, replacement in SPIN_PATTERNS:
+            # We use string replace for standard patterns if they match exactly, or regex
+            p_content = re.sub(pattern, replacement, p_content)
             
-        # Extract title from H3 or badge (if no H3)
-        title_match = re.search(r'<h3[^>]*>(.*?)</h3>', sec, re.DOTALL)
-        if title_match:
-            title = re.sub(r'<[^>]+>', '', title_match.group(1)).strip()
-        else:
-            # try finding the badge text
-            badge_match = re.search(r'<span[^>]*>.*?<font[^>]*>(.*?)</font>', sec, re.DOTALL)
-            if badge_match:
-                title = badge_match.group(1).strip()
-            else:
-                title = ""
-                
-        # Extract paragraph
-        p_matches = re.findall(r'<p[^>]*>(.*?)</p>', sec, re.DOTALL)
-        
-        # If there are UL/LI lists (like for Sterowniki)
-        li_matches = re.findall(r'<li[^>]*>(.*?)</li>', sec, re.DOTALL)
-        
-        # Spin the text
-        if p_matches:
-            content = " ".join([re.sub(r'<[^>]+>', '', p).strip() for p in p_matches])
-            for pattern, replacement in SPIN_PATTERNS:
-                content = re.sub(pattern, replacement, content)
-            content = spin(content, sku)
-            if title:
-                wapro_blocks.append(f"<strong>{title}</strong><br>{content}")
-            else:
-                wapro_blocks.append(f"{content}")
-                
-        elif li_matches:
-            bullets = []
-            for li in li_matches:
-                li_text = re.sub(r'<[^>]+>', '', li).strip()
-                bullets.append(f"- {li_text}")
-            content = "<br>".join(bullets)
-            if title:
-                wapro_blocks.append(f"<strong>{title}</strong><br>{content}")
-            else:
-                wapro_blocks.append(f"{content}")
-                
-    if wapro_blocks:
-        return "<br><br>".join(wapro_blocks)
-    return html
+        p_content = spin(p_content, sku)
+        return f'<p{p_attrs}>{p_content}</p>'
 
-# We will patch vary_seo.py to use this!
+    html_spun = re.sub(r'<p([^>]*)>(.*?)</p>', spin_p_tag, html_no_h3, flags=re.DOTALL)
+    
+    # Do the same for <li> tags if any (e.g. Sterowniki)
+    def spin_li_tag(match):
+        li_attrs = match.group(1)
+        li_content = match.group(2)
+        for pattern, replacement in SPIN_PATTERNS:
+            li_content = re.sub(pattern, replacement, li_content)
+        li_content = spin(li_content, sku)
+        return f'<li{li_attrs}>{li_content}</li>'
+        
+    html_spun = re.sub(r'<li([^>]*)>(.*?)</li>', spin_li_tag, html_spun, flags=re.DOTALL)
+
+    return html_spun
