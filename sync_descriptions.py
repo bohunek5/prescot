@@ -216,9 +216,17 @@ import generate_wapro_unikat
 
 excel_export_dict = {}
 
+try:
+    df_temp = pd.read_excel(EXCEL_FILE)
+    sku_to_nazwa = dict(zip(df_temp['INDEKS_HANDLOWY'].astype(str).str.strip(), df_temp['NAZWA_CALA'].astype(str)))
+except Exception as e:
+    print("Error reading Excel for names:", e)
+    sku_to_nazwa = {}
+
 def inject_safely(html_str):
     updated = 0
     for sku, original_content in master_dict.items():
+        nazwa_cala = sku_to_nazwa.get(sku, "")
         for tab in ['wapro', 'tim', 'allegro']:
             # Apply SEO variation
             if tab == 'tim':
@@ -228,7 +236,7 @@ def inject_safely(html_str):
                 platform_content = vary_seo.vary_text(original_content, 'allegro')
                 platform_content = vary_colors.randomize_color_blocks(platform_content)
             else:
-                platform_content = generate_wapro_unikat.generate_wapro_html(original_content, sku)
+                platform_content = generate_wapro_unikat.generate_wapro_html(original_content, sku, nazwa_cala)
                 excel_export_dict[sku] = platform_content  # Save back for Excel export
                 
             start_marker = f'<div class="model-block" id="desc-view-{tab}-{sku}">'

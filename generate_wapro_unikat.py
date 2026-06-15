@@ -83,7 +83,7 @@ SPIN_PATTERNS = [
     )
 ]
 
-def generate_wapro_html(html, sku):
+def generate_wapro_html(html, sku, nazwa_cala=""):
     # DONT STRIP SECTIONS. The user wants the original visual layout, but WITHOUT <h3> tags, 
     # and WITH spun text inside the <p> tags.
     
@@ -110,8 +110,15 @@ def generate_wapro_html(html, sku):
     for noise in noise_patterns:
         html_no_h3 = re.sub(noise, '', html_no_h3)
 
+    benefit_1m = spin("{Wersja cięta z metra to świetny wybór do punktowych projektów, gdzie kupujesz dokładnie tyle, ile potrzebujesz do swojego montażu.|Odcinki cięte na metry ułatwiają realizację precyzyjnych oświetleń bez konieczności magazynowania nadwyżek.|Kupując taśmę na metry, optymalizujesz koszty i dostajesz idealną ilość materiału do krótszych formatek i wnęk.}", sku)
+    benefit_50m = spin("{Rolka 50-metrowa to wygodne rozwiązanie dla instalatorów, pozwalające na swobodne docinanie długich odcinków na bieżąco podczas pracy.|Duża zwijka 50m zapewnia świetną powtarzalność barwy na całej długości bardziej rozbudowanej inwestycji.|Format 50m ułatwia pracę przy rozległych zabudowach, gdzie konkretny wymiar ustala się z reguły dopiero na miejscu montażu.}", sku)
+    benefit_100m = spin("{Ogromna zwijka 100-metrowa to maksymalna wydajność przy hurtowych instalacjach, gwarantująca w pełni spójną partię diod w całym obiekcie.|Rolka o długości 100m to znakomity wybór na duże realizacje komercyjne, gdzie liczy się szybkość pracy i jednolitość światła we wszystkich pomieszczeniach.|Zapas 100 metrów na jednej rolce pozwala na płynne realizowanie największych projektów liniowych bez najmniejszych obaw o różnice w barwie.}", sku)
+
+    added_benefit = False
+
     # 3. Spin the content inside <p> tags.
     def spin_p_tag(match):
+        nonlocal added_benefit
         p_attrs = match.group(1)
         p_content = match.group(2)
         
@@ -124,6 +131,16 @@ def generate_wapro_html(html, sku):
         # Clean up any remaining double spaces from removals
         p_content = re.sub(r'\s{2,}', ' ', p_content).strip()
         
+        # Append length benefit if applicable
+        if not added_benefit and "taśma" in nazwa_cala.lower():
+            if re.search(r'\b1m\b', nazwa_cala, re.IGNORECASE):
+                p_content += " " + benefit_1m
+            elif re.search(r'\b50m\b', nazwa_cala, re.IGNORECASE):
+                p_content += " " + benefit_50m
+            elif re.search(r'\b100m\b', nazwa_cala, re.IGNORECASE):
+                p_content += " " + benefit_100m
+            added_benefit = True
+            
         return f'<p{p_attrs}>{p_content}</p>'
 
     html_spun = re.sub(r'<p([^>]*)>(.*?)</p>', spin_p_tag, html_no_h3, flags=re.DOTALL)
