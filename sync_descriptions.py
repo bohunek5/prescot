@@ -192,6 +192,11 @@ for sku in zlaczki_skus:
 
 print("Generated new Złączki")
 
+# 4.5. Remove spaces between numbers and units
+for sku in master_dict:
+    # 8 mm -> 8mm, 12 V -> 12V, 18 W -> 18W, 12 A -> 12A, 30 m -> 30m
+    master_dict[sku] = re.sub(r'(\d+)\s+(mm|V|W|A|m)\b', r'\1\2', master_dict[sku])
+
 # 5. Read index.html and update safely
 with open(INDEX_HTML, 'r', encoding='utf-8') as f:
     html_content = f.read()
