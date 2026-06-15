@@ -212,6 +212,7 @@ with open(INDEX_HTML, 'r', encoding='utf-8') as f:
 
 import vary_seo
 import vary_colors
+import generate_wapro_unikat
 
 excel_export_dict = {}
 
@@ -227,7 +228,7 @@ def inject_safely(html_str):
                 platform_content = vary_seo.vary_text(original_content, 'allegro')
                 platform_content = vary_colors.randomize_color_blocks(platform_content)
             else:
-                platform_content = vary_seo.vary_text(original_content, 'wapro')
+                platform_content = generate_wapro_unikat.generate_wapro_html(original_content, sku)
                 excel_export_dict[sku] = platform_content  # Save back for Excel export
                 
             start_marker = f'<div class="model-block" id="desc-view-{tab}-{sku}">'
