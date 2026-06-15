@@ -161,7 +161,8 @@ def randomize_color_blocks(html_content):
     
     # Let's combine them simply:
     # We will match the entire <section> that contains a <font>Barwa ...</font>
-    pattern2 = r'<section[^>]*>[\s\S]*?<font color="#ffffff">Barwa (?:[^\(]*\(([\d]+K)\)|(RGBW \+ [\d]+K))</font>[\s\S]*?</section>'
+    # Use (?!</section>) to ensure we do not cross section boundaries
+    pattern2 = r'<section[^>]*>(?:(?!</section>)[\s\S])*?<font color="#ffffff">Barwa (?:[^\(]*\(([\d]+K)\)|(RGBW \+ [\d]+K))</font>(?:(?!</section>)[\s\S])*?</section>'
     
     def unified_replacer(match):
         full_match = match.group(0)

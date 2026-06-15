@@ -227,7 +227,7 @@ def inject_safely(html_str):
                 platform_content = vary_seo.vary_text(content, 'allegro')
                 platform_content = vary_colors.randomize_color_blocks(platform_content)
             else:
-                platform_content = vary_colors.randomize_color_blocks(content)
+                platform_content = content
                 master_dict[sku] = platform_content  # Save back for Excel export
                 
             start_marker = f'<div class="model-block" id="desc-view-{tab}-{sku}">'
