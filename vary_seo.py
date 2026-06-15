@@ -46,6 +46,29 @@ def vary_text(html, platform):
             ("Profil aluminiowy stabilizuje montaż, poprawia chłodzenie i pomaga uzyskać czystą linię światła.", "Wykorzystanie profilu aluminiowego ułatwia montaż, chłodzi diody i sprzyja uzyskaniu estetycznej linii świetlnej.")
         ]
         
+    elif platform == 'wapro':
+        replacements = [
+            # Low Brightness
+            ("Low brightness wybierasz tam, gdzie światło ma być obecne, ale nie agresywne:", "Wybierz linię Low brightness tam, gdzie zależy Ci na dyskretnym i miękkim efekcie:"),
+            ("w cokołach, półkach, witrynach, wnękach, sypialni, za lustrem albo w nocnej linii komunikacyjnej.", "podświetlenie cokołów, otwarte półki, witryny, światło nocne na schodach czy tło za lustrem."),
+            ("To taśma do efektu i komfortu, nie do prześwietlania całej zabudowy.", "Zadaniem tej taśmy jest budowanie klimatu i komfortu wizualnego, a nie oświetlanie całego pomieszczenia."),
+            ("To jasność do dekoracji z realnym efektem:", "Jest to idealny poziom jasności do tworzenia akcentów świetlnych:"),
+            ("pod półkę, do regału, cokołu, gabloty, wnęki sufitowej albo tła za lustrem.", "do wnęk, gablot, półek i regałów, gdzie światło nie może oślepiać."),
+            ("Daje widoczne światło, ale nadal pozostaje miękka i nie dominuje wnętrza.", "Zapewnia wyraźny, ale bardzo miękki i relaksujący blask."),
+            ("<font color=\"#ffffff\">Low brightness</font>\n  </span>\n\n    Wybierz", "<font color=\"#ffffff\">Low brightness</font>\n  </span>\n\n  <h3 style=\"font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;\">\n    Miękkie światło do tła, detalu i nastroju\n  </h3>\n\n  <p style=\"font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;\">\n    Wybierz"),
+            
+            # Medium/High Brightness
+            ("Ten poziom jasności wybierasz do cokołów, półek, witryn, wnęk, linii nocnych i miękkiego podświetlenia mebli.", "Ten poziom mocy świetlnej jest uniwersalny i sprawdzi się do oświetlania mebli, głębokich witryn i podwieszanych sufitów."),
+            ("Światło ma prowadzić wzrok i podkreślić kształt, a nie razić ani zastępować lampę roboczą.", "Jej zadaniem jest wyraźnie doświetlić detale, bez jednoczesnego rażenia w oczy."),
+            ("Tu taśma pracuje już jak wyraźne oświetlenie użytkowe.", "Na tym poziomie jasności taśma staje się pełnoprawnym źródłem światła roboczego."),
+            ("Wybierz ją nad blatem, w profilu podszafkowym, nad ladą, w witrynie, przy ekspozycji produktu albo w dłuższej linii meblowej, gdzie światło ma być widoczne nawet przy oświetleniu ogólnym.", "Zastosuj ją pod szafkami w kuchni, nad blatem warsztatowym, przy ladach recepcyjnych i wszędzie tam, gdzie potrzebujesz mocnego światła użytkowego."),
+            ("Taki poziom jasności ma sens w miejscach, gdzie taśma naprawdę ma świecić:", "Tak duża moc jest dedykowana do miejsc wymagających bardzo mocnego naświetlenia:"),
+            ("długi blat, mocna ekspozycja, wysoka witryna, zabudowa sufitowa, lada sprzedażowa albo przestrzeń robocza.", "blaty robocze, główne światło z sufitu podwieszanego czy mocne doświetlenie towaru w sklepie."),
+            ("Przy tej jasności szczególnie ważny jest profil aluminiowy i dobrze policzone zasilanie.", "Przy tak wysokich parametrach świetlnych obowiązkowo stosuj profil aluminiowy (do chłodzenia) oraz mocny zasilacz z zapasem."),
+            ("<font color=\"#ffffff\">High brightness</font>\n  </span>\n\n    Tak duża", "<font color=\"#ffffff\">High brightness</font>\n  </span>\n\n  <h3 style=\"font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;\">\n    Bardzo mocne światło do zadań specjalnych\n  </h3>\n\n  <p style=\"font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;\">\n    Tak duża"),
+            ("<font color=\"#ffffff\">Medium brightness</font>\n  </span>\n\n    Ten poziom", "<font color=\"#ffffff\">Medium brightness</font>\n  </span>\n\n  <h3 style=\"font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;\">\n    Subtelne oświetlenie funkcyjne\n  </h3>\n\n  <p style=\"font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;\">\n    Ten poziom")
+        ]
+        
     elif platform == 'allegro':
         replacements = [
             # Low Brightness (460lm, etc)

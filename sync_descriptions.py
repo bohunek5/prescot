@@ -213,22 +213,22 @@ with open(INDEX_HTML, 'r', encoding='utf-8') as f:
 import vary_seo
 import vary_colors
 
+excel_export_dict = {}
+
 def inject_safely(html_str):
     updated = 0
-    # Process tabs in order
-    for tab in ['wapro', 'tim', 'allegro']:
-        for sku, content in master_dict.items():
-            
+    for sku, original_content in master_dict.items():
+        for tab in ['wapro', 'tim', 'allegro']:
             # Apply SEO variation
             if tab == 'tim':
-                platform_content = vary_seo.vary_text(content, 'tim')
+                platform_content = vary_seo.vary_text(original_content, 'tim')
                 platform_content = vary_colors.randomize_color_blocks(platform_content)
             elif tab == 'allegro':
-                platform_content = vary_seo.vary_text(content, 'allegro')
+                platform_content = vary_seo.vary_text(original_content, 'allegro')
                 platform_content = vary_colors.randomize_color_blocks(platform_content)
             else:
-                platform_content = content
-                master_dict[sku] = platform_content  # Save back for Excel export
+                platform_content = vary_seo.vary_text(original_content, 'wapro')
+                excel_export_dict[sku] = platform_content  # Save back for Excel export
                 
             start_marker = f'<div class="model-block" id="desc-view-{tab}-{sku}">'
             end_marker = f'<div class="edit-block" id="desc-edit-{tab}-{sku}"'
@@ -267,8 +267,8 @@ try:
     updated_excel = 0
     for idx, row in df.iterrows():
         sku = str(row['INDEKS_HANDLOWY']).strip()
-        if sku in master_dict:
-            df.at[idx, 'Opis'] = master_dict[sku]
+        if sku in excel_export_dict:
+            df.at[idx, 'Opis'] = excel_export_dict[sku]
             updated_excel += 1
 
     df.to_excel(EXCEL_FILE, index=False)
