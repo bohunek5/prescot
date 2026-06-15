@@ -91,17 +91,39 @@ def generate_wapro_html(html, sku):
     # Wapro original description had NO <h3> tags, so removing them fixes the "2x to samo naglowki" problem.
     html_no_h3 = re.sub(r'<h3[^>]*>.*?</h3>', '', html, flags=re.DOTALL)
     
-    # 2. Spin the content inside <p> tags.
+    # 2. Clean technical noise
+    noise_patterns = [
+        r"Profil aluminiowy jest tu potrzebny[^.]*\.",
+        r"Profil aluminiowy ułatwia równe przyklejenie[^.]*\.",
+        r"Profil aluminiowy, chłodzenie i zasilacz[^.]*\.",
+        r"Profil docinasz pod wymiar[^.]*\.",
+        r"Profil pomaga zamknąć taśmę[^.]*\.",
+        r"Profil porządkuje prowadzenie[^.]*\.",
+        r"Punkty cięcia co \d+\s?mm ułatwiają dopasowanie[^.]*\.",
+        r"Rolka \d+\s?m ma sens[^.]*\.",
+        r"Rolka \d+\s?m wystarczy[^.]*\.",
+        r"Rolka \d+\s?m jest praktyczna[^.]*\.",
+        r"Zasilacz dobierz pod \d+V[^.]*\.",
+        r"Zasilacz pracuje najlepiej[^.]*\.",
+        r"Format rolka \d+m[^.]*\."
+    ]
+    for noise in noise_patterns:
+        html_no_h3 = re.sub(noise, '', html_no_h3)
+
+    # 3. Spin the content inside <p> tags.
     def spin_p_tag(match):
         p_attrs = match.group(1)
         p_content = match.group(2)
         
         # Apply spin patterns to p_content
         for pattern, replacement in SPIN_PATTERNS:
-            # We use string replace for standard patterns if they match exactly, or regex
             p_content = re.sub(pattern, replacement, p_content)
             
         p_content = spin(p_content, sku)
+        
+        # Clean up any remaining double spaces from removals
+        p_content = re.sub(r'\s{2,}', ' ', p_content).strip()
+        
         return f'<p{p_attrs}>{p_content}</p>'
 
     html_spun = re.sub(r'<p([^>]*)>(.*?)</p>', spin_p_tag, html_no_h3, flags=re.DOTALL)
@@ -113,6 +135,7 @@ def generate_wapro_html(html, sku):
         for pattern, replacement in SPIN_PATTERNS:
             li_content = re.sub(pattern, replacement, li_content)
         li_content = spin(li_content, sku)
+        li_content = re.sub(r'\s{2,}', ' ', li_content).strip()
         return f'<li{li_attrs}>{li_content}</li>'
         
     html_spun = re.sub(r'<li([^>]*)>(.*?)</li>', spin_li_tag, html_spun, flags=re.DOTALL)
