@@ -1,8 +1,7 @@
 import random
 
 file_paths = [
-    '/Users/karolbohdanowicz/Downloads/opisy KAROL v2.html',
-    '/Users/karolbohdanowicz/my-ai-agents/prescot/index.html'
+    '/Users/karolbohdanowicz/my-ai-agents/prescot/old_index.html'
 ]
 
 warm_original = "Ciepła biel 3000K dobrze działa w kuchniach, salonach, sypialniach, restauracjach i zabudowach meblowych. Daje efekt przytulny, ale nadal czytelny, dlatego pasuje zarówno do dekoracji, jak i do spokojnego światła użytkowego."
