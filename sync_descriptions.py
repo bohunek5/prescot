@@ -209,11 +209,22 @@ for sku in master_dict:
 with open(INDEX_HTML, 'r', encoding='utf-8') as f:
     html_content = f.read()
 
+import vary_seo
+
 def inject_safely(html_str):
     updated = 0
     # Process tabs in order
     for tab in ['wapro', 'tim', 'allegro']:
         for sku, content in master_dict.items():
+            
+            # Apply SEO variation
+            if tab == 'tim':
+                platform_content = vary_seo.vary_text(content, 'tim')
+            elif tab == 'allegro':
+                platform_content = vary_seo.vary_text(content, 'allegro')
+            else:
+                platform_content = content
+                
             start_marker = f'<div class="model-block" id="desc-view-{tab}-{sku}">'
             end_marker = f'<div class="edit-block" id="desc-edit-{tab}-{sku}"'
             
@@ -226,7 +237,7 @@ def inject_safely(html_str):
                     next_char = html_str[end_idx + len(end_marker)]
                     if next_char in ['"', ' ']:
                         # Perform safe injection
-                        html_str = html_str[:start_idx + len(start_marker)] + '\n' + content + '\n</div>\n' + html_str[end_idx:]
+                        html_str = html_str[:start_idx + len(start_marker)] + '\n' + platform_content + '\n</div>\n' + html_str[end_idx:]
                         updated += 1
                         
                         # Also update corresponding textarea
@@ -236,7 +247,7 @@ def inject_safely(html_str):
                             ta_close_bracket = html_str.find('>', ta_start_idx)
                             ta_end_tag = html_str.find('</textarea>', ta_close_bracket)
                             if ta_end_tag != -1:
-                                html_str = html_str[:ta_close_bracket + 1] + '\n' + content + '\n' + html_str[ta_end_tag:]
+                                html_str = html_str[:ta_close_bracket + 1] + '\n' + platform_content + '\n' + html_str[ta_end_tag:]
     print(f"Injected {updated} blocks into HTML.")
     return html_str
 
