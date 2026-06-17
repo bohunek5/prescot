@@ -231,15 +231,24 @@ def inject_safely(html_str):
         nazwa_cala = sku_to_nazwa.get(sku, "")
         kategoria = sku_to_kat.get(sku, "")
         for tab in ['wapro', 'tim', 'allegro']:
-            if tab == 'tim':
-                platform_content = generate_wapro_unikat.generate_wapro_html(original_content, sku, nazwa_cala, kategoria, seed_suffix='_tim')
-                platform_content = vary_seo.vary_text(platform_content, 'tim')
-                platform_content = vary_colors.randomize_color_blocks(platform_content)
-            elif tab == 'allegro':
-                platform_content = generate_wapro_unikat.generate_wapro_html(original_content, sku, nazwa_cala, kategoria, seed_suffix='_allegro')
-                platform_content = vary_seo.vary_text(platform_content, 'allegro')
+            if tab in ['tim', 'allegro']:
+                # 1. Take original content
+                platform_content = original_content
+                
+                # 2. Remove the old generic blog section completely
+                # "Szukasz fachowego wsparcia?" or "Praktyczne poradniki"
+                platform_content = re.sub(r'<section[^>]*>(?:(?!</section>).)*?Praktyczne poradniki.*?</section>', '', platform_content, flags=re.DOTALL|re.IGNORECASE)
+                platform_content = re.sub(r'<h3[^>]*>.*?Szukasz fachowej.*?</h3>.*?<section[^>]*>.*?</section>', '', platform_content, flags=re.DOTALL|re.IGNORECASE)
+
+                # 3. Apply SEO text (synonyms) and random colors
+                if tab == 'tim':
+                    platform_content = vary_seo.vary_text(platform_content, 'tim')
+                elif tab == 'allegro':
+                    platform_content = vary_seo.vary_text(platform_content, 'allegro')
+
                 platform_content = vary_colors.randomize_color_blocks(platform_content)
             else:
+                # WAPRO remains exactly as it was requested (no H3, with new specific blogs, generic spun text)
                 platform_content = generate_wapro_unikat.generate_wapro_html(original_content, sku, nazwa_cala, kategoria, seed_suffix='')
                 excel_export_dict[sku] = platform_content  # Save back for Excel export
                 
