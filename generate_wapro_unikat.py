@@ -64,12 +64,12 @@ SPIN_PATTERNS = [
     # Rolka 5m
     (
         r"Format rolka 5m sprawdza się przy pojedynczej linii światła albo kilku krótszych odcinkach w jednej zabudowie\.",
-        "{Rolka o długości 5m to optymalny format do średnich instalacji lub krótszych odcinków|Wersja 5-metrowa świetnie nadaje się do standardowych mebli i pojedynczych stref oświetleniowych|Pięciometrowa zwijka ułatwia wykonanie kilku krótszych linii światła w jednym meblu}."
+        "{Rolka o długości 5m to optymalny format do średnich instalacji lub krótszych odcinków|Wersja 5-metrowa świetnie nadaje się do standardowych mebli i pojedynczych stref oświetleniowych|Pięciometrowa szpula ułatwia wykonanie kilku krótszych linii światła w jednym meblu}."
     ),
     # Rolka 50m
     (
         r"Format rolka 50m jest wygodny przy dłuższych, powtarzalnych realizacjach: regałach, zabudowach, kilku pomieszczeniach albo pracy instalacyjnej, gdzie odcinki docinasz dopiero na miejscu\.",
-        "{Rolka 50m to doskonały wybór dla instalatorów i przy dużych projektach|Wersja 50-metrowa ułatwia pracę przy rozbudowanych, wielostrefowych inwestycjach|Zwijka o długości 50 metrów to oszczędność i wygoda przy seryjnym oświetlaniu regałów czy dużych sufitów}, {pozwalając na docinanie odcinków na bieżąco|gdzie precyzyjny wymiar ustalany jest dopiero na budowie|oferując maksymalną elastyczność podczas montażu}."
+        "{Rolka 50m to doskonały wybór dla instalatorów i przy dużych projektach|Wersja 50-metrowa ułatwia pracę przy rozbudowanych, wielostrefowych inwestycjach|Szpula o długości 50 metrów to oszczędność i wygoda przy seryjnym oświetlaniu regałów czy dużych sufitów}, {pozwalając na docinanie odcinków na bieżąco|gdzie precyzyjny wymiar ustalany jest dopiero na budowie|oferując maksymalną elastyczność podczas montażu}."
     ),
     # COB
     (
@@ -83,13 +83,101 @@ SPIN_PATTERNS = [
     )
 ]
 
-def generate_wapro_html(html, sku, nazwa_cala=""):
-    # DONT STRIP SECTIONS. The user wants the original visual layout, but WITHOUT <h3> tags, 
-    # and WITH spun text inside the <p> tags.
+BLOGS = {
+    'Taśmy': [
+        {'title': 'Jak czytać parametry taśmy LED?', 'subtitle': 'moc, lumeny, CRI, napięcie i IP', 'url': 'https://www.prescot.com.pl/pl/n/23'},
+        {'title': 'Montaż taśmy LED na zewnątrz', 'subtitle': 'IP, uszczelnienie i ochrona połączeń', 'url': 'https://www.prescot.com.pl/pl/n/16'},
+        {'title': 'Jak dobrać taśmę LED do mieszkania?', 'subtitle': 'barwa, moc i miejsce montażu', 'url': 'https://www.prescot.com.pl/pl/n/12'},
+        {'title': 'Jak dobrać profil aluminiowy do taśmy LED?', 'subtitle': 'profil, klosz, chłodzenie i estetyka linii światła', 'url': 'https://www.prescot.com.pl/pl/n/15'}
+    ],
+    'Zasilacze': [
+        {'title': 'Jak dobrać zasilacz LED do taśmy?', 'subtitle': 'Dobór zasilacza LED nie powinien być zgadywaniem.', 'url': 'https://www.prescot.com.pl/pl/n/24'},
+        {'title': 'Zasilacze LED - gdzie użyć którego?', 'subtitle': 'Desktop, modułowy czy hermetyczny IP67?', 'url': 'https://www.prescot.com.pl/pl/n/25'},
+        {'title': 'Do czego służą zasilacze LED?', 'subtitle': 'Zmiana napięcia z 230V na 12V/24V.', 'url': 'https://www.prescot.com.pl/pl/n/26'},
+        {'title': 'Stopnie IP - dlaczego są ważne?', 'subtitle': 'Ochrona zasilacza przed wodą i kurzem.', 'url': 'https://www.prescot.com.pl/pl/n/27'}
+    ],
+    'Sterowniki': [
+        {'title': 'Jak dobrać sterownik do taśmy LED?', 'subtitle': 'Sterowniki do taśm MONO, RGB i RGBW.', 'url': 'https://www.prescot.com.pl/pl/n/28'},
+        {'title': 'Sterowanie smartfonem', 'subtitle': 'Aplikacje i integracje ze Smart Home.', 'url': 'https://www.prescot.com.pl/pl/n/29'},
+        {'title': 'Parowanie i strefy', 'subtitle': 'Jak zaprogramować wielostrefowe piloty?', 'url': 'https://www.prescot.com.pl/pl/n/30'},
+        {'title': 'Ukrywanie sterowników', 'subtitle': 'Montaż mikro-sterowników bezpośrednio w profilu.', 'url': 'https://www.prescot.com.pl/pl/n/31'}
+    ],
+    'Złączki': [
+        {'title': 'Jak łączyć taśmy bez lutowania?', 'subtitle': 'Złączki typu clamp i ich zalety.', 'url': 'https://www.prescot.com.pl/pl/n/32'},
+        {'title': 'Lutowanie a złączki', 'subtitle': 'Kiedy wybrać lutowanie, a kiedy złączkę?', 'url': 'https://www.prescot.com.pl/pl/n/33'},
+        {'title': 'Złączki 9w1', 'subtitle': 'Uniwersalne złączki do taśm LED i profili.', 'url': 'https://www.prescot.com.pl/pl/n/34'},
+        {'title': 'Łączenie taśm w narożnikach', 'subtitle': 'Jak estetycznie przejść taśmą pod kątem 90 stopni.', 'url': 'https://www.prescot.com.pl/pl/n/35'}
+    ],
+    'Profile': [
+        {'title': 'Dlaczego profil ALU jest konieczny?', 'subtitle': 'Chłodzenie i żywotność taśmy LED.', 'url': 'https://www.prescot.com.pl/pl/n/36'},
+        {'title': 'Jak dobrać profil aluminiowy do taśmy LED?', 'subtitle': 'Dobór klosza i szerokości profilu.', 'url': 'https://www.prescot.com.pl/pl/n/15'},
+        {'title': 'Ciągła linia światła bez kropek', 'subtitle': 'Jak dobrać profil i taśmę do jednolitego efektu.', 'url': 'https://www.prescot.com.pl/pl/n/37'},
+        {'title': 'Profile podtynkowe vs natynkowe', 'subtitle': 'Które rozwiązanie sprawdzi się u Ciebie?', 'url': 'https://www.prescot.com.pl/pl/n/38'}
+    ]
+}
+
+def generate_blog_section(kategoria):
+    key = 'Taśmy'
+    if 'zasilacz' in str(kategoria).lower(): key = 'Zasilacze'
+    elif 'sterownik' in str(kategoria).lower(): key = 'Sterowniki'
+    elif 'złączk' in str(kategoria).lower() or 'zlacz' in str(kategoria).lower(): key = 'Złączki'
+    elif 'profil' in str(kategoria).lower(): key = 'Profile'
     
-    # 1. Strip all <h3> tags completely.
+    links = BLOGS.get(key, BLOGS['Taśmy'])
+    
+    html = f"""  <section
+    style="font-family:inherit; margin:18px 0 28px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
+    <div
+      style="font-family:inherit; margin-bottom:18px; background:none !important; background-color:transparent !important; color:inherit;">
+      <span
+        style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px;  line-height:1.2;">
+        <font color="#ffffff">Praktyczne poradniki</font>
+      </span>
+      <h3
+        style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
+        Szukasz fachowej wiedzy?
+      </h3>
+      <p
+        style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
+        Poznaj nowoczesną bazę wiedzy oświetleniowej PRESCOT. Czytaj o rozwiązaniach, które zmienią Twój projekt na
+        lepsze, rozwieją wątpliwości przed zakupem oraz ułatwią ostateczny wybór.
+      </p>
+    </div>
+    <div
+      style="font-family:inherit; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; background:none !important; background-color:transparent !important; color:inherit; align-items:stretch;">"""
+
+    for link in links:
+        html += f"""
+      <div
+        style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+        <strong
+          style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">{link['title']}</strong>
+        <small
+          style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">{link['subtitle']}</small>
+        <a href="{link['url']}"
+          style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+          <font color="#ffffff"><span
+              style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj
+              poradnik</span></font>
+        </a>
+      </div>"""
+    
+    html += """
+    </div>
+  </section>"""
+    return html
+
+
+def generate_wapro_html(html, sku, nazwa_cala="", kategoria="", seed_suffix=""):
+    # Split out the existing 'Praktyczne poradniki' section if it exists
+    # It usually starts with <section ... and contains Praktyczne poradniki
+    
+    # Simple regex to remove any section that contains "Praktyczne poradniki"
+    html_cleaned = re.sub(r'<section[^>]*>(?:(?!</section>).)*?Praktyczne poradniki.*?</section>', '', html, flags=re.DOTALL|re.IGNORECASE)
+    
+    # 1. Strip all <h3> tags completely from the remaining HTML.
     # Wapro original description had NO <h3> tags, so removing them fixes the "2x to samo naglowki" problem.
-    html_no_h3 = re.sub(r'<h3[^>]*>.*?</h3>', '', html, flags=re.DOTALL)
+    html_no_h3 = re.sub(r'<h3[^>]*>.*?</h3>', '', html_cleaned, flags=re.DOTALL)
     
     # 2. Clean technical noise
     noise_patterns = [
@@ -110,9 +198,9 @@ def generate_wapro_html(html, sku, nazwa_cala=""):
     for noise in noise_patterns:
         html_no_h3 = re.sub(noise, '', html_no_h3)
 
-    benefit_1m = spin("{Wersja cięta z metra to świetny wybór do punktowych projektów, gdzie kupujesz dokładnie tyle, ile potrzebujesz do swojego montażu.|Odcinki cięte na metry ułatwiają realizację precyzyjnych oświetleń bez konieczności magazynowania nadwyżek.|Kupując taśmę na metry, optymalizujesz koszty i dostajesz idealną ilość materiału do krótszych formatek i wnęk.}", sku)
-    benefit_50m = spin("{Rolka 50-metrowa to wygodne rozwiązanie dla instalatorów, pozwalające na swobodne docinanie długich odcinków na bieżąco podczas pracy.|Duża rolka 50m zapewnia świetną powtarzalność barwy na całej długości bardziej rozbudowanej inwestycji.|Format 50m ułatwia pracę przy rozległych zabudowach, gdzie konkretny wymiar ustala się z reguły dopiero na miejscu montażu.}", sku)
-    benefit_100m = spin("{Fabryczna rolka 100-metrowa to maksymalna wydajność przy hurtowych instalacjach, gwarantująca w pełni spójną partię diod w całym obiekcie.|Rolka o długości 100m to znakomity wybór na duże realizacje komercyjne, gdzie liczy się szybkość pracy i jednolitość światła we wszystkich pomieszczeniach.|Zapas 100 metrów na jednej rolce pozwala na płynne realizowanie największych projektów liniowych bez najmniejszych obaw o różnice w barwie.}", sku)
+    benefit_1m = spin("{Wersja cięta z metra to świetny wybór do punktowych projektów, gdzie kupujesz dokładnie tyle, ile potrzebujesz do swojego montażu.|Odcinki cięte na metry ułatwiają realizację precyzyjnych oświetleń bez konieczności magazynowania nadwyżek.|Kupując taśmę na metry, optymalizujesz koszty i dostajesz idealną ilość materiału do krótszych formatek i wnęk.}", sku + seed_suffix)
+    benefit_50m = spin("{Rolka 50-metrowa to wygodne rozwiązanie dla instalatorów, pozwalające na swobodne docinanie długich odcinków na bieżąco podczas pracy.|Duża rolka 50m zapewnia świetną powtarzalność barwy na całej długości bardziej rozbudowanej inwestycji.|Format 50m ułatwia pracę przy rozległych zabudowach, gdzie konkretny wymiar ustala się z reguły dopiero na miejscu montażu.}", sku + seed_suffix)
+    benefit_100m = spin("{Fabryczna rolka 100-metrowa to maksymalna wydajność przy hurtowych instalacjach, gwarantująca w pełni spójną partię diod w całym obiekcie.|Rolka o długości 100m to znakomity wybór na duże realizacje komercyjne, gdzie liczy się szybkość pracy i jednolitość światła we wszystkich pomieszczeniach.|Zapas 100 metrów na jednej rolce pozwala na płynne realizowanie największych projektów liniowych bez najmniejszych obaw o różnice w barwie.}", sku + seed_suffix)
 
     added_benefit = False
 
@@ -126,7 +214,7 @@ def generate_wapro_html(html, sku, nazwa_cala=""):
         for pattern, replacement in SPIN_PATTERNS:
             p_content = re.sub(pattern, replacement, p_content)
             
-        p_content = spin(p_content, sku)
+        p_content = spin(p_content, sku + seed_suffix)
         
         # Clean up any remaining double spaces from removals
         p_content = re.sub(r'\s{2,}', ' ', p_content).strip()
@@ -151,10 +239,14 @@ def generate_wapro_html(html, sku, nazwa_cala=""):
         li_content = match.group(2)
         for pattern, replacement in SPIN_PATTERNS:
             li_content = re.sub(pattern, replacement, li_content)
-        li_content = spin(li_content, sku)
+        li_content = spin(li_content, sku + seed_suffix)
         li_content = re.sub(r'\s{2,}', ' ', li_content).strip()
         return f'<li{li_attrs}>{li_content}</li>'
         
     html_spun = re.sub(r'<li([^>]*)>(.*?)</li>', spin_li_tag, html_spun, flags=re.DOTALL)
 
-    return html_spun
+    # 4. Append new Blog section based on Kategoria
+    new_blog_section = generate_blog_section(kategoria)
+    html_final = html_spun.strip() + "\n" + new_blog_section
+
+    return html_final
