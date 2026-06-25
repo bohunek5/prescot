@@ -1,268 +1,226 @@
 import re
 import pandas as pd
-from bs4 import BeautifulSoup
 
-SCHARFER_FILE = "/Users/karolbohdanowicz/Downloads/TOP Scharfer - OSTATECZNY.txt"
-INDEX_FILE = "/Users/karolbohdanowicz/my-ai-agents/prescot/index.html"
-EXCEL_FILE = "/Users/karolbohdanowicz/Desktop/EksportowaneArtykuly.xlsx"
-
-# 1. Parse Scharfer gotowce
-scharfer_gotowce = {}
-with open(SCHARFER_FILE, 'r', encoding='utf-8') as f:
-    content = f.read()
-    # Find all START {sku} ... KONIEC {sku}
-    matches = re.finditer(r'START\s+(SCH-[^\n]+)\n(.*?)\nKONIEC\s+\1', content, re.DOTALL)
-    for match in matches:
-        sku = match.group(1).strip()
-        html = match.group(2).strip()
-        scharfer_gotowce[sku] = html
-
-# 2. Define Blog templates
-BLOG_ZASILACZE = """
-<section style="font-family:inherit; margin:0; padding:0; background:none !important; background-color:transparent !important; color:inherit;">
-  <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
+blog_html = """<section style="font-family:inherit; margin:18px 0 28px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
+  <div style="font-family:inherit; margin-bottom:18px; background:none !important; background-color:transparent !important; color:inherit;">
+    <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px;  line-height:1.2;">
     <font color="#ffffff">Praktyczne poradniki</font>
   </span>
 
-  <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Dobierz zasilacz LED bez zgadywania
-  </h3>
+    <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
+      Dobierz komponenty bez zgadywania
+    </h3>
 
-  <p style="font-family:inherit; margin:0 0 16px 0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.78; font-size:14px; line-height:1.6;">
-    Poradniki pomagają policzyć moc, dobrać typ obudowy, napięcie i stopień ochrony IP do konkretnej instalacji.
-  </p>
+    <p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.78; font-size:14px; line-height:1.6;">
+      Poradniki prowadzą przez parametry, zasilanie, profile aluminiowe i montaż, czyli decyzje, które naprawdę wpływają na efekt końcowy.
+    </p>
+  </div>
 
   <div style="font-family:inherit; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; background:none !important; background-color:transparent !important; color:inherit; align-items:stretch;">
     <div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
-      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Jak dobrać zasilacz LED do taśmy?</strong>
-      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">moc W/m, długość taśmy i zapas mocy</small>
-      <a href="https://www.prescot.com.pl/pl/n/24" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Jak czytać parametry taśmy LED?</strong>
+      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">moc, lumeny, CRI, napięcie i IP</small>
+      <a href="https://www.prescot.com.pl/pl/n/23" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
         <font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
       </a>
     </div>
     <div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
-      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Stopnie IP - dlaczego to ważne?</strong>
-      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">IP20, IP33, IP44 i <strong style="font-family:inherit; color:inherit !important;">IP67</strong> w praktyce</small>
-      <a href="https://www.prescot.com.pl/pl/n/27" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Montaż taśmy LED na zewnątrz</strong>
+      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">IP, uszczelnienie i ochrona połączeń</small>
+      <a href="https://www.prescot.com.pl/pl/n/16" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+        <font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+      </a>
+    </div>
+    <div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Jak dobrać taśmę LED do mieszkania?</strong>
+      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">barwa, moc i miejsce montażu</small>
+      <a href="https://www.prescot.com.pl/pl/n/12" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+        <font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+      </a>
+    </div>
+    <div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Jak dobrać profil aluminiowy do taśmy LED?</strong>
+      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">profil, klosz, chłodzenie i estetyka linii światła</small>
+      <a href="https://www.prescot.com.pl/pl/n/15" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
         <font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
       </a>
     </div>
   </div>
-</section>
-"""
+</section>"""
 
-BLOG_ZLĄCZKI = """
-<section style="font-family:inherit; margin:0; padding:0; background:none !important; background-color:transparent !important; color:inherit;">
-  <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
-    <font color="#ffffff">Praktyczne poradniki</font>
-  </span>
+def get_sterownik_html(sku):
+    typ = "Jednokolorowych (MONO)" if "MONO" in sku else ("CCT (Dual White)" if "CCT" in sku and "RGB" not in sku else ("RGB" if "RGB-" in sku else ("RGBW" if "RGBW" in sku else "RGBCCT")))
+    
+    # First block: general description
+    if "CCT" in sku and "RGB" not in sku:
+        opis_ogolny = f"Zaawansowany sterownik radiowy dedykowany do taśm LED {typ}. Pozwala na swobodne zarządzanie temperaturą barwową (od ciepłej do zimnej) oraz jasnością z poziomu jednego pilota. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+    elif "RGB-" in sku:
+        opis_ogolny = f"Zaawansowany sterownik radiowy dedykowany do taśm LED {typ}. Oferuje pełną kontrolę nad paletą 16 milionów kolorów, umożliwiając płynną zmianę nasycenia oraz jasności światła. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+    elif "RGBW" in sku:
+        opis_ogolny = f"Zaawansowany sterownik radiowy dedykowany do wielokolorowych taśm LED {typ}. Łączy w sobie sterowanie paletą 16 mln kolorów RGB z niezależnym, czystym kanałem białym. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+    elif "RGBCCT" in sku:
+        opis_ogolny = f"Najbardziej zaawansowany sterownik radiowy dedykowany do taśm LED {typ}. To urządzenie typu 'wszystko w jednym': pozwala na kontrolę kolorów RGB, regulację temperatury barwy białej CCT oraz płynne ściemnianie. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+    else: # MONO
+        opis_ogolny = f"Niezawodny sterownik radiowy (ściemniacz) dedykowany do taśm LED {typ}. Pozwala na precyzyjne, płynne sterowanie jasnością od 1% do 100%, dostosowując oświetlenie do każdej sytuacji. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
 
-  <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Szybki montaż instalacji LED
-  </h3>
-
-  <p style="font-family:inherit; margin:0 0 16px 0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.78; font-size:14px; line-height:1.6;">
-    Sprawdź jak poprawnie łączyć taśmy LED bez lutowania i na co uważać przy cięciu.
-  </p>
-
-  <div style="font-family:inherit; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; background:none !important; background-color:transparent !important; color:inherit; align-items:stretch;">
-    <div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
-      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Jak łączyć taśmy LED?</strong>
-      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">lutowanie czy złączki zaciskowe</small>
-      <a href="https://www.prescot.com.pl/pl/n/18" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
-        <font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
-      </a>
-    </div>
-    <div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
-      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Cięcie i modyfikacja taśm</strong>
-      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">oznaczenia miejsc cięcia i profile</small>
-      <a href="https://www.prescot.com.pl/pl/n/20" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
-        <font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
-      </a>
-    </div>
-  </div>
-</section>
-"""
-
-BLOG_STEROWNIKI = """
-<section style="font-family:inherit; margin:0; padding:0; background:none !important; background-color:transparent !important; color:inherit;">
-  <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
-    <font color="#ffffff">Praktyczne poradniki</font>
-  </span>
-
-  <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Inteligentne sterowanie oświetleniem
-  </h3>
-
-  <p style="font-family:inherit; margin:0 0 16px 0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.78; font-size:14px; line-height:1.6;">
-    Dowiedz się jak sparować systemy RF 2.4G i wykorzystać pełny potencjał sterowników LED w swoim domu.
-  </p>
-
-  <div style="font-family:inherit; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; background:none !important; background-color:transparent !important; color:inherit; align-items:stretch;">
-    <div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
-      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Konfiguracja sterowania</strong>
-      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">parowanie stref, retransmisja sygnału</small>
-      <a href="https://www.prescot.com.pl/pl/n/21" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
-        <font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
-      </a>
-    </div>
-    <div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
-      <strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Sterowanie aplikacją i głosem</strong>
-      <small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">Smart Home, bramki WiFi</small>
-      <a href="https://www.prescot.com.pl/pl/n/22" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
-        <font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
-      </a>
-    </div>
-  </div>
-</section>
-"""
-
-# HTML Generator Functions
-def generate_sterownik_html(model, nazwa, funkcje_opis):
     return f"""<section style="font-family:inherit; margin:28px 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
   <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
-    <font color="#ffffff">Sterownik LED Prescot {nazwa}</font>
+    <font color="#ffffff">Dedykowany do taśm {typ}</font>
   </span>
 
   <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Inteligentne sterowanie RF 2.4GHz z zaawansowanymi funkcjami
+    Odbiornik radiowy LED {sku}
   </h3>
 
   <p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
-    Sterownik <strong style="font-family:inherit; color:inherit !important;">{model}</strong> to nowoczesne urządzenie do obsługi instalacji LED. Pracuje w standardzie <strong style="font-family:inherit; color:inherit !important;">RF 2.4GHz</strong>, oferując zasięg do 30 metrów oraz <strong style="font-family:inherit; color:inherit !important;">auto-retransmisję i synchronizację</strong> (sterownik przekazuje sygnał do kolejnego w zasięgu 30m, co czyni zasięg niemal nieograniczonym). {funkcje_opis}
+    {opis_ogolny} Idealne rozwiązanie do zabudowy – odbiornik można bez trudu schować nad sufitem podwieszanym, za meblami czy w rozdzielni.
   </p>
 </section>
 
 <section style="font-family:inherit; margin:0 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
   <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
-    <font color="#ffffff">Funkcje i parametry</font>
+    <font color="#ffffff">Funkcje użytkowe</font>
   </span>
 
-  <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Tryb "Nie przeszkadzać" i wysoka wydajność prądowa
+  <h3 style="font-family:inherit; margin:0 0 14px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
+    Zaawansowana kontrola i wygoda
   </h3>
 
-  <p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
-    Urządzenie wyposażono w funkcję <strong style="font-family:inherit; color:inherit !important;">"Nie przeszkadzać"</strong> (po zaniku zasilania światła pozostają wyłączone w nocy) oraz przełączanie częstotliwości PWM (wysoka/niska), co jest idealne przy nagrywaniu wideo. Napięcie wejściowe i wyjściowe to DC 5-24V. Maksymalne obciążenie wynosi 6A na kanał (łącznie max 12A). Obsługuje złącza zasilania DC 5.5x2.1mm lub zaciski śrubowe. Kompaktowe wymiary (74.5 x 35.6 x 16.5 mm) ułatwiają ukrycie w profilach lub wnękach.
-  </p>
+  <ul style="font-family:inherit; margin:0; padding-left:20px; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
+    <li style="margin-bottom:8px;"><b>Wysoka obciążalność:</b> Maksymalne obciążenie wynosi 12A (max 6A na kanał), obsługa napięć z zakresu DC 5-24V.</li>
+    <li style="margin-bottom:8px;"><b>Auto-retransmisja sygnału:</b> Odbiornik automatycznie przekazuje sygnał do kolejnego urządzenia w odległości do 30m, pozwalając na budowę nieskończenie długich ciągów oświetleniowych.</li>
+    <li style="margin-bottom:8px;"><b>Automatyczna synchronizacja:</b> Wiele odbiorników w jednej strefie pracuje idealnie równo – efekty świetlne i zmiany kolorów następują bez opóźnień.</li>
+    <li style="margin-bottom:8px;"><b>Zmienna częstotliwość PWM:</b> Możliwość zmiany częstotliwości chroni przed efektem migotania, co jest kluczowe przy nagrywaniu wideo i zapobiega zmęczeniu wzroku.</li>
+    <li style="margin-bottom:0;"><b>Tryb "Nie przeszkadzać" (Do Not Disturb):</b> Inteligentna funkcja blokująca samoistne załączenie się oświetlenia w środku nocy po niespodziewanym zaniku i powrocie zasilania w sieci domowej.</li>
+  </ul>
 </section>
+{blog_html}"""
 
-{BLOG_STEROWNIKI}"""
+def get_zlaczka_html(sku):
+    szerokosc = "8mm" if "FC8" in sku else "10mm"
+    typ = "CCT" if "CCT" in sku else ("RGBW" if "RGBW" in sku else ("RGB" if "RGB" in sku else "MONO"))
+    
+    kompatybilnosc = "Uniwersalne zastosowanie: doskonale łączy zarówno taśmy COB (linia ciągła), jak i tradycyjne SMD."
+    if "-COB-" in sku: kompatybilnosc = "Zaprojektowana specjalnie pod bezpunktowe taśmy COB."
+    if "-SMD-" in sku: kompatybilnosc = "Zaprojektowana dla standardowych taśm SMD."
+    
+    warianty = "Wszechstronna budowa 9w1: łączy taśmę z taśmą, taśmę z przewodem, pozwala na łączenie narożne (L), boczne (T) oraz krzyżowe (X)." if "9IN1" in sku else "Szybkie, stabilne połączenie zaciskowe na piny bez konieczności czasochłonnego lutowania."
 
-def generate_zlaczka_html(model, nazwa, opis_stykow):
     return f"""<section style="font-family:inherit; margin:28px 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
   <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
-    <font color="#ffffff">Złączka zaciskowa LED 9w1 - {nazwa}</font>
+    <font color="#ffffff">Łączenie {typ} {szerokosc}</font>
   </span>
 
   <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Uniwersalne połączenie bez lutowania dla taśm COB i SMD
+    Solidny montaż COB i SMD bez lutowania ({sku})
   </h3>
 
   <p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
-    Złączka <strong style="font-family:inherit; color:inherit !important;">{model}</strong> (9w1) to innowacyjne rozwiązanie, które pozwala na błyskawiczny montaż bez konieczności lutowania. Dzięki transparentnej obudowie (brak ciemnych obszarów) nie zaburza emisji światła. Jest to niezwykle smukły element, który z łatwością mieści się w standardowych profilach aluminiowych LED. {opis_stykow}
+    {kompatybilnosc} Złączka oparta jest o system pionowych pinów dociskowych, które przebijają powłokę i gwarantują pewny styk bez przerywania i migotania obwodu. {warianty}
   </p>
 </section>
 
 <section style="font-family:inherit; margin:0 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
   <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
-    <font color="#ffffff">Gdzie użyć i jak łączyć</font>
+    <font color="#ffffff">Transparentny design do profili</font>
   </span>
 
   <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Jedna złączka - 9 sposobów połączenia
+    Brak zaciemnień, idealne do profili LED
   </h3>
 
   <p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
-    Dzięki specjalnej budowie złączy pinowych, jedna złączka umożliwia aż 9 typów połączeń: <strong style="font-family:inherit; color:inherit !important;">przewód z taśmą, taśma z taśmą, przewód z przewodem</strong> oraz zaawansowane łączenia: <strong style="font-family:inherit; color:inherit !important;">zasilanie narożne "L", taśma w kształcie "L", zasilanie boczne "T", taśma z taśmą w kształcie "T", czy zasilanie "X"</strong>. Wystarczy wyrównać biegunowość, włożyć taśmę i/lub przewód do środka, a następnie zacisnąć każdy pin pionowo. Idealnie sprawdza się w wąskich przestrzeniach oraz przy montażu ciągów liniowych z taśm COB i SMD.
+    Smukła i kompaktowa budowa złączki sprawia, że bez problemu mieści się ona w większości aluminiowych profili LED. Dzięki krystalicznie przezroczystej obudowie światło swobodnie przenika na zewnątrz, całkowicie eliminując nieestetyczny efekt martwych, niedoświetlonych stref w miejscu łączenia.
   </p>
 </section>
+{blog_html}"""
 
-{BLOG_ZLĄCZKI}"""
-
-
-# Data dictionaries for specific product logic
-sterowniki_dict = {
-    "PR-MONO-12A": ["MONO", "Umożliwia płynną regulację jasności taśm jednokolorowych (DIM) od 1% do 100%."],
-    "PR-CCT-12A": ["CCT (Dual White)", "Umożliwia płynną regulację jasności oraz zmiany barwy światła od ciepłej bieli do zimnej (CCT)."],
-    "PR-RGB-12A": ["RGB", "Umożliwia płynną regulację jasności oraz wybór spośród 16 milionów kolorów z palety RGB."],
-    "PR-RGBW-12A": ["RGBW", "Umożliwia płynną regulację kolorów z palety RGB, a także osobną kontrolę białego kanału światła."],
-    "PR-RGBCCT-12A": ["RGBCCT", "Najbardziej zaawansowany model, obsługuje pełne spektrum kolorów RGB oraz pełen zakres bieli (ciepła-zimna)."]
-}
-
-zlaczki_dict = {
-    "FC8-MONO-MULTI-9IN1": ["2-pin 8mm", "Model 8mm 2-pin przeznaczony do jednokolorowych taśm LED o szerokości laminatu 8mm. Pełna kompatybilność zarówno z najnowszymi taśmami COB (jednolita linia światła) jak i standardowymi taśmami SMD."],
-    "FC10-MONO-MULTI-9IN1": ["2-pin 10mm", "Model 10mm 2-pin przeznaczony do jednokolorowych taśm LED o szerokości laminatu 10mm. Pełna kompatybilność zarówno z najnowszymi taśmami COB (jednolita linia światła) jak i standardowymi taśmami SMD."],
-    # In case there are older złączki matching the 9w1 logic without 9in1 name
-}
-
-
-def process_description(title, sku):
-    # If Scharfer
-    if "scharfer" in title.lower() and sku in scharfer_gotowce:
-        # Use exact gotowiec text (without START/KONIEC)
-        return scharfer_gotowce[sku]
-    
-    # If Zasilacz ale nie Scharfer (fallback, but user only complained about Scharfer, Sterowniki, Zlaczki)
-    if "scharfer" in title.lower():
-        # Maybe SKU mismatch?
-        pass
-
-    # If Sterownik
-    if sku in sterowniki_dict:
-        return generate_sterownik_html(sku, sterowniki_dict[sku][0], sterowniki_dict[sku][1])
-
-    # If Złączka
-    if "9IN1" in sku or "zlaczka" in title.lower() or "złączka" in title.lower():
-        # Extract features
-        if "FC8-MONO-MULTI" in sku:
-            return generate_zlaczka_html(sku, "2-pin 8mm", zlaczki_dict["FC8-MONO-MULTI-9IN1"][1])
-        elif "FC10-MONO-MULTI" in sku:
-            return generate_zlaczka_html(sku, "2-pin 10mm", zlaczki_dict["FC10-MONO-MULTI-9IN1"][1])
-        elif "COB-RGB" in sku:
-            return generate_zlaczka_html(sku, "3-pin/4-pin RGB", "Zaprojektowana dla taśm wielokolorowych RGB. Kompatybilna z taśmami COB oraz SMD.")
-        elif "SMD-RGBW" in sku:
-            return generate_zlaczka_html(sku, "5-pin RGBW", "Zaprojektowana dla taśm wielokolorowych RGBW (z dodatkowym białym kanałem). Kompatybilna z taśmami SMD.")
-        elif "SMD-RGB" in sku:
-            return generate_zlaczka_html(sku, "4-pin RGB", "Zaprojektowana dla taśm wielokolorowych RGB. Kompatybilna z taśmami SMD.")
-        else:
-            return generate_zlaczka_html(sku, sku.replace("FC10-", "").replace("FC8-", ""), "Dostosowana do precyzyjnego łączenia wybranego typu taśmy LED, obsługuje zarówno układy COB jak i SMD, o ile odpowiada ilości pinów i szerokości.")
-
-    return None
-
-# Read HTML file
-with open(INDEX_FILE, 'r', encoding='utf-8') as f:
-    soup = BeautifulSoup(f, 'html.parser')
-
-df = pd.read_excel(EXCEL_FILE)
-
-# Process Excel and HTML
-for index, row in df.iterrows():
-    sku = str(row['INDEKS_HANDLOWY']).strip()
-    nazwa = str(row['NAZWA_CALA']).strip()
-    
-    new_desc = process_description(nazwa, sku)
-    
-    if new_desc:
-        # Update Excel
-        df.at[index, 'Opis'] = new_desc
+def get_scharfer_html(sku):
+    parts = sku.split('-')
+    if len(parts) >= 3:
+        w = parts[1]
+        v = parts[2]
+    else:
+        w = "?"
+        v = "?"
         
-        # Update HTML
-        # Find element by ID (e.g. desc-view-wapro-SCH-18-12)
-        div_id = f"desc-view-wapro-{sku}"
-        div_elem = soup.find(id=div_id)
-        if div_elem:
-            # Replace inner html
-            div_elem.clear()
-            # We parse the new_desc as HTML and insert it
-            new_soup = BeautifulSoup(new_desc, 'html.parser')
-            div_elem.append(new_soup)
+    return f"""<section style="font-family:inherit; margin:28px 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
+  <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
+    <font color="#ffffff">Napięcie {v}V DC | Moc {w}W</font>
+  </span>
 
-# Save Excel
-df.to_excel(EXCEL_FILE, index=False)
+  <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
+    Stabilne zasilanie z obsługą 100% obciążenia ({sku})
+  </h3>
 
-# Save HTML
-with open(INDEX_FILE, 'w', encoding='utf-8') as f:
-    f.write(str(soup))
+  <p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
+    Zasilacze z tej serii charakteryzują się bardzo stabilnym napięciem wyjściowym i zdolnością do ciągłej pracy pod pełnym, stuprocentowym obciążeniem. To sprzęt klasy premium dla wymagających instalacji, redukujący migotanie i przedłużający żywotność samych taśm LED. Wbudowane, aktywne zabezpieczenia: przeciwzwarciowe, przeciążeniowe i nadnapięciowe chronią Twój obwód.
+  </p>
+</section>
 
-print("Rewritten successfully.")
+<section style="font-family:inherit; margin:0 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
+  <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
+    <font color="#ffffff">IP67 | 7 LAT GWARANCJI</font>
+  </span>
+
+  <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
+    Szczelny metalowy korpus i legendarna bezawaryjność
+  </h3>
+
+  <p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
+    Obudowa o klasie wodoszczelności IP67 gwarantuje, że elektronika jest w pełni uodporniona na kurz, zabrudzenia i wilgoć. Dzięki doskonałemu odprowadzaniu ciepła przez zwarty korpus, zasilacze Scharfer objęte są bezkompromisową, 7-letnią gwarancją producenta – to dowód na rzeczywistą trwałość, potwierdzoną certyfikatem CE.
+  </p>
+</section>
+{blog_html}"""
+
+# SKUs to update
+sterowniki = ['PR-CCT-12A', 'PR-MONO-12A', 'PR-RGB-12A', 'PR-RGBCCT-12A', 'PR-RGBW-12A']
+zlaczki = ['FC8-MONO-MULTI-9IN1', 'FC8-MONO-MULTI-TP', 'FC8-MONO-MULTI-TPT', 'FC8-MONO-MULTI', 'FC8-MONO-MULTI-L', 'FC8-MONO-MULTI-T', 
+           'FC10-MONO-MULTI-9IN1', 'FC10-MONO-MULTI-TPT', 'FC10-MONO-MULTI', 'FC10-MONO-MULTI-L', 'FC10-MONO-MULTI-T', 'FC10-MONO-MULTI-TP',
+           'FC10-COB-RGB-TP', 'FC10-COB-RGB-TPT', 'FC8-SMD-CCT-TP', 'FC10-SMD-RGB-TP', 'FC10-SMD-RGB-TPT', 'FC10-SMD-RGBW-TP', 'FC10-SMD-RGBW-TPT']
+scharfer = ['SCH-18-12', 'SCH-20-12', 'SCH-30-12', 'SCH-45-12', 'SCH-60-12', 'SCH-100-12', 'SCH-150-12', 'SCH-200-12', 'SCH-300-12', 'SCH-400-12', 
+            'SCH-18-24', 'SCH-20-24', 'SCH-30-24', 'SCH-45-24', 'SCH-60-24', 'SCH-100-24', 'SCH-150-24', 'SCH-200-24', 'SCH-300-24', 'SCH-400-24']
+
+descriptions = {}
+for s in sterowniki: descriptions[s] = get_sterownik_html(s)
+for z in zlaczki: descriptions[z] = get_zlaczka_html(z)
+for sc in scharfer: descriptions[sc] = get_scharfer_html(sc)
+
+# Update index.html
+index_path = '/Users/karolbohdanowicz/my-ai-agents/prescot/index.html'
+with open(index_path, 'r', encoding='utf-8') as f:
+    index_content = f.read()
+
+updated_html = 0
+for sku, html in descriptions.items():
+    for tab in ['wapro', 'tim', 'allegro']:
+        view_pattern = rf'(<div class="model-block" id="desc-view-{tab}-{sku}">)(.*?)(</div>\s*<div class="edit-block" id="desc-edit-{tab}-{sku}")'
+        def replacer_view(match):
+            return match.group(1) + "\n" + html + "\n" + match.group(3)
+        index_content, c1 = re.subn(view_pattern, replacer_view, index_content, flags=re.DOTALL)
+        
+        textarea_pattern = rf'(<textarea class="edit-textarea" id="textarea-{tab}-{sku}"[^>]*>)(.*?)(</textarea>)'
+        def replacer_textarea(match):
+            return match.group(1) + "\n" + html + "\n" + match.group(3)
+        index_content, c2 = re.subn(textarea_pattern, replacer_textarea, index_content, flags=re.DOTALL)
+        
+        if c1 > 0 or c2 > 0:
+            updated_html += 1
+
+with open(index_path, 'w', encoding='utf-8') as f:
+    f.write(index_content)
+
+print(f"Updated {updated_html} elements in index.html")
+
+# Update Excel
+excel_path = '/Users/karolbohdanowicz/Desktop/EksportowaneArtykuly.xlsx'
+df = pd.read_excel(excel_path)
+updated_excel = 0
+for idx, row in df.iterrows():
+    sku = str(row['INDEKS_HANDLOWY']).strip()
+    if sku in descriptions:
+        df.at[idx, 'OPIS'] = descriptions[sku]
+        updated_excel += 1
+
+df.to_excel(excel_path, index=False)
+print(f"Updated {updated_excel} rows in Excel")
