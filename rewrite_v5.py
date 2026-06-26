@@ -86,24 +86,24 @@ def get_sterownik_html(sku, tab):
 
     else:
         if "CCT" in sku and "RGB" not in sku:
-            opis_ogolny = f"Zaawansowany zestaw radiowy dedykowany do taśm LED {typ}. Pozwala na swobodne zarządzanie temperaturą barwową (od ciepłej do zimnej) oraz jasnością z poziomu jednego pilota. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania w stronę instalacji."
+            opis_ogolny = f"Profesjonalny system zarządzania temperaturą barwową do taśm LED {typ}. Zaawansowana elektronika pozwala na precyzyjne przejścia między tonacjami (od chłodnej bieli do ciepłej) z zachowaniem optymalnego odwzorowania. Wykorzystanie protokołu bezprzewodowego 2.4GHz RF eliminuje opóźnienia, gwarantując zasięg do 30 metrów nawet w gęstej architekturze wnętrz."
         elif "RGB-" in sku:
-            opis_ogolny = f"Zaawansowany zestaw radiowy dedykowany do taśm LED {typ}. Oferuje pełną kontrolę nad paletą 16 milionów kolorów, umożliwiając płynną zmianę nasycenia oraz jasności światła. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania w stronę instalacji."
+            opis_ogolny = f"Wielostrefowy, profesjonalny system sterowania taśmami LED {typ}. Umożliwia precyzyjne zarządzanie nasyceniem z pełnego spektrum 16 milionów barw. Zastosowanie wydajnego protokołu komunikacji bezprzewodowej 2.4GHz RF gwarantuje natychmiastową reakcję i stabilny sygnał na dystansie do 30 metrów, eliminując wymóg optycznego celowania pilotem."
         elif "RGBW" in sku:
-            opis_ogolny = f"Zaawansowany zestaw radiowy dedykowany do wielokolorowych taśm LED {typ}. Łączy w sobie sterowanie paletą 16 mln kolorów RGB z niezależnym, czystym kanałem białym. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania w stronę instalacji."
+            opis_ogolny = f"Zaawansowany moduł sterujący dla taśm LED {typ}. Bezkompromisowe połączenie dynamicznego oświetlenia RGB z absolutnie czystym kanałem światła białego. Profesjonalny sprzęt oparty o komunikację 2.4GHz RF utrzymuje stabilne i pozbawione zakłóceń łącze o zasięgu do 30 metrów we wszystkich współczesnych obiektach architektonicznych."
         elif "RGBCCT" in sku:
-            opis_ogolny = f"Najbardziej zaawansowany zestaw radiowy dedykowany do taśm LED {typ}. To urządzenie typu 'wszystko w jednym': pozwala na kontrolę kolorów RGB, regulację temperatury barwy białej CCT oraz płynne ściemnianie. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania w stronę instalacji."
+            opis_ogolny = f"Najwyższej klasy, zintegrowany system 5-kanałowy do taśm LED {typ}. Zapewnia totalną kontrolę nad instalacją świetlną – od wielokolorowych aranżacji przestrzeni, poprzez precyzyjną kalibrację czystej bieli CCT, aż po bezstopniowe ściemnianie. Standard pracy 2.4GHz RF zapewnia penetrację przeszkód i zasięg do 30 metrów w warunkach docelowych."
         else: # MONO
-            opis_ogolny = f"Niezawodny zestaw radiowy (ściemniacz) dedykowany do taśm LED {typ}. Pozwala na precyzyjne, płynne sterowanie jasnością od 1% do 100%, dostosowując oświetlenie do każdej sytuacji. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania w stronę instalacji."
+            opis_ogolny = f"Profesjonalny zestaw sterujący zaprojektowany z myślą o zaawansowanych instalacjach na taśmach LED {typ}. Architektura oparta na komunikacji 2.4GHz RF gwarantuje niezawodną pracę systemu bez latencji. Zaawansowane algorytmy regulacji mocy modułu wykonawczego oferują precyzyjne i w pełni bezstopniowe sterowanie strumieniem świetlnym od 1% do 100%."
 
-        opis_ogolny += " Idealne rozwiązanie do zabudowy – urządzenie można bez trudu schować nad sufitem podwieszanym, za meblami czy w rozdzielni."
+        opis_ogolny += " Kompaktowa forma odbiornika pozwala na pełną integrację w architekturze wnętrza. Zminimalizowane gabaryty umożliwiają błyskawiczny montaż bezpośrednio w profilach konstrukcyjnych, przestrzeniach sufitów podwieszanych i rozdzielnicach elektrycznych."
         tytul_funkcji = "Wygoda, kontrola i funkcje"
         funkcje = f"""
-    <li style="margin-bottom:8px;"><b>Wysoka obciążalność:</b> Maksymalne obciążenie wynosi 12A (max 6A na kanał), obsługa napięć z zakresu DC 5-24V.</li>
-    <li style="margin-bottom:8px;"><b>Auto-retransmisja sygnału:</b> Urządzenie automatycznie przekazuje sygnał do kolejnego w odległości do 30m, pozwalając na budowę nieskończenie długich ciągów oświetleniowych.</li>
-    <li style="margin-bottom:8px;"><b>Automatyczna synchronizacja:</b> Wiele urządzeń w jednej strefie pracuje idealnie równo – efekty świetlne i zmiany kolorów następują bez opóźnień.</li>
-    <li style="margin-bottom:8px;"><b>Zmienna częstotliwość PWM:</b> Możliwość zmiany częstotliwości chroni przed efektem migotania, co jest kluczowe przy nagrywaniu wideo i zapobiega zmęczeniu wzroku.</li>
-    <li style="margin-bottom:0;"><b>Tryb "Nie przeszkadzać" (Do Not Disturb):</b> Inteligentna funkcja blokująca samoistne załączenie się oświetlenia w środku nocy po niespodziewanym zaniku i powrocie zasilania w sieci domowej.</li>"""
+    <li style="margin-bottom:8px;"><b>Wysoka wydajność prądowa:</b> Moduł obsługuje obciążenia rzędu 12A (max 6A na kanał), stabilizując parametry zasilania w instalacjach DC 5-24V.</li>
+    <li style="margin-bottom:8px;"><b>Aktywna retransmisja sygnału:</b> Urządzenie kaskadowo transmituje protokół sterujący do kolejnych węzłów, pozwalając na budowanie nieskończenie długich stref oświetleniowych.</li>
+    <li style="margin-bottom:8px;"><b>Sprzętowa synchronizacja:</b> Rozległa sieć urządzeń wykonawczych działa w pełnej koordynacji, eliminując desynchronizację w płynnych przejściach tonalnych.</li>
+    <li style="margin-bottom:8px;"><b>Adaptacyjna częstotliwość PWM:</b> Technologia redukcji stroboskopowej (flicker-free) gwarantująca najwyższy komfort wizualny, niezależnie od zastosowanego sprzętu wideo.</li>
+    <li style="margin-bottom:0;"><b>Zarządzanie zasilaniem (DND):</b> Tryb inteligentnej pamięci zapobiega samoistnemu wzbudzeniu obwodu po nagłych spadkach lub utracie zasilania w obiekcie.</li>"""
 
     return f"""<section style="font-family:inherit; margin:28px 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
   <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
