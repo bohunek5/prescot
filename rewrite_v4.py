@@ -53,15 +53,15 @@ def get_sterownik_html(sku):
     
     # First block: general description
     if "CCT" in sku and "RGB" not in sku:
-        opis_ogolny = f"Zaawansowany sterownik radiowy dedykowany do taśm LED {typ}. Pozwala na swobodne zarządzanie temperaturą barwową (od ciepłej do zimnej) oraz jasnością z poziomu jednego pilota. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+        opis_ogolny = f"Zaawansowany zestaw radiowy dedykowany do taśm LED {typ}. Pozwala na swobodne zarządzanie temperaturą barwową (od ciepłej do zimnej) oraz jasnością z poziomu jednego pilota. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
     elif "RGB-" in sku:
-        opis_ogolny = f"Zaawansowany sterownik radiowy dedykowany do taśm LED {typ}. Oferuje pełną kontrolę nad paletą 16 milionów kolorów, umożliwiając płynną zmianę nasycenia oraz jasności światła. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+        opis_ogolny = f"Zaawansowany zestaw radiowy dedykowany do taśm LED {typ}. Oferuje pełną kontrolę nad paletą 16 milionów kolorów, umożliwiając płynną zmianę nasycenia oraz jasności światła. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
     elif "RGBW" in sku:
-        opis_ogolny = f"Zaawansowany sterownik radiowy dedykowany do wielokolorowych taśm LED {typ}. Łączy w sobie sterowanie paletą 16 mln kolorów RGB z niezależnym, czystym kanałem białym. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+        opis_ogolny = f"Zaawansowany zestaw radiowy dedykowany do wielokolorowych taśm LED {typ}. Łączy w sobie sterowanie paletą 16 mln kolorów RGB z niezależnym, czystym kanałem białym. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
     elif "RGBCCT" in sku:
-        opis_ogolny = f"Najbardziej zaawansowany sterownik radiowy dedykowany do taśm LED {typ}. To urządzenie typu 'wszystko w jednym': pozwala na kontrolę kolorów RGB, regulację temperatury barwy białej CCT oraz płynne ściemnianie. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+        opis_ogolny = f"Najbardziej zaawansowany zestaw radiowy dedykowany do taśm LED {typ}. To urządzenie typu 'wszystko w jednym': pozwala na kontrolę kolorów RGB, regulację temperatury barwy białej CCT oraz płynne ściemnianie. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
     else: # MONO
-        opis_ogolny = f"Niezawodny sterownik radiowy (ściemniacz) dedykowany do taśm LED {typ}. Pozwala na precyzyjne, płynne sterowanie jasnością od 1% do 100%, dostosowując oświetlenie do każdej sytuacji. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
+        opis_ogolny = f"Niezawodny zestaw radiowy (ściemniacz) dedykowany do taśm LED {typ}. Pozwala na precyzyjne, płynne sterowanie jasnością od 1% do 100%, dostosowując oświetlenie do każdej sytuacji. Działa w niezawodnym paśmie bezprzewodowym 2.4GHz RF, co zapewnia bezproblemowy zasięg do 30 metrów w otwartej przestrzeni, bez konieczności celowania pilotem w odbiornik."
 
     return f"""<section style="font-family:inherit; margin:28px 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
   <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
@@ -69,11 +69,11 @@ def get_sterownik_html(sku):
   </span>
 
   <h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Odbiornik radiowy LED {sku}
+    Pilot, uchwyt magnetyczny i odbiornik {sku}
   </h3>
 
   <p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
-    {opis_ogolny} Idealne rozwiązanie do zabudowy – odbiornik można bez trudu schować nad sufitem podwieszanym, za meblami czy w rozdzielni.
+    {opis_ogolny} Idealne rozwiązanie do zabudowy – sterownik można bez trudu schować nad sufitem podwieszanym, za meblami czy w rozdzielni.
   </p>
 </section>
 
