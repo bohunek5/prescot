@@ -83,7 +83,7 @@ def get_sterownik_html(sku):
   </span>
 
   <h3 style="font-family:inherit; margin:0 0 14px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
-    Zaawansowana kontrola i wygoda
+    Wygoda, kontrola i funkcje
   </h3>
 
   <ul style="font-family:inherit; margin:0; padding-left:20px; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">
