@@ -46,38 +46,93 @@ def generate_desc(category, sku, badge_text=""):
     if category == 'sterowniki':
         badge_lower = badge_text.lower()
         sku_upper = sku.upper()
-        if 'cct' in badge_lower or 'cct' in sku_upper:
-            typ_desc = "Pełna kontrola nad temperaturą barwową (CCT) pozwala błyskawicznie zmienić klimat wnętrza – od chłodnego światła do pracy, po ciepłe do relaksu."
-            typ_head = "Zarządzanie temperaturą bieli"
-            pill = "KONTROLA CCT"
+        
+        # We need completely customized blocks for each controller model to avoid repetition
+        if 'rgbcct' in badge_lower or 'rgbcct' in sku_upper:
+            # 5-channel model
+            blocks.append((
+                "KONTROLA RGB+CCT (5w1)",
+                "Najbardziej zaawansowany kontroler 5-kanałowy",
+                "Odbiornik dedykowany do obsługi taśm wielokolorowych z regulacją bieli (RGB+CCT). Pozwala na płynne wybieranie dowolnego koloru z palety RGB oraz jednoczesne precyzyjne sterowanie temperaturą barwową światła białego (od 2700K do 6500K) i jego jasnością."
+            ))
+            blocks.append((
+                "FUNKCJE I PARAMETRY",
+                "Specyfikacja i możliwości w pigułce",
+                "<ul><li style='margin-bottom:8px;'><b>Zasilanie uniwersalne:</b> Obsługa taśm LED 12V oraz 24V DC o łącznym prądzie obciążenia do 15A.</li><li style='margin-bottom:8px;'><b>Automatyczna retransmisja:</b> Zwiększenie zasięgu sterowania poprzez bezprzewodowe przekazywanie sygnału radiowego między odbiornikami (do 30m).</li><li style='margin-bottom:0;'><b>Zabezpieczenie przed zanikiem:</b> Opcjonalny tryb 'Do Not Disturb' zapobiegający niekontrolowanemu włączeniu światła po powrocie zasilania w sieci.</li></ul>"
+            ))
+            blocks.append((
+                "SYSTEM INTEGRACJI",
+                "Swoboda łączenia i sterowania strefowego",
+                "Sterownik pracuje w standardzie komunikacji radiowej RF 2.4GHz. Można go bez problemu sparować z pilotami strefowymi (zarówno przenośnymi, jak i ściennymi) i przypisać do wybranej grupy urządzeń, tworząc zsynchronizowany system oświetlenia w całym domu."
+            ))
         elif 'rgbw' in badge_lower or 'rgbw' in sku_upper:
-            typ_desc = "Odkryj nieskończone możliwości palety RGB wzbogacone o dedykowaną, czystą biel. Twórz niesamowite sceny świetlne i zapisuj ulubione kolory, aby natychmiast wracać do pożądanego nastroju."
-            typ_head = "Kolory i czysta biel w jednym"
-            pill = "MAGIA RGBW"
+            # 4-channel model
+            blocks.append((
+                "STEROWANIE RGB+W (4-kanałowe)",
+                "Pełen kolor oraz dedykowany kanał bieli",
+                "Kontroler dedykowany do taśm LED RGBW. Umożliwia niezależne miksowanie kolorów z palety RGB oraz włączenie czystego światła białego (ciepłego, neutralnego lub zimnego w zależności od podłączonej taśmy), dając idealny balans między dekoracją a oświetleniem użytkowym."
+            ))
+            blocks.append((
+                "ZALETY INSTALACYJNE",
+                "Wysoka sprawność i bezpieczna eksploatacja",
+                "<ul><li style='margin-bottom:8px;'><b>Moc pod kontrolą:</b> Prąd wyjściowy 12A/15A pozwala na podpięcie długich linii taśmy bez strat na stabilności sygnału.</li><li style='margin-bottom:8px;'><b>Sygnał bez barier:</b> Wykorzystanie szyfrowanej częstotliwości radiowej 2.4GHz zapewnia doskonały zasięg nawet przez ściany i zabudowy meblowe.</li><li style='margin-bottom:0;'><b>Cicha praca (PWM):</b> Zaawansowane ściemnianie metodą modulacji szerokości impulsów eliminuje efekt brzęczenia i migotania diod.</li></ul>"
+            ))
+            blocks.append((
+                "EKOSYSTEM STREFOWY",
+                "Elastyczne przypisywanie urządzeń",
+                "Jedno kliknięcie pozwala powiązać kontroler z jednym lub kilkoma pilotami. Umożliwia to wygodną obsługę tego samego obwodu np. za pomocą pilota przy łóżku oraz włącznika dotykowego na ścianie przy wejściu do pokoju."
+            ))
         elif 'rgb' in badge_lower or 'rgb' in sku_upper:
-            typ_desc = "Zarządzaj milionami kolorów z palety RGB. Twórz dynamiczne przejścia lub wybierz stały odcień, który idealnie dopełni Twoją przestrzeń życiową."
-            typ_head = "Pełna paleta barw do dyspozycji"
-            pill = "MAGIA RGB"
+            # 3-channel model
+            blocks.append((
+                "KONTROLA RGB (3-kanałowa)",
+                "Efektowne zarządzanie trójkolorową paletą barw",
+                "Model stworzony z myślą o klasycznych taśmach LED RGB. Pozwala na płynne przechodzenie między kolorami podstawowymi, regulację nasycenia barw oraz uruchamianie automatycznych programów dynamicznych (przejścia płynne, skokowe, stroboskopowe)."
+            ))
+            blocks.append((
+                "PARAMETRY I WYDAJNOŚĆ",
+                "Niezawodne serce instalacji kolorowej",
+                "<ul><li style='margin-bottom:8px;'><b>Wygodne zaciski:</b> Solidne terminale śrubowe ułatwiają szybkie i trwałe podłączenie przewodów sekcji R, G, B oraz zasilania.</li><li style='margin-bottom:8px;'><b>Retransmisja RF:</b> Każdy odbiornik działa jako repeater, przekazując sygnał do kolejnego kontrolera w odległości do 30m.</li><li style='margin-bottom:0;'><b>Pamięć ostatniego stanu:</b> Po wyłączeniu zasilania (np. przełącznikiem ściennym) odbiornik zapamiętuje ostatnio ustawiony kolor i jasność.</li></ul>"
+            ))
+            blocks.append((
+                "PILOTY I INTEGRACJA",
+                "Zbuduj wygodne sterowanie radiowe",
+                "Sterownik współpracuje z pełną gamą nadajników RF 2.4GHz. Pozwala to na stworzenie instalacji wielostrefowej, w której jednym pilotem zmieniasz kolory w całym salonie, kuchni i wnękach sufitowych jednocześnie lub niezależnie."
+            ))
+        elif 'cct' in badge_lower or 'cct' in sku_upper:
+            # 2-channel model
+            blocks.append((
+                "ZARZĄDZANIE BIELĄ CCT",
+                "Regulacja temperatury barwowej światła białego",
+                "Dedykowany sterownik do taśm LED o zmiennej barwie białej (CCT / Multiwhite). Umożliwia precyzyjne i płynne przejście od bardzo ciepłego światła (np. 2700K sprzyjającego relaksowi) do rześkiej, chłodnej bieli (np. 6500K pobudzającej do pracy)."
+            ))
+            blocks.append((
+                "FUNKCJONALNOŚĆ I BEZPIECZEŃSTWO",
+                "Inteligentne rozwiązania sterujące",
+                "<ul><li style='margin-bottom:8px;'><b>Bezskokowa regulacja:</b> Płynne mieszanie barw poprzez dokładne sterowanie dwoma kanałami (ciepłym i zimnym).</li><li style='margin-bottom:8px;'><b>Auto-rettransmisja sygnału:</b> Urządzenia mogą przekazywać sygnał radiowy między sobą (do 30m), co pozwala na budowę ogromnych stref świetlnych.</li><li style='margin-bottom:0;'><b>Tryb 'Do Not Disturb':</b> Inteligentna funkcja, która zapobiega samoistnemu włączeniu świateł po chwilowym zaniku zasilania w nocy.</li></ul>"
+            ))
+            blocks.append((
+                "ŁĄCZENIE W GRUPY",
+                "Strefowe zarządzanie oświetleniem w domu",
+                "Odbiornik można bezprzewodowo łączyć z wieloma pilotami strefowymi i sterownikami ściennymi. Pozwala to na pełną swobodę w aranżacji wnętrz i dopasowanie systemu sterowania do indywidualnych przyzwyczajeń domowników."
+            ))
         else:
-            typ_desc = "Płynne i pozbawione migotania ściemnianie taśm jednokolorowych to podstawa wygody. Idealnie dostosuj jasność do pory dnia lub potrzeb domowników."
-            typ_head = "Płynna regulacja jasności"
-            pill = "PRECYZYJNE ŚCIEMNIANIE"
-
-        blocks.append((
-            pill,
-            typ_head,
-            f"Wysokiej klasy system sterowania, który daje Ci pełną swobodę. {typ_desc} Szybka reakcja na polecenia i intuicyjna obsługa zapewniają bezproblemowe zarządzanie światłem na co dzień."
-        ))
-        blocks.append((
-            "WSZECHSTRONNA FUNKCJONALNOŚĆ",
-            "Rozwiązania, które ułatwiają życie",
-            "<ul><li style='margin-bottom:8px;'><b>Wysoka obciążalność:</b> Obsługa długich odcinków taśm LED (nawet 15-20m) na jednym kontrolerze bez utraty stabilności.</li><li style='margin-bottom:8px;'><b>Auto-retransmisja sygnału:</b> Urządzenia mogą przekazywać sygnał radiowy między sobą (do 30m), co pozwala na budowę ogromnych stref świetlnych.</li><li style='margin-bottom:0;'><b>Tryb 'Do Not Disturb':</b> Inteligentna funkcja, która zapobiega samoistnemu włączeniu świateł po chwilowym zaniku zasilania w nocy.</li></ul>"
-        ))
-        blocks.append((
-            "SYSTEM WIELE-DO-WIELU",
-            "Nieskończone możliwości łączenia",
-            "Ten ekosystem rośnie razem z Twoimi potrzebami. Przypisz wiele sterowników do jednego pilota, tworząc zsynchronizowane strefy, lub używaj kilku pilotów (np. ściennego i przenośnego) do sterowania jedną sekcją. Instalacja jest elastyczna i banalnie prosta."
-        ))
+            # 1-channel model (MONO)
+            blocks.append((
+                "PRECYZYJNE ŚCIEMNIANIE MONO",
+                "Płynna regulacja jasności taśm jednokolorowych",
+                "Klasyczny sterownik ściemniający przeznaczony do jednokolorowych taśm LED (MONO). Oferuje super płynne rozjaśnianie i ściemnianie w zakresie od 1% do 100% bez efektu gwałtownych skoków jasności w najniższych rejestrach."
+            ))
+            blocks.append((
+                "NIEZAWODNOŚĆ I STABILNOŚĆ",
+                "Sprawdzona konstrukcja radiowa",
+                "<ul><li style='margin-bottom:8px;'><b>Częstotliwość PWM:</b> Wysoka częstotliwość sterowania całkowicie eliminuje migotanie diod na nagraniach wideo i chroni wzrok przed zmęczeniem.</li><li style='margin-bottom:8px;'><b>Duża obciążalność prądowa:</b> Bezpieczna praca z długimi odcinkami taśm dzięki dopuszczalnemu prądowi wyjściowemu 12A/15A.</li><li style='margin-bottom:0;'><b>Repeater sygnału:</b> Bezprzewodowa synchronizacja pozwala na jednorodne ściemnianie wielu odbiorników bez układania dodatkowych kabli.</li></ul>"
+            ))
+            blocks.append((
+                "ZARZĄDZANIE RADIOWE RF",
+                "Prosta konfiguracja i elastyczny zasięg",
+                "Komunikacja w standardzie RF 2.4GHz gwarantuje stabilną pracę bez zakłóceń na dystansie do 30m. Urządzenie można sparować z wieloma pilotami lub przyciskami bezprzewodowymi, co pozwala na wygodne sterowanie światłem z dowolnego punktu w pokoju."
+            ))
         
     elif category == 'zasilacze':
         badge_lower = badge_text.lower()
@@ -125,8 +180,8 @@ def generate_desc(category, sku, badge_text=""):
         ))
         blocks.append((
             "IDEALNA LINIA ŚWIATŁA",
-            "Mleczny klosz i rozproszenie",
-            "Oprócz funkcji chłodzącej, profil w połączeniu z odpowiednim, mlecznym kloszem fantastycznie rozprasza światło, niwelując efekt \"kropkowania\" diod na taśmie (szczególnie w taśmach SMD). Dzięki temu uzyskujesz gładką, przyjemną dla oka linię świetlną."
+            "Klosz i rozproszenie (Brak w zestawie)",
+            "Profil wymaga zastosowania odpowiedniego klosza (osłony), który jest sprzedawany oddzielnie. Klosze mleczne doskonale rozpraszają światło, niwelując efekt \"kropkowania\" i tworząc gładką linię świetlną. Osłony transparentne oferują z kolei maksymalną przepuszczalność światła. Warto zaznaczyć, że do profili serii MICRO oraz MICRO-NK pasują standardowe klosze wsuwane (np. typu HS, KA), natomiast mleczny LIGER-11 to klosz wciskany, który również z nimi współpracuje."
         ))
         
     elif category == 'zlaczki':
