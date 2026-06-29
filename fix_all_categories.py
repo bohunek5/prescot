@@ -1,3 +1,4 @@
+import hashlib
 import re
 from bs4 import BeautifulSoup
 
@@ -12,7 +13,7 @@ def get_category(sku):
         return 'zlaczki'
     return 'tasmy'
 
-blog_html = """
+blog_html_tasmy = """
 <div class="blog-grid" style="font-family:inherit; margin-top: 28px; background:none !important; background-color:transparent !important; color:inherit;">
     <h3 style="font-family:inherit; margin:0 0 16px 0; font-size:22px; font-weight:700;">Baza Wiedzy - Prescot</h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:stretch;">
@@ -38,6 +39,91 @@ blog_html = """
         </div>
     </div>
 </div>
+"""
+
+blog_html_zasilacze = """
+<section style="font-family:inherit; margin:18px 0 0 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
+<div style="font-family:inherit; margin-bottom:18px; background:none !important; background-color:transparent !important; color:inherit;">
+<span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
+<font color="#ffffff">Praktyczne poradniki</font>
+</span>
+<h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
+      Dobierz zasilacz LED bez zgadywania
+    </h3>
+<p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.78; font-size:14px; line-height:1.6;">
+      Sprawdź krótkie poradniki, które pomogą dobrać moc, typ obudowy, napięcie i stopień ochrony IP do konkretnej instalacji LED.
+    </p>
+</div>
+<div style="font-family:inherit; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; background:none !important; background-color:transparent !important; color:inherit; align-items:stretch;">
+<div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+<strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Do czego służą zasilacze LED?</strong>
+<small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">taśmy LED, moduły LED i sterowniki</small>
+<a href="https://www.prescot.com.pl/pl/n/26" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+<font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+</a>
+</div>
+<div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+<strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Zasilacze LED - gdzie użyć którego?</strong>
+<small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">desktop, gniazdkowy, siatkowy, slim i hermetyczny</small>
+<a href="https://www.prescot.com.pl/pl/n/25" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+<font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+</a>
+</div>
+<div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+<strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Jak dobrać zasilacz LED do taśmy?</strong>
+<small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">moc W/m, długość taśmy i zapas mocy</small>
+<a href="https://www.prescot.com.pl/pl/n/24" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+<font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+</a>
+</div>
+<div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+<strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Stopnie IP - dlaczego to ważne?</strong>
+<small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">IP20, IP33, IP44 i <strong style="font-family:inherit; color:inherit !important;">IP67</strong> w praktyce</small>
+<a href="https://www.prescot.com.pl/pl/n/27" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+<font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+</a>
+</div>
+</div>
+</section>
+"""
+
+blog_html_sterowniki = """
+<section style="font-family:inherit; margin:18px 0 28px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
+<div style="font-family:inherit; margin-bottom:18px; background:none !important; background-color:transparent !important; color:inherit;">
+<span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px;  line-height:1.2;">
+<font color="#ffffff">Praktyczne poradniki</font>
+</span>
+<h3 style="font-family:inherit; margin:0 0 8px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:22px; line-height:1.3; font-weight:700;">
+      Baza wiedzy o oświetleniu LED
+    </h3>
+<p style="font-family:inherit; margin:0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.78; font-size:14px; line-height:1.6;">
+      Przeczytaj nasze poradniki, aby uniknąć błędów przy doborze komponentów i montażu.
+    </p>
+</div>
+<div style="font-family:inherit; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; background:none !important; background-color:transparent !important; color:inherit; align-items:stretch;">
+<div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+<strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Jak dobrać zasilacz do taśmy LED?</strong>
+<small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">obliczanie mocy i dobór napięcia</small>
+<a href="https://www.prescot.com.pl/pl/n/18" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+<font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+</a>
+</div>
+<div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+<strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Rodzaje sterowników LED</strong>
+<small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">RF, Wi-Fi i dobór do typu taśmy</small>
+<a href="https://www.prescot.com.pl/pl/n/20" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+<font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+</a>
+</div>
+<div style="font-family:inherit; min-height:190px; padding:18px; margin:0; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; box-shadow:none !important; color:inherit; display:flex; flex-direction:column;">
+<strong style="font-family:inherit; display:block; color:inherit !important; font-size:15px; line-height:1.35; margin-bottom:6px; font-weight:700;">Jak łączyć taśmy LED bez lutowania?</strong>
+<small style="font-family:inherit; display:block; color:inherit !important; opacity:.76; font-size:12px; line-height:1.4; margin-bottom:15px;">szybkozłączki, stabilność i profilowanie</small>
+<a href="https://www.prescot.com.pl/pl/n/19" style="font-family:inherit; display:inline-block; min-width:142px; margin-top:auto; padding:10px 17px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; text-align:center; line-height:1.2; border:0 !important; align-self:flex-start;">
+<font color="#ffffff"><span style="font-family:inherit; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; font-weight:700; font-size:14px;">Czytaj poradnik</span></font>
+</a>
+</div>
+</div>
+</section>
 """
 
 def generate_desc(category, sku, badge_text=""):
@@ -140,32 +226,61 @@ def generate_desc(category, sku, badge_text=""):
         
         w_match = re.search(r'(\d+)W', badge_text, re.IGNORECASE)
         watt = f" {w_match.group(1)}W" if w_match else ""
+        watt_raw = f"{w_match.group(1)}W" if w_match else "mocy"
         
-        if 'slim' in badge_lower or 'sch-' in sku_lower:
-            pill = "KOMPAKTOWY ROZMIAR"
-            head = f"Wąska obudowa do zadań specjalnych{watt}"
-            desc = "Ten zasilacz o ultracienkim profilu został stworzony z myślą o bardzo ograniczonych przestrzeniach. Idealnie mieści się za lustrem, w płytkiej wnęce meblowej czy w ciasnym kanale sufitu podwieszanego – zapewniając moc bez konieczności kucia ścian."
-        elif 'hermetycz' in badge_lower or 'lrs' in sku_lower or 'ip67' in badge_lower:
-            pill = "PODWYŻSZONA ODPORNOŚĆ"
-            head = f"Bezpieczna praca w trudnych warunkach{watt}"
-            desc = "Wytrzymała aluminiowa obudowa i wysoki stopień ochrony gwarantują bezawaryjną pracę tam, gdzie standardowe zasilacze zawodzą. Konstrukcja odporna na zapylenie i wilgoć, idealna do instalacji zewnętrznych oraz łazienek."
+        v_match = re.search(r'(\d+)V', badge_text, re.IGNORECASE)
+        if not v_match:
+            v_match = re.search(r'-(\d+)$', sku)
+        volt = f"{v_match.group(1)}V DC" if v_match else "stabilnym napięciem"
+        
+        # Use deterministic hash of SKU to vary descriptions (using hashlib to get uniform distribution)
+        sku_hash = int(hashlib.md5(sku.encode('utf-8')).hexdigest(), 16)
+        var_idx = sku_hash % 3
+        
+        # 1. Zasilanie / Blok 1
+        if var_idx == 0:
+            pill_1 = "STABILNE NAPIĘCIE"
+            head_1 = f"Dedykowana moc {watt_raw} do systemów LED"
+            desc_1 = f"Profesjonalny zasilacz stałonapięciowy o wydajności prądowej dopasowanej do nowoczesnych systemów oświetlenia. Stabilizuje napięcie wyjściowe na stałym poziomie {volt}, co skutecznie chroni diody przed przegrzaniem i gwarantuje równomierny strumień świetlny na całej długości taśmy."
+        elif var_idx == 1:
+            pill_1 = f"REALNA MOC {watt_raw}"
+            head_1 = f"Stabilne zasilanie instalacji {volt}"
+            desc_1 = f"Zaawansowana konstrukcja eliminująca wahania napięcia, które są główną przyczyną przyspieszonego zużycia półprzewodników. Zasilacz dostarcza realne {watt_raw} mocy ciągłej, zapobiegając uciążliwemu migotaniu światła nawet przy maksymalnym obciążeniu."
         else:
-            pill = "ZASILANIE PREMIUM"
-            head = f"Stabilne napięcie dla Twojej instalacji{watt}"
-            desc = "Wydajny zasilacz to absolutny fundament instalacji LED. Zapewnia stałe napięcie i odpowiednią rezerwę mocy, co przekłada się na idealną, równą jasność całej taśmy na każdym jej metrze i zapobiega nadmiernemu przegrzewaniu diod."
-
-        blocks.append((pill, head, desc))
+            pill_1 = "KONTROLA PRĄDU"
+            head_1 = f"Sprawność energetyczna i rezerwa {watt_raw}"
+            desc_1 = f"Wysokiej klasy układ zasilający dostarczający prąd o stabilnym parametrze {volt}. Optymalnie zestrojona elektronika zapobiega nagłym spadkom napięcia na końcu linii LED, gwarantując identyczną jasność diod w każdym punkcie montażowym."
+        blocks.append((pill_1, head_1, desc_1))
         
-        blocks.append((
-            "BEZPIECZEŃSTWO I TRWAŁOŚĆ",
-            "Ochrona Twojej instalacji LED",
-            "<ul><li style='margin-bottom:8px;'><b>Ochrona przeciwzwarciowa:</b> Natychmiastowe odcięcie zasilania w przypadku zwarcia, chroniące układ elektryczny.</li><li style='margin-bottom:8px;'><b>Ochrona przeciążeniowa:</b> Zabezpieczenie chroniące przed uszkodzeniem spowodowanym podpięciem zbyt dużej liczby taśm.</li><li style='margin-bottom:0;'><b>Wydajne komponenty:</b> Elementy wewnętrzne odpowiednio dobrane i przystosowane do pracy pod pełnym obciążeniem.</li></ul>"
-        ))
-        blocks.append((
-            "PRZEWAGA SCHARFER ORAZ MONTAŻ",
-            "Ergonomia instalacji i cisza działania",
-            "Marka Scharfer słynie ze świetnej stabilizacji napięcia oraz pasywnego chłodzenia, co całkowicie eliminuje irytujący problem piszczących cewek. Sama budowa urządzenia to ukłon w stronę instalatorów – mocne zaciski śrubowe oraz wygoda podłączenia przewodów sprawiają, że instalacja przebiega błyskawicznie i profesjonalnie."
-        ))
+        # 2. Bezpieczeństwo / Blok 2
+        if var_idx == 0:
+            pill_2 = "ZABEZPIECZENIA AKTYWNE"
+            head_2 = "Kompletna ochrona przed uszkodzeniem"
+            desc_2 = "Wbudowane układy zabezpieczające automatycznie odcinają napięcie w przypadku wykrycia zwarcia (SCP) lub przeciążenia (OLP). Zabezpiecza to całą podpiętą linię LED przed uszkodzeniem i minimalizuje ryzyko awarii."
+        elif var_idx == 1:
+            pill_2 = "BEZPIECZEŃSTWO SYSTEMU"
+            head_2 = "Potrójna ochrona prądowa i termiczna"
+            desc_2 = "Urządzenie wyposażono w bezpieczniki automatyczne, które natychmiast reagują na stany zwarciowe i przeciążenia. Stały monitoring temperatury wewnętrznej chroni zasilacz przed przegrzaniem przy montażu w zamkniętych przestrzeniach."
+        else:
+            pill_2 = "OCHRONA INSTALACJI"
+            head_2 = "Automatyczne układy zabezpieczające"
+            desc_2 = "Praca pod stałym nadzorem elektroniki. W razie wykrycia zwarcia lub przeciążenia, zasilacz przechodzi w tryb impulsowej ochrony (tzw. hiccup mode). Po usunięciu przyczyny problemu urządzenie samoczynnie wraca do standardowego trybu pracy."
+        blocks.append((pill_2, head_2, desc_2))
+        
+        # 3. Przewaga Scharfer / Blok 3
+        if var_idx == 0:
+            pill_3 = "7 LAT GWARANCJI"
+            head_3 = "Szczelna konstrukcja Scharfer IP67"
+            desc_3 = "W pełni zalana hermetyczna obudowa zapewnia bezkompromisową odporność na pył i wodę (klasa IP67). Idealny wybór do łazienek, kuchni oraz na zewnątrz. Aluminiowy korpus doskonale odprowadza ciepło bez hałaśliwych wentylatorów, zapewniając bezgłośną pracę. Producent udziela aż 7-letniej gwarancji."
+        elif var_idx == 1:
+            pill_3 = "KLASA PROJEKTOWA 7Y"
+            head_3 = "Cicha praca i aluminiowa obudowa"
+            desc_3 = "Scharfer słynie z doskonałej filtracji tętnień, co eliminuje problem pisków cewek. Metalowa konstrukcja w klasie szczelności IP67 umożliwia montaż w miejscach narażonych na wilgoć. Wyprowadzone fabrycznie przewody ułatwiają i przyspieszają montaż w puszkach instalacyjnych, a 7 lat gwarancji potwierdza najwyższą klasę sprzętu."
+        else:
+            pill_3 = "MARKA SCHARFER"
+            head_3 = "Bezpieczny montaż i pasywne chłodzenie"
+            desc_3 = "Solidny, metalowy korpus IP67 działa jak wydajny radiator, odprowadzając ciepło pasywnie i bezgłośnie. Całkowity brak generowanego hałasu podnosi komfort codziennego użytkowania. Fabryczne okablowanie pozwala na sprawny montaż we wnękach sufitowych lub gablotach. Bezpieczeństwo inwestycji potwierdza 7 lat gwarancji."
+        blocks.append((pill_3, head_3, desc_3))
 
     elif category == 'profile':
         blocks.append((
@@ -243,7 +358,12 @@ def generate_desc(category, sku, badge_text=""):
             html += f"<p style=\"font-family: inherit; margin: 0; background: none !important; background-color: transparent !important; color: inherit !important; font-size: 16px; line-height: 1.6; opacity: 0.85;\">{p}</p>\n</section>"
             text_val += f"{pill}\n{h}\n{p}\n\n"
 
-    html += blog_html
+    if category == 'sterowniki':
+        html += blog_html_sterowniki
+    elif category == 'zasilacze':
+        html += blog_html_zasilacze
+    else:
+        html += blog_html_tasmy
     return html, text_val.strip()
 
 with open('index.html', 'r', encoding='utf-8') as f:
@@ -269,7 +389,7 @@ for card in cards:
             if cat == 'tasmy':
                 existing_html = "".join([str(c) for c in model_block.contents])
                 if "Baza Wiedzy - Prescot" not in existing_html:
-                    blog_soup = BeautifulSoup(blog_html, 'html.parser')
+                    blog_soup = BeautifulSoup(blog_html_tasmy, 'html.parser')
                     model_block.append(blog_soup)
                     updates_count[cat] += 1
             else:
