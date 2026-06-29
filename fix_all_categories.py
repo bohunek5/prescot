@@ -130,20 +130,44 @@ def generate_desc(category, sku, badge_text=""):
         ))
         
     elif category == 'zlaczki':
+        badge_lower = badge_text.lower()
+        
+        if '8mm' in badge_lower:
+            szerokosc = "8mm (np. popularne taśmy jednokolorowe MONO COB lub SMD)"
+        elif '10mm' in badge_lower:
+            szerokosc = "10mm (często taśmy CCT, RGB lub wyższe moce MONO)"
+        elif '12mm' in badge_lower:
+            szerokosc = "12mm (zazwyczaj taśmy RGBW lub wielokolorowe)"
+        else:
+            szerokosc = "odpowiedniej szerokości"
+
+        if 'kątow' in badge_lower or ' l ' in badge_lower:
+            zasada = "Złączka typu L (kątowa) służy do estetycznego i bezpiecznego zakręcania taśmą pod kątem 90 stopni, bez ryzyka przełamania ścieżek miedzianych na laminacie."
+            zastosowanie = "Idealna przy załamaniach blatu, w narożnikach sufitów podwieszanych i półek meblowych."
+        elif 'trójnik' in badge_lower or ' t ' in badge_lower or ' t' in badge_lower:
+            zasada = "Złączka typu T (trójnik) rozgałęzia sygnał i zasilanie w trzech kierunkach. Działa jak rozdzielacz, pozwalając na poprowadzenie światła w dwie strony od jednego punktu."
+            zastosowanie = "Świetnie sprawdza się w rozbudowanych instalacjach, gdzie potrzebujemy stworzyć odnogi od głównego ciągu świetlnego."
+        elif '9w1' in badge_lower or 'uniwersalna' in badge_lower:
+            zasada = "Uniwersalny zestaw 9w1 (wielofunkcyjna złączka) pozwala na łączenie prostych odcinków, wyprowadzenie kabli do zasilacza lub łączenie taśm ze złączką narożną."
+            zastosowanie = "Prawdziwy niezbędnik instalatora – jeden komplet rozwiązuje większość typowych problemów łączeniowych na obiekcie, dając ogromną swobodę."
+        else:
+            zasada = "Standardowa złączka służy do szybkiego łączenia dwóch odciętych kawałków taśmy w jedną dłuższą linię lub do bezlutowego podpięcia przewodów zasilających."
+            zastosowanie = "Podstawowy element instalacyjny, pozwalający na przedłużanie taśmy bez konieczności kłopotliwego lutowania."
+
         blocks.append((
-            "AKCESORIA MONTAŻOWE",
-            "Szybki i pewny montaż",
-            "Złączki do taśm LED to klucz do błyskawicznego tworzenia skomplikowanych ciągów świetlnych. Dzięki nim połączysz odcięte kawałki taśmy, utworzysz narożniki lub wyprowadzisz przewody zasilające wprost do zasilacza – a to wszystko bez konieczności lutowania."
+            "ZASADA DZIAŁANIA",
+            "Szybki i pewny styk bez lutowania",
+            f"{zasada} Kluczem działania złączek zaciskowych typu klips są ostre, metalowe piny wewnątrz, które mocno dociskają (lub przebijają) miedziane punkty stykowe taśmy, gwarantując ciągłość obwodu."
         ))
         blocks.append((
-            "UNIWERSALNOŚĆ",
-            "Dopasowane do różnych taśm",
-            "Zależnie od typu (złączki 2-pinowe, 4-pinowe, etc.) są kompatybilne z taśmami MONO, CCT, czy RGB. Projektowane tak, by pewnie trzymać miedziane punkty stykowe taśmy i zapewniać ciągłość obwodu."
+            "KOMPATYBILNOŚĆ",
+            f"Dopasowana do taśm {szerokosc.split(' ')[0]}",
+            f"Prezentowany model został zaprojektowany z myślą o taśmach o szerokości laminatu {szerokosc}. Solidny zacisk poliwęglanowej obudowy chroni przed przypadkowym wysunięciem się taśmy podczas pracy."
         ))
         blocks.append((
-            "WYGODA",
-            "Oszczędność czasu instalatora",
-            "Wykorzystanie profesjonalnych złączek zaciskowych wielokrotnie przyspiesza montaż. Konstrukcja zębata lub klipsowa gwarantuje solidny klik, dzięki czemu praca przebiega czysto i sprawnie."
+            "PRAKTYCZNE ZASTOSOWANIE",
+            "Zwiększona wygoda instalatora",
+            f"{zastosowanie} Wykorzystanie złączek eliminuje konieczność trudnego lutowania bezpośrednio na drabinie, co przyspiesza pracę i ułatwia szybkie przeróbki."
         ))
     else:
         return None, None
