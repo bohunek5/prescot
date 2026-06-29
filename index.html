@@ -21131,8 +21131,7 @@ function copyDescriptionHtml(platform, model, btn) {
   for (let i = 0; i < children.length; i++) {
     const el = children[i];
     if (el.tagName && el.tagName.toLowerCase() === 'section' && !el.classList.contains('product-parameters-section')) {
-      finalHtml += el.outerHTML + '
-';
+      finalHtml += el.outerHTML + '\n';
     }
   }
 
