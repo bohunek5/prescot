@@ -5,6 +5,18 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
+def remove_spaces_from_units(text):
+    if not text: return text
+    text = re.sub(r'(?<!<b>)\b(\d+(?:[.,]\d+)?)\s+(lm/m|V|W|A|mm|K|SMD|COB)\b(?!</b>)', r'\1\2', text, flags=re.IGNORECASE)
+    text = re.sub(r'(?<!<b>)\bIP\s+(\d{2})\b(?!</b>)', r'IP\1', text, flags=re.IGNORECASE)
+    return text
+
+def format_text_parameters(text):
+    if not text: return text
+    text = re.sub(r'(?<!<b>)\b(\d+(?:[.,]\d+)?)\s*(lm/m|V|W|A|mm|K|SMD|COB)\b(?!</b>)', r'<b>\1\2</b>', text, flags=re.IGNORECASE)
+    text = re.sub(r'(?<!<b>)\bIP\s*(\d{2})\b(?!</b>)', r'<b>IP\1</b>', text, flags=re.IGNORECASE)
+    return text
+
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "qwen2.5-coder:7b"
 SKILL_PATH = "/Users/karolbohdanowicz/my-ai-agents/.agent/skills/prescot-copywriter-seo/SKILL.md"
@@ -93,6 +105,74 @@ def parse_badge(badge):
         length = rest
         
     return series, length, color
+
+def parse_connector(sku):
+    if "FC8" in sku:
+        width = "8 mm (dedykowana do taśm LED o szerokości laminatu 8 mm)"
+    elif "FC10" in sku:
+        width = "10 mm (dedykowana do taśm LED o szerokości laminatu 10 mm)"
+    else:
+        width = "uniwersalna"
+        
+    if "9IN1" in sku:
+        conn_type = "kompletny zestaw złączek 9w1 (zawierający łączniki proste, kątowe L, trójniki T oraz złącza z przewodami jednostronnymi i dwustronnymi)"
+        zastosowanie = "kompleksowe łączenie wielu odcinków taśm LED w rozbudowanych instalacjach z wieloma zakrętami i rozgałęzieniami bez konieczności lutowania"
+    elif "TPT" in sku:
+        conn_type = "elastyczna złączka dwustronna z przewodem (taśma-przewód-taśma, czyli dwa klipsy połączone krótkim kablem)"
+        zastosowanie = "połączenie dwóch odcinków taśm LED pod dowolnym kątem, ominięcie przeszkód konstrukcyjnych (np. narożników mebli, załamań) lub wykonanie przejścia w odległości"
+    elif "TP" in sku:
+        conn_type = "złączka jednostronna z przewodem (taśma-przewód, czyli klips z wyprowadzonymi luźnymi kablami)"
+        zastosowanie = "szybkie i pewne podłączenie taśmy LED do zasilacza, sterownika lub głównej instalacji elektrycznej bez lutowania przewodów bezpośrednio do taśmy"
+    elif "-L" in sku:
+        conn_type = "sztywny łącznik kątowy L (narożny 90 stopni, styk dwustronny)"
+        zastosowanie = "bezpośrednie i estetyczne łączenie dwóch taśm LED pod kątem prostym w narożnikach wnęk sufitowych, szuflad czy szafek kuchennych bez powstawania ciemnych stref (cieni) w świetle"
+    elif "-T" in sku:
+        conn_type = "łącznik trójdrożny typu T (trójnik, styk trójstronny)"
+        zastosowanie = "rozgałęzienie jednej linii zasilającej taśmy LED na dwa niezależne kierunki pod kątem 90 stopni bez lutowania kabli"
+    else:
+        conn_type = "klasyczna złączka prosta (łącznik stykający dwa odcinki taśma-taśma)"
+        zastosowanie = "szybkie przedłużenie linii oświetlenia poprzez szeregowe połączenie dwóch taśm LED w linii prostej bez lutownicy"
+        
+    return width, conn_type, zastosowanie
+
+
+def generate_zasilacz_cechy_html(spec_dict, advantages_text):
+    keys_to_show = {
+        "Napięcie": "Napięcie",
+        "Moc": "Moc",
+        "Prąd znam.": "Prąd znamionowy",
+        "Wymiary": "Wymiar",
+        "Szczelność": "Klasa szczelności (IP)"
+    }
+    
+    content = ""
+    for k, display_k in keys_to_show.items():
+        val = spec_dict.get(k)
+        if not val:
+            for spec_k in spec_dict:
+                if spec_k.lower().startswith(k.lower()[:4]):
+                    val = spec_dict[spec_k]
+                    break
+        if val:
+            val = remove_spaces_from_units(val)
+            content += f'''<h3 style="font-family:inherit; margin:0 0 4px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:18px; line-height:1.3; font-weight:700;">{display_k}</h3>
+<p style="font-family:inherit; margin:0 0 12px 0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">{val}</p>
+'''
+    
+    if advantages_text:
+        advantages_text = format_text_parameters(advantages_text)
+        content += f'''<h3 style="font-family:inherit; margin:0 0 4px 0; background:none !important; background-color:transparent !important; color:inherit !important; font-size:18px; line-height:1.3; font-weight:700;">Zalety</h3>
+<p style="font-family:inherit; margin:0 0 12px 0; background:none !important; background-color:transparent !important; color:inherit !important; opacity:.82; font-size:14px; line-height:1.65;">{advantages_text}</p>
+'''
+    
+    return f'''<section style="font-family:inherit; margin:0 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
+  <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
+    <font color="#ffffff">KLUCZOWE CECHY</font>
+  </span>
+  <div style="margin-top: 10px;">
+{content}  </div>
+</section>'''
+
 
 def generate_description_json(sku, category, spec_dict, badge=""):
     spec_str = "\n".join([f"- {k}: {v}" for k, v in spec_dict.items()])
@@ -199,20 +279,80 @@ Zasady:
             print(f"Error parsing JSON for {sku}: {e}\nResponse was:\n{response_str}")
             return None
     elif category == 'zlaczki':
-        cat_data = f"""
-Informacje techniczne:
-{connectors_data}
+        width, conn_type, zastosowanie = parse_connector(sku)
+        
+        prompt = f"""
+Jesteś profesjonalnym copywriterem e-commerce. Stwórz unikalne opisy produktu w formacie JSON po polsku dla złączki bezlutowej do taśm LED.
+SKU: {sku}
+
+Dane techniczne złączki:
+- Typ złączki: {conn_type}
+- Dedykowana szerokość taśmy LED: {width}
+- Główne przeznaczenie: {zastosowanie}
+
+Wymagany format JSON (zwróć tylko czysty JSON bez ```json, bez innych znaków, tylko czysty kod JSON):
+{{
+  "wapro": [
+    {{ "pill": "ZŁĄCZKA LED", "head": "Unikalny nagłówek dla sekcji 1 o szybkiej instalacji bez lutowania", "text": "Opis sekcji 1 (min. 3 zdania)" }},
+    {{ "pill": "KLUCZOWE CECHY", "head": "Unikalny nagłówek dla sekcji 2 (o konstrukcji i materiale)", "text": "Opis sekcji 2 w formie <ul><li><b>Cecha:</b> korzyść i opis</li>...</ul> (minimum 3 punkty)" }},
+    {{ "pill": "GDZIE UŻYĆ", "head": "Unikalny nagłówek dla sekcji 3 o zastosowaniu", "text": "Opis sekcji 3 (min. 3 zdania)" }}
+  ],
+  "tim": [
+    {{ "pill": "ZŁĄCZKA LED", "head": "Inny unikalny nagłówek dla sekcji 1", "text": "Opis sekcji 1 (min. 3 zdania)" }},
+    {{ "pill": "KLUCZOWE CECHY", "head": "Inny unikalny nagłówek dla sekcji 2", "text": "Opis sekcji 2 w formie <ul><li><b>Cecha:</b> korzyść i opis</li>...</ul> (minimum 3 punkty)" }},
+    {{ "pill": "GDZIE UŻYĆ", "head": "Inny unikalny nagłówek dla sekcji 3", "text": "Opis sekcji 3 (min. 3 zdania)" }}
+  ],
+  "allegro": [
+    {{ "pill": "ZŁĄCZKA LED", "head": "Inny unikalny nagłówek dla sekcji 1", "text": "Opis sekcji 1 (min. 3 zdania)" }},
+    {{ "pill": "KLUCZOWE CECHY", "head": "Inny unikalny nagłówek dla sekcji 2", "text": "Opis sekcji 2 w formie <ul><li><b>Cecha:</b> korzyść i opis</li>...</ul> (minimum 3 punkty)" }},
+    {{ "pill": "GDZIE UŻYĆ", "head": "Inny unikalny nagłówek dla sekcji 3", "text": "Opis sekcji 3 (min. 3 zdania)" }}
+  ]
+}}
 
 Zasady:
-- Dotyczy złączki bezlutowej {sku}.
-- Brak cieni w linii światła dzięki obudowie z przezroczystego poliwęglanu PC.
-- Kształty L (kątowa), T (trójnik), proste lub zestawy 9w1. Szerokości 8mm, 10mm lub 12mm.
-- Nigdy nie wspominaj o sterownikach radiowych, parowaniu ani o marce Scharfer. Nie podawaj 5 ani 7 lat gwarancji dla złączek (tylko standardowa).
+1. Pisz WYŁĄCZNIE w języku polskim.
+2. Zadbaj o BARDZO DUŻĄ RÓŻNORODNOŚĆ słownictwa i unikalność zdań. Unikaj powielania tych samych formułek, schematów i utartych zwrotów. Zmieniaj szyk zdań, używaj synonimów (np. "prosty montaż", "błyskawiczna instalacja", "połączenie w kilka sekund", "brak konieczności lutowania"). Pisz tak, by opisy brzmiały naturalnie dla człowieka i nie były traktowane przez boty Google jako duplikaty/plagiaty.
+3. Zakazane słowa: "wysokiej jakości", "innowacyjny", "lider rynku", "kompleksowy", "najlepszy", "wyjątkowy".
+4. Sekcja 1 (ZŁĄCZKA LED):
+   - Nagłówek (head) musi odnosić się do bezlutowego łączenia (np. "Stabilne łączenie taśm w kilka sekund", "Instalacja LED bez użycia lutownicy", "Błyskawiczne łączenie obwodów LED" itp.).
+   - Opisz typ złączki: {conn_type}.
+   - Podkreśl przezroczystą obudowę z poliwęglanu PC – dzięki niej złączka idealnie przepuszcza światło i eliminuje problem ciemnych plam (cieni) w miejscu łączenia taśmy.
+5. Sekcja 2 (KLUCZOWE CECHY):
+   - Wygeneruj listę <ul><li> po polsku o cechach fizycznych: przezroczysty poliwęglan PC, szerokość {width}, maksymalny prąd znamionowy (do 5A), ostre metalowe piny przebijające laminat taśmy gwarantujące stabilny styk bez lutowania.
+6. Sekcja 3 (GDZIE UŻYĆ):
+   - Opisz praktyczne zastosowanie: {zastosowanie}. Podaj przykłady montażu w szafkach, sufitach podwieszanych czy wnękach.
+- Nigdy nie podawaj 5 ani 7 lat gwarancji dla złączek (tylko standardowa rękojmia). Nie wspominaj o marce Scharfer ani sterownikach radiowych.
 """
-    else:
-        return None
-
-    prompt = f"""
+        response_str = call_ollama(prompt, skill_content)
+        response_str = response_str.strip()
+        if response_str.startswith("```json"):
+            response_str = response_str[7:]
+        if response_str.endswith("```"):
+            response_str = response_str[:-3]
+        response_str = response_str.strip()
+        try:
+            data = json.loads(response_str)
+            return data
+        except Exception as e:
+            print(f"Error parsing JSON for {sku}: {e}\nResponse was:\n{response_str}")
+            return None
+    elif category == 'tasmy':
+        cat_data = f"""
+Zasady specjalne dla taśm LED:
+- Taśma LED SKU: {sku}
+- UWAGA BARDZO WAŻNA: Musisz MOCNO różnicować opisy pomiędzy różnymi wariantami! Używaj różnych synonimów, innej struktury zdań, nie powielaj tych samych sformułowań.
+"""
+        if "24D160-3-2797-810" in sku or "24D160-3-4097-810" in sku:
+            cat_data += "\n- To jest SPECJALISTYCZNA taśma LED z przeznaczeniem do PIECZYWA i wyrobów piekarniczych w ladach. Wspomnij jak idealnie uwydatnia chrupkość, złocisty kolor wypieków i zachęca klientów do zakupu."
+        
+        cat_data += """
+- Długości i odcinki: 
+  - Jeśli to taśma cięta z metra (np. w nazwie jest 1m lub brak info o rolce), wspomnij, że wygodnie można ją dopasować do wymiaru (idealnie skrojona na miarę).
+  - O klasycznej rolce 5m albo 10m NIE PISZ w ogóle.
+  - Jeśli to długa rolka (np. 50m lub 100m - często końcówka SKU "50" lub "100"), podkreśl zalety długich odcinków (mniej lutowania, jednolita linia, jeden zasilacz) i delikatnie wspomnij o lepszej cenie / opłacalności.
+"""
+        
+        prompt = f"""
 Jesteś profesjonalnym copywriterem e-commerce. Stwórz opisy produktu w formacie JSON po polsku.
 SKU: {sku}
 Kategoria: {category}
@@ -222,21 +362,22 @@ Specyfikacja:
 {cat_data}
 
 Zasady:
-1. Pisz WYŁĄCZNIE w języku polskim (ani słowa po angielsku!).
+1. Pisz WYŁĄCZNIE w języku polskim.
 2. Wygeneruj 3 wersje opisu (wapro, tim, allegro). Każda wersja musi zawierać dokładnie 3 unikalne sekcje (Section 1, Section 2, Section 3). Nie powtarzaj nagłówków ani treści sekcji.
-   - Sekcja 1: Zasada działania i wstęp. (Pill np. ZASADA DZIAŁANIA, STABILNE ZASILANIE)
-   - Sekcja 2: Lista kluczowych funkcji w HTML (zawsze w formacie <ul><li><b>Cecha:</b> korzyść i opis</li>...</ul>, minimum 3 rozbudowane punkty). (Pill np. KLUCZOWE CECHY, PARAMETRY TECHNICZNE)
-   - Sekcja 3: Praktyczne zastosowanie i zalety dla instalatora/użytkownika. (Pill np. GDZIE UŻYĆ, ZASTOSOWANIE)
+   - Sekcja 1: Zasada działania, główne zalety i wstęp.
+   - Sekcja 2: Kluczowe parametry techniczne sformatowane jako bloki HTML: `<h3><b>Nazwa parametru (np. Napięcie):</b></h3><p>Wartość (np. 24V) - krótki opis korzyści</p>`. Wygeneruj 4-6 takich bloków na podstawie specyfikacji. Parametry pisz RAZEM z jednostką, np. "460lm/m" (nie "460 lm/m"), "24V", "12V", "8mm".
+   - Sekcja 3: Praktyczne zastosowanie (Gdzie użyć, dla kogo). Dodaj "te jego zalety - te co wiesz i znasz".
 3. Zakazane słowa: "wysokiej jakości", "innowacyjny", "lider rynku", "kompleksowy", "najlepszy", "wyjątkowy".
-4. Text w sekcji nie może zawierać tagów <p> ani </p>.
-5. Nagłówek 'head' dla KAŻDEJ z trzech sekcji jest obowiązkowy! Nie może być pusty. Musi to być konkretna, chwytliwa fraza (np. "Cicha praca dzięki chłodzeniu pasywnemu", "Montaż bez użycia lutownicy").
+4. Formatuj parametry RAZEM z jednostką, bez spacji pomiędzy! ZAWSZE "460lm/m", "24V", "12W/m". Jeśli pojawiają się w tekście w Sekcji 1 i 3, zawsze POGRUBIAJ je tagiem <b> (np. <b>24V</b>).
+5. Sekcja 2 ma składać się wyłącznie ze stringa z blokami HTML. NIE używaj <ul> ani <li> w Sekcji 2.
+6. Nagłówek 'head' dla KAŻDEJ z trzech sekcji jest obowiązkowy! Nie może być pusty. Musi to być konkretna, chwytliwa fraza.
 
 Zwróć wyłącznie czysty, poprawny kod JSON (bez markdown blocks, bez ```json, tylko czysty JSON):
 {{
   "wapro": [
-    {{ "pill": "Pill1", "head": "Nagłówek1", "text": "Opis w języku polskim (min. 3 zdania)" }},
-    {{ "pill": "Pill2", "head": "Nagłówek2", "text": "<ul><li><b>Cecha 1:</b> opis po polsku</li><li><b>Cecha 2:</b> opis po polsku</li><li><b>Cecha 3:</b> opis po polsku</li></ul>" }},
-    {{ "pill": "Pill3", "head": "Nagłówek3", "text": "Opis w języku polskim (min. 3 zdania)" }}
+    {{ "pill": "ZALETY TAŚMY", "head": "Nagłówek1", "text": "Opis w języku polskim (min. 3 zdania). Tutaj np. <b>24V</b>." }},
+    {{ "pill": "PARAMETRY", "head": "Kluczowe dane techniczne", "text": "<h3><b>Napięcie zasilania:</b></h3><p>24V – gwarantuje stabilną pracę bez spadków napięcia na dłuższych odcinkach.</p><h3><b>Strumień świetlny:</b></h3><p>460lm/m – idealna jasność do...</p>" }},
+    {{ "pill": "ZASTOSOWANIE", "head": "Nagłówek3", "text": "Opis w języku polskim (min. 3 zdania)" }}
   ],
   "tim": [
     ...
@@ -246,19 +387,21 @@ Zwróć wyłącznie czysty, poprawny kod JSON (bez markdown blocks, bez ```json,
   ]
 }}
 """
-    response_str = call_ollama(prompt, skill_content)
-    response_str = response_str.strip()
-    if response_str.startswith("```json"):
-        response_str = response_str[7:]
-    if response_str.endswith("```"):
-        response_str = response_str[:-3]
-    response_str = response_str.strip()
-    
-    try:
-        data = json.loads(response_str)
-        return data
-    except Exception as e:
-        print(f"Error parsing JSON for {sku}: {e}\nResponse was:\n{response_str}")
+        response_str = call_ollama(prompt, skill_content)
+        response_str = response_str.strip()
+        if response_str.startswith("```json"):
+            response_str = response_str[7:]
+        if response_str.endswith("```"):
+            response_str = response_str[:-3]
+        response_str = response_str.strip()
+        try:
+            data = json.loads(response_str)
+            return data
+        except Exception as e:
+            print(f"Error parsing JSON for {sku}: {e}\nResponse was:\n{response_str}")
+            return None
+
+    else:
         return None
 
 blog_html_tasmy = """
@@ -394,6 +537,21 @@ blog_html_sterowniki = """
 def build_section_html(sku, pill, head, text):
     pill_clean = pill.strip()
     head_clean = head.strip()
+    text_clean = text.strip()
+    
+    # Normalize list placement:
+    if "<ul>" in head_clean or "<li>" in head_clean:
+        orig_head = head_clean
+        if text_clean and "<ul>" not in text_clean and "<li>" not in text_clean:
+            head_clean = text_clean
+        else:
+            head_clean = "Parametry techniczne"
+        text_clean = orig_head
+        
+    text_clean = text_clean.strip()
+    # If the list is only <li> without <ul>, wrap it
+    if text_clean.startswith('<li>') and not text_clean.startswith('<ul>'):
+        text_clean = f"<ul>{text_clean}</ul>"
     
     if not head_clean:
         if pill_clean:
@@ -401,12 +559,12 @@ def build_section_html(sku, pill, head, text):
         else:
             head_clean = f"Zalety i funkcje {sku}"
 
-    text_clean = text.strip()
     text_clean = re.sub(r'^<p[^>]*>', '', text_clean)
     text_clean = re.sub(r'</p>$', '', text_clean)
     text_clean = text_clean.strip()
+    text_clean = format_text_parameters(text_clean)
 
-    if text_clean.startswith('<ul>') or text_clean.startswith('<li>'):
+    if text_clean.startswith('<ul>') or text_clean.startswith('<li>') or text_clean.startswith('<h') or text_clean.startswith('<div'):
         return f"""<section style="font-family:inherit; margin:0 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
   <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
     <font color="#ffffff">{pill_clean}</font>
@@ -471,10 +629,20 @@ def process_sku(sku, category, spec_dict, badge=""):
                 print(f"Warning: Could not find original Section 3 for {sku} {platform}, using generated one.")
             
         desc_html = ""
-        for sec in sections:
-            desc_html += build_section_html(sku, sec.get('pill', ''), sec.get('head', ''), sec.get('text', ''))
+        for i, sec in enumerate(sections):
+            if category == 'zasilacze' and i == 1:
+                # Inject custom Section 2 for zasilacze
+                adv_text = "Zasilacz gwarantuje stabilną, ciągłą pracę pod pełnym 100% obciążeniem. Zastosowane pasywne chłodzenie zapewnia bezgłośną pracę (brak pisków). Całość zamknięta jest w szczelnej, metalowej obudowie IP67, w pełni odpornej na kurz i wodę, z bezprecedensową gwarancją aż 7 lat."
+                desc_html += generate_zasilacz_cechy_html(spec_dict, adv_text)
+            else:
+                desc_html += build_section_html(sku, sec.get('pill', ''), sec.get('head', ''), sec.get('text', ''))
             
-        desc_html += blog_html_tasmy
+        if category == 'zasilacze':
+            desc_html += blog_html_zasilacze
+        elif category == 'sterowniki':
+            desc_html += blog_html_sterowniki
+        else:
+            desc_html += blog_html_tasmy
             
         results[platform] = desc_html
         
@@ -501,7 +669,7 @@ def main():
         if not sku:
             continue
         cat = get_category(sku)
-        if cat in ['sterowniki', 'zasilacze', 'zlaczki', 'profile']:
+        if cat in ['sterowniki', 'zasilacze', 'zlaczki', 'profile', 'tasmy']:
             if sku not in sku_to_cards:
                 badge_elem = card.find("span", class_="product-label-badge")
                 badge_text = badge_elem.text.strip() if badge_elem else ""
@@ -541,6 +709,8 @@ def main():
  
     updated_count = 0
     for sku, cat, specs, badge in skus_to_process:
+        if sys.argv[1:] and sku not in sys.argv[1:]:
+            continue
         print(f"Generating for {sku} ({cat}) [Badge: {badge}]...")
         results = process_sku(sku, cat, specs, badge)
         if not results:
