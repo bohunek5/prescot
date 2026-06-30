@@ -93,7 +93,12 @@ Informacje techniczne:
 Zasady:
 - Dotyczy zasilacza hermetycznego Scharfer {sku}.
 - Gwarancja wynosi 7 lat!
-- Pasywne chłodzenie, obudowa hermetyczna metalowa IP67, praca pod 100% obciążeniem, brak cewek cichy montaż.
+- Pasywne chłodzenie, obudowa hermetyczna metalowa IP67, praca pod 100% obciążeniem, brak głośnych wentylatorów / cichy montaż.
+- Sekcja 1 (ZASADA DZIAŁANIA) musi bezpośrednio i wyraźnie podkreślać jako główne zalety:
+  1. Ciągłą pracę pod pełnym 100% obciążeniem bez ryzyka awarii czy spadku napięcia.
+  2. Konstrukcję bezwentylatorową (pasywne chłodzenie) gwarantującą cichą pracę i eliminującą problem pisków cewek.
+  3. Wytrzymałą, metalową obudowę hermetyczną o klasie szczelności IP67, która całkowicie chroni elektronikę przed kurzem, pyłem i bezpośrednim kontaktem z wodą.
+  4. Wyjątkowo długi okres ochronny - aż 7 lat gwarancji producenta, będący potwierdzeniem najwyższej niezawodności komponentów.
 - Nigdy nie wspominaj o sterownikach 2.4G ani o złączkach.
 """
     elif category == 'zlaczki':
@@ -327,6 +332,28 @@ def build_section_html(sku, pill, head, text):
   </p>
 </section>"""
 
+def extract_scharfer_sec3(sku, platform):
+    try:
+        with open(INDEX_PATH, "r", encoding="utf-8") as f:
+            soup = BeautifulSoup(f, "html.parser")
+        view_div = soup.find("div", id=f"desc-view-{platform}-{sku}")
+        if view_div:
+            sections = view_div.find_all("section", recursive=False)
+            if len(sections) >= 3:
+                sec3 = sections[2]
+                pill_span = sec3.find("span")
+                head_h3 = sec3.find("h3")
+                text_p = sec3.find("p")
+                
+                pill = pill_span.text.strip() if pill_span else "GDZIE UŻYĆ"
+                head = head_h3.text.strip() if head_h3 else ""
+                text = text_p.text.strip() if text_p else ""
+                
+                return {"pill": pill, "head": head, "text": text}
+    except Exception as e:
+        print(f"Error extracting section 3 for {sku} {platform}: {e}")
+    return None
+
 def process_sku(sku, category, spec_dict):
     data = generate_description_json(sku, category, spec_dict)
     if not data:
@@ -337,6 +364,14 @@ def process_sku(sku, category, spec_dict):
         sections = data.get(platform)
         if not sections or len(sections) < 3:
             continue
+            
+        # Override Section 3 for Scharfer zasilacze
+        if category == 'zasilacze':
+            orig_sec3 = extract_scharfer_sec3(sku, platform)
+            if orig_sec3:
+                sections[2] = orig_sec3
+            else:
+                print(f"Warning: Could not find original Section 3 for {sku} {platform}, using generated one.")
             
         desc_html = ""
         for sec in sections:
