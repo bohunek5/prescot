@@ -68,7 +68,33 @@ def call_ollama(prompt, system_prompt):
         print(f"Error calling Ollama: {e}")
         return ""
 
-def generate_description_json(sku, category, spec_dict):
+def parse_badge(badge):
+    badge = badge.strip()
+    series = "KLUŚ"
+    length = ""
+    color = ""
+    
+    if "–" in badge:
+        parts = badge.split("–")
+        series = parts[0].strip()
+        rest = parts[1].strip()
+    elif "-" in badge:
+        parts = badge.split("-")
+        series = parts[0].strip()
+        rest = parts[1].strip()
+    else:
+        rest = badge
+        
+    if "," in rest:
+        subparts = rest.split(",")
+        length = subparts[0].strip()
+        color = subparts[1].strip()
+    else:
+        length = rest
+        
+    return series, length, color
+
+def generate_description_json(sku, category, spec_dict, badge=""):
     spec_str = "\n".join([f"- {k}: {v}" for k, v in spec_dict.items()])
     
     if category == 'sterowniki':
@@ -101,6 +127,77 @@ Zasady:
   4. Wyjątkowo długi okres ochronny - aż 7 lat gwarancji producenta, będący potwierdzeniem najwyższej niezawodności komponentów.
 - Nigdy nie wspominaj o sterownikach 2.4G ani o złączkach.
 """
+    elif category == 'profile':
+        series, length, color = parse_badge(badge)
+        if "NK" in series:
+            type_desc = "wpuszczany (meblowy lub do płyt gipsowo-kartonowych GK), montowany we wcięciu/rowku (frezie), którego boczne skrzydełka (kołnierz) idealnie maskują ewentualne niedoskonałości krawędzi frezu"
+            montaz_szczegoly = "idealny do dyskretnego montażu zlicowanego w szafkach meblowych, garderobach czy sufitach"
+        else:
+            type_desc = "nawierzchniowy/natynkowy o minimalnej wysokości, montowany bezpośrednio do powierzchni sufitów, blatów, szafek (np. za pomocą dedykowanych zaczepów/sprężynek, wkrętów lub taśmy dwustronnej)"
+            montaz_szczegoly = "doskonały do oświetlenia blatów kuchennych, półek lub jako nawierzchniowy element dekoracyjny"
+            
+        prompt = f"""
+Jesteś profesjonalnym copywriterem e-commerce. Stwórz opisy produktu w formacie JSON po polsku dla profilu aluminiowego marki KLUŚ.
+SKU: {sku}
+Specyfikacja techniczna:
+{spec_str}
+
+Dane wejściowe produktu do wykorzystania:
+- Seria profilu: {series}
+- Typ profilu: {type_desc}
+- Sposób montażu: {montaz_szczegoly}
+- Długość profilu: {length}
+- Kolor/wykończenie: {color}
+
+Wymagany format JSON (zwróć tylko czysty JSON bez ```json, bez innych znaków, tylko czysty kod JSON):
+{{
+  "wapro": [
+    {{ "pill": "PROFIL KLUŚ", "head": "Nagłówek sekcji 1 (unikalny synonim do 'Fundament trwałego systemu LED')", "text": "Opis sekcji 1" }},
+    {{ "pill": "RODZAJE I ZASTOSOWANIE", "head": "Nagłówek sekcji 2 (o montażu wpuszczanym lub nawierzchniowym)", "text": "Opis sekcji 2" }},
+    {{ "pill": "IDEALNA LINIA ŚWIATŁA", "head": "Klosz i rozproszenie (Brak w zestawie)", "text": "Opis sekcji 3" }}
+  ],
+  "tim": [
+    {{ "pill": "PROFIL KLUŚ", "head": "Inny nagłówek sekcji 1", "text": "Opis sekcji 1" }},
+    {{ "pill": "RODZAJE I ZASTOSOWANIE", "head": "Inny nagłówek sekcji 2", "text": "Opis sekcji 2" }},
+    {{ "pill": "IDEALNA LINIA ŚWIATŁA", "head": "Klosz i rozproszenie (Brak w zestawie)", "text": "Opis sekcji 3" }}
+  ],
+  "allegro": [
+    {{ "pill": "PROFIL KLUŚ", "head": "Inny nagłówek sekcji 1", "text": "Opis sekcji 1" }},
+    {{ "pill": "RODZAJE I ZASTOSOWANIE", "head": "Inny nagłówek sekcji 2", "text": "Opis sekcji 2" }},
+    {{ "pill": "IDEALNA LINIA ŚWIATŁA", "head": "Klosz i rozproszenie (Brak w zestawie)", "text": "Opis sekcji 3" }}
+  ]
+}}
+
+Zasady:
+1. Pisz WYŁĄCZNIE w języku polskim.
+2. Zakazane słowa: "wysokiej jakości", "innowacyjny", "lider rynku", "kompleksowy", "najlepszy", "wyjątkowy".
+3. Żadna sekcja NIE MOŻE zawierać list <ul>/<li> ani innych tagów HTML (tylko czysty tekst, min. 3 zdania na opis).
+4. Sekcja 1 (PROFIL KLUŚ):
+   - Nagłówek (head) musi być unikalną frazą oznaczającą chłodzenie lub stabilność taśm (synonim do "Fundament trwałego systemu LED", np. "Baza niezawodnej instalacji LED", "Trwałe chłodzenie dla diod LED", "Filar stabilnego oświetlenia LED", "Ochrona i optymalna temperatura diod" itp.). Baw się synonimami, nie pisz w kółko tego samego dla różnych platform i modeli!
+   - W tekście sekcji opisz konkretną długość ({length}) oraz kolor ({color}). Napisz np. "Profil o długości {length} w kolorze {color}..." lub "Wersja o długości {length} w wykończeniu {color}...".
+   - Opisz funkcję radiatora: profil efektywnie odprowadza ciepło wydzielane przez diody LED, zapobiegając ich przegrzaniu i drastycznie przedłużając żywotność taśmy.
+5. Sekcja 2 (RODZAJE I ZASTOSOWANIE):
+   - Nagłówek (head) musi opisywać sposób montażu lub typ profilu (np. "Dyskretny montaż wpuszczany", "Zlicowana linia światła", "Uniwersalny montaż nawierzchniowy").
+   - W tekście sekcji opisz dokładnie typ profilu: {type_desc} oraz sposób montażu: {montaz_szczegoly}. Pisz o konkretnym wariancie (np. jeśli to {series}, napisz o nim).
+6. Sekcja 3 (IDEALNA LINIA ŚWIATŁA):
+   - Nagłówek (head) musi brzmieć dokładnie: "Klosz i rozproszenie (Brak w zestawie)" lub "Klosz i osłona (Brak w zestawie)".
+   - W tekście opisz klosze. Wyjaśnij, że klosz nie jest częścią zestawu (sprzedawany oddzielnie).
+   - Wyjaśnij różnicę między kloszami: mleczny (tworzy jednolitą, gładką linie światła bez widocznych punktów świetlnych/efektu kropkowania) a transparentny (maksymalna przepustowość światła, optymalna jasność).
+   - Zaznacz, że pasują do niego wsuwane klosze (np. KA, HS) oraz mleczny klosz LIGER-11 (wciskany).
+"""
+        response_str = call_ollama(prompt, skill_content)
+        response_str = response_str.strip()
+        if response_str.startswith("```json"):
+            response_str = response_str[7:]
+        if response_str.endswith("```"):
+            response_str = response_str[:-3]
+        response_str = response_str.strip()
+        try:
+            data = json.loads(response_str)
+            return data
+        except Exception as e:
+            print(f"Error parsing JSON for {sku}: {e}\nResponse was:\n{response_str}")
+            return None
     elif category == 'zlaczki':
         cat_data = f"""
 Informacje techniczne:
@@ -354,8 +451,8 @@ def extract_scharfer_sec3(sku, platform):
         print(f"Error extracting section 3 for {sku} {platform}: {e}")
     return None
 
-def process_sku(sku, category, spec_dict):
-    data = generate_description_json(sku, category, spec_dict)
+def process_sku(sku, category, spec_dict, badge=""):
+    data = generate_description_json(sku, category, spec_dict, badge)
     if not data:
         return None
     
@@ -404,12 +501,15 @@ def main():
         if not sku:
             continue
         cat = get_category(sku)
-        if cat in ['sterowniki', 'zasilacze', 'zlaczki']:
+        if cat in ['sterowniki', 'zasilacze', 'zlaczki', 'profile']:
             if sku not in sku_to_cards:
+                badge_elem = card.find("span", class_="product-label-badge")
+                badge_text = badge_elem.text.strip() if badge_elem else ""
                 sku_to_cards[sku] = {
                     "category": cat,
                     "cards": [],
-                    "specs": {}
+                    "specs": {},
+                    "badge": badge_text
                 }
             sku_to_cards[sku]["cards"].append(card)
             
@@ -431,18 +531,18 @@ def main():
         if sku in completed_skus:
             print(f"Skipping already completed SKU: {sku}")
             continue
-        skus_to_process.append((sku, info["category"], info["specs"]))
+        skus_to_process.append((sku, info["category"], info["specs"], info["badge"]))
         
     print(f"Pending SKUs to process: {len(skus_to_process)}")
     
     if not skus_to_process:
         print("All SKUs are already processed!")
         return
-
+ 
     updated_count = 0
-    for sku, cat, specs in skus_to_process:
-        print(f"Generating for {sku} ({cat})...")
-        results = process_sku(sku, cat, specs)
+    for sku, cat, specs, badge in skus_to_process:
+        print(f"Generating for {sku} ({cat}) [Badge: {badge}]...")
+        results = process_sku(sku, cat, specs, badge)
         if not results:
             print(f"Failed to generate for SKU: {sku}")
             continue
