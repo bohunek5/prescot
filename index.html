@@ -528,15 +528,20 @@ header p {
 }
 
 /* SHOPER TAB */
+.main-tab-btn.shoper {
+    border: 2px solid transparent;
+}
+.main-tab-btn.shoper:hover {
+    border: 2px solid #0066ff;
+    background: #ffffff;
+}
 .main-tab-btn.shoper.active {
-    background: #000000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    background: #ffffff;
+    border: 2px solid #0066ff;
+    box-shadow: 0 4px 15px rgba(0,102,255,0.2);
 }
 .main-tab-btn.shoper.active .brand-name {
-    color: #ffffff;
-}
-.main-tab-btn.shoper.active .shoper-logo img {
-    filter: brightness(0) invert(1);
+    color: #1a1a1a;
 }
 .shoper-logo img {
     height: 30px;
