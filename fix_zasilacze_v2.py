@@ -1,0 +1,126 @@
+import re
+
+html_path = '/Users/karolbohdanowicz/my-ai-agents/prescot/index.html'
+with open(html_path, 'r', encoding='utf-8') as f:
+    html = f.read()
+
+models_data = {
+    'PR-MAD36-1224': {'power': 36, 'safe': 28, 't96': 'ok. 3 metry', 't48': 'ok. 6 metrów'},
+    'PR-MAD60-1224': {'power': 60, 'safe': 48, 't96': 'ok. 5 metrów', 't48': 'ok. 10 metrów'},
+    'PR-MAD100-1224': {'power': 100, 'safe': 80, 't96': 'ok. 8 metrów', 't48': 'ok. 16 metrów'},
+    'PR-MAD150-1224': {'power': 150, 'safe': 120, 't96': 'ok. 12 metrów', 't48': 'ok. 25 metrów'},
+    'PR-MAD200-1224': {'power': 200, 'safe': 160, 't96': 'ok. 16 metrów', 't48': 'ok. 33 metry'},
+    'PR-MAD300-1224': {'power': 300, 'safe': 240, 't96': 'ok. 25 metrów', 't48': 'ok. 50 metrów'},
+}
+
+platforms = ['wapro', 'tim', 'allegro', 'shoper']
+
+blog_html = """
+<section style="font-family: inherit; margin: 18px 0 0 0; padding: 22px 24px; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; color: inherit;">
+<div style="font-family: inherit; margin-bottom: 18px; background: none !important; background-color: transparent !important; color: inherit;">
+<span style="font-family: inherit; display: inline-block; margin-bottom: 10px; padding: 5px 12px; border-radius: 999px; background: #e94b25 !important; background-color: #e94b25 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 11px; font-weight: bold; letter-spacing: .8px; text-transform: uppercase; line-height: 1.2;">
+<span style="color: #ffffff;">Praktyczne poradniki</span>
+</span>
+<h3 style="font-family: inherit; margin: 0 0 8px 0; background: none !important; background-color: transparent !important; color: inherit !important; font-size: 22px; line-height: 1.3; font-weight: bold;">Dobierz zasilacz LED bez zgadywania</h3>
+<p style="font-family: inherit; margin: 0; background: none !important; background-color: transparent !important; color: inherit !important; opacity: .78; font-size: 14px; line-height: 1.6;">Sprawdź krótkie poradniki, które pomogą dobrać moc, typ obudowy, napięcie i stopień ochrony IP do konkretnej instalacji LED.</p>
+</div>
+<div style="font-family: inherit; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; background: none !important; background-color: transparent !important; color: inherit; align-items: stretch;">
+<div style="font-family: inherit; min-height: 190px; padding: 18px; margin: 0; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; box-shadow: none !important; color: inherit; display: flex; flex-direction: column;">
+<strong style="font-family: inherit; display: block; color: inherit !important; font-size: 15px; line-height: 1.35; margin-bottom: 6px; font-weight: bold;">Do czego służą zasilacze LED?</strong>
+<small style="font-family: inherit; display: block; color: inherit !important; opacity: .76; font-size: 12px; line-height: 1.4; margin-bottom: 15px;">taśmy LED, moduły LED i sterowniki</small>
+<a href="https://www.prescot.com.pl/pl/n/26" style="font-family: inherit; display: inline-block; min-width: 142px; margin-top: auto; padding: 10px 17px; border-radius: 999px; background: #e94b25 !important; background-color: #e94b25 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; text-decoration: none !important; text-align: center; line-height: 1.2; border: 0 !important; align-self: flex-start;">
+<span style="color: #ffffff;"><span style="font-family: inherit; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; text-decoration: none !important; font-weight: bold; font-size: 14px;">Czytaj poradnik</span></span>
+</a>
+</div>
+<div style="font-family: inherit; min-height: 190px; padding: 18px; margin: 0; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; box-shadow: none !important; color: inherit; display: flex; flex-direction: column;">
+<strong style="font-family: inherit; display: block; color: inherit !important; font-size: 15px; line-height: 1.35; margin-bottom: 6px; font-weight: bold;">Zasilacze LED - gdzie użyć którego?</strong>
+<small style="font-family: inherit; display: block; color: inherit !important; opacity: .76; font-size: 12px; line-height: 1.4; margin-bottom: 15px;">desktop, gniazdkowy, siatkowy, slim i hermetyczny</small>
+<a href="https://www.prescot.com.pl/pl/n/25" style="font-family: inherit; display: inline-block; min-width: 142px; margin-top: auto; padding: 10px 17px; border-radius: 999px; background: #e94b25 !important; background-color: #e94b25 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; text-decoration: none !important; text-align: center; line-height: 1.2; border: 0 !important; align-self: flex-start;">
+<span style="color: #ffffff;"><span style="font-family: inherit; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; text-decoration: none !important; font-weight: bold; font-size: 14px;">Czytaj poradnik</span></span>
+</a>
+</div>
+<div style="font-family: inherit; min-height: 190px; padding: 18px; margin: 0; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; box-shadow: none !important; color: inherit; display: flex; flex-direction: column;">
+<strong style="font-family: inherit; display: block; color: inherit !important; font-size: 15px; line-height: 1.35; margin-bottom: 6px; font-weight: bold;">Jak dobrać zasilacz LED do taśmy?</strong>
+<small style="font-family: inherit; display: block; color: inherit !important; opacity: .76; font-size: 12px; line-height: 1.4; margin-bottom: 15px;">moc W/m, długość taśmy i zapas mocy</small>
+<a href="https://www.prescot.com.pl/pl/n/24" style="font-family: inherit; display: inline-block; min-width: 142px; margin-top: auto; padding: 10px 17px; border-radius: 999px; background: #e94b25 !important; background-color: #e94b25 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; text-decoration: none !important; text-align: center; line-height: 1.2; border: 0 !important; align-self: flex-start;">
+<span style="color: #ffffff;"><span style="font-family: inherit; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; text-decoration: none !important; font-weight: bold; font-size: 14px;">Czytaj poradnik</span></span>
+</a>
+</div>
+</div>
+</section>
+"""
+
+def escape_html_for_textarea(h):
+    return h.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+for model, data in models_data.items():
+    p = data['power']
+    s = data['safe']
+    t96 = data['t96']
+    t48 = data['t48']
+    
+    content = f"""
+<section style="font-family: inherit; margin: 28px 0 18px 0; padding: 22px 24px; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; color: inherit;">
+<span style="font-family: inherit; display: inline-block; margin-bottom: 10px; padding: 5px 12px; border-radius: 999px; background: #e94b25 !important; background-color: #e94b25 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 11px; font-weight: bold; letter-spacing: .8px; text-transform: uppercase; line-height: 1.2;">
+<span style="color: #ffffff;">Zasilacz LED Smart Auto {p}W</span>
+</span>
+<h3 style="font-family: inherit; margin: 0 0 8px 0; background: none !important; background-color: transparent !important; color: inherit !important; font-size: 22px; line-height: 1.3; font-weight: bold;">Auto-identyfikacja 12V/24V - prawdziwy przełom w instalacjach</h3>
+<p style="font-family: inherit; margin: 0; background: none !important; background-color: transparent !important; color: inherit !important; opacity: .82; font-size: 14px; line-height: 1.65;">Zasilacz <b>{model}</b> to innowacyjne urządzenie o mocy <b>{p}W</b>, wyposażone w genialną funkcję <b>Smart Auto</b>. Moduł samodzielnie detektuje i dostosowuje napięcie wyjściowe (12V lub 24V) do podłączonej taśmy LED! Koniec z pomyłkami i spalonymi taśmami przy montażu. Do tego ultra-cienka obudowa sprawia, że bez problemu ukryjesz go w sufitach podwieszanych i ciasnych zabudowach meblowych.</p>
+</section>
+<section style="font-family: inherit; margin: 0 0 18px 0; padding: 22px 24px; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; color: inherit;">
+<span style="font-family: inherit; display: inline-block; margin-bottom: 10px; padding: 5px 12px; border-radius: 999px; background: #e94b25 !important; background-color: #e94b25 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 11px; font-weight: bold; letter-spacing: .8px; text-transform: uppercase; line-height: 1.2;">
+<span style="color: #ffffff;">Użyteczność mocy ({p}W)</span>
+</span>
+<h3 style="font-family: inherit; margin: 0 0 8px 0; background: none !important; background-color: transparent !important; color: inherit !important; font-size: 22px; line-height: 1.3; font-weight: bold;">Co możesz podłączyć do tego zasilacza?</h3>
+<p style="font-family: inherit; margin: 0; background: none !important; background-color: transparent !important; color: inherit !important; opacity: .82; font-size: 14px; line-height: 1.65;">Przy zachowaniu bezpiecznego zapasu (ok. 80% mocy znamionowej, czyli ok. <b>{s}W</b> ciągłego, bezawaryjnego obciążenia), ten zasilacz swobodnie obsłuży na przykład <b>{t96}</b> najpopularniejszej taśmy LED 9.6W/m lub nawet <b>{t48}</b> standardowej taśmy dekoracyjnej 4.8W/m. Pamiętaj, żeby nie przeciążać urządzenia i cieszyć się latami bezproblemowej pracy.</p>
+</section>
+<section style="font-family: inherit; margin: 0 0 28px 0; padding: 24px; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; color: inherit;">
+<span style="font-family: inherit; display: inline-block; margin-bottom: 10px; padding: 5px 12px; border-radius: 999px; background: #e94b25 !important; background-color: #e94b25 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; font-size: 11px; font-weight: bold; letter-spacing: .8px; text-transform: uppercase; line-height: 1.2;">
+<span style="color: #ffffff;">Parametry techniczne {model}</span>
+</span>
+<div style="font-family: inherit; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; background: none !important; background-color: transparent !important; color: inherit; margin-bottom: 24px;">
+<div style="font-family: inherit; padding: 16px; margin: 0; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; box-shadow: none !important; color: inherit;">
+<strong style="font-family: inherit; display: block; color: inherit !important; font-size: 15px; line-height: 1.35; margin-bottom: 6px; font-weight: bold;">Moc wyjściowa</strong>
+<small style="font-family: inherit; display: block; color: inherit !important; opacity: .78; font-size: 13px; line-height: 1.45;">
+<strong style="font-family: inherit; color: inherit !important;">{p}W</strong>
+</small>
+</div>
+<div style="font-family: inherit; padding: 16px; margin: 0; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; box-shadow: none !important; color: inherit;">
+<strong style="font-family: inherit; display: block; color: inherit !important; font-size: 15px; line-height: 1.35; margin-bottom: 6px; font-weight: bold;">Napięcie pracy</strong>
+<small style="font-family: inherit; display: block; color: inherit !important; opacity: .78; font-size: 13px; line-height: 1.45;">
+<strong style="font-family: inherit; color: inherit !important;">12V/24V Smart Auto</strong>
+</small>
+</div>
+<div style="font-family: inherit; padding: 16px; margin: 0; background: none !important; background-color: transparent !important; border: 1px solid currentColor; border-radius: 12px; box-shadow: none !important; color: inherit;">
+<strong style="font-family: inherit; display: block; color: inherit !important; font-size: 15px; line-height: 1.35; margin-bottom: 6px; font-weight: bold;">Typ obudowy</strong>
+<small style="font-family: inherit; display: block; color: inherit !important; opacity: .78; font-size: 13px; line-height: 1.45;">
+<strong style="font-family: inherit; color: inherit !important;">Ultra-Slim (Wąska)</strong>
+</small>
+</div>
+</div>
+<p style="font-family: inherit; margin: 0; background: none !important; background-color: transparent !important; color: inherit !important; opacity: .82; font-size: 14px; line-height: 1.65;">
+Najważniejsze cechy serii: <strong style="font-family: inherit; color: inherit !important;">automatyczna identyfikacja 12V/24V</strong>, ultrakompaktowe wymiary, cicha i bezawaryjna praca, doskonałe odprowadzanie ciepła oraz pełne zabezpieczenia przed przeciążeniem, zwarciem i przepięciem. Pamiętaj, aby dobierać zasilacz zawsze z minimum 15-20% zapasem mocy w stosunku do pobieranej przez taśmy LED! <br><br>
+<strong style="font-family: inherit; color: inherit !important;">Ważne:</strong> W przypadku podłączania bardzo krótkich odcinków taśm COB (poniżej 1 metra), zaleca się ręczne ustawienie stałego napięcia (12V lub 24V) za pomocą dedykowanych pinów na zasilaczu.
+</p>
+</section>
+{blog_html}
+""".strip()
+
+    textarea_content = escape_html_for_textarea(content)
+    
+    for platform in platforms:
+        # We need to replace the content inside <div class="model-block" id="desc-view-{platform}-{model}"> ... </div>
+        # and <textarea class="edit-textarea" id="textarea-{platform}-{model}" ...> ... </textarea>
+        
+        view_pattern = re.compile(f'(<div class="model-block" id="desc-view-{platform}-{model}">)(.*?)(</div>\\s*<div class="edit-block" id="desc-edit-{platform}-{model}")', re.DOTALL)
+        textarea_pattern = re.compile(f'(<textarea class="edit-textarea" id="textarea-{platform}-{model}"[^>]*>)(.*?)(</textarea>)', re.DOTALL)
+        
+        # In Python, replacing with a string containing actual literal '\n' characters in a raw string will just put actual newlines in the file.
+        # But wait, earlier I used `\\n` which was literally output as '\n'. I should just use normal python newlines.
+        html = view_pattern.sub(lambda m: m.group(1) + '\n' + content + '\n' + m.group(3), html)
+        html = textarea_pattern.sub(lambda m: m.group(1) + textarea_content + m.group(3), html)
+
+with open(html_path, 'w', encoding='utf-8') as f:
+    f.write(html)
+
+print("Updated index.html successfully with V2.")
