@@ -143,7 +143,7 @@ for model, data in models_data.items():
         view_pattern = re.compile(f'(<div class="model-block" id="desc-view-{tab}-{model}">)(.*?)(</div>\\s*<div class="edit-block" id="desc-edit-{tab}-{model}")', re.DOTALL)
         textarea_pattern = re.compile(f'(<textarea class="edit-textarea" id="textarea-{tab}-{model}"[^>]*>)(.*?)(</textarea>)', re.DOTALL)
         
-        html = view_pattern.sub(lambda m: m.group(1) + '\\n' + content + '\\n' + m.group(3), html)
+        html = view_pattern.sub(lambda m: m.group(1) + '\n' + content + '\n' + m.group(3), html)
         html = textarea_pattern.sub(lambda m: m.group(1) + textarea_content + m.group(3), html)
 
 with open(html_path, 'w', encoding='utf-8') as f:
