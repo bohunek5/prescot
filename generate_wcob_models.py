@@ -59,9 +59,9 @@ WCOB_MODELS = [
         },
         "desc_shoper": {
             "h1": "24WCOB320WW5IP62 - Taśma LED WCOB 24V 320LED 10W/m IP62 3000K Biała Ciepła 5m",
-            "p1": "<b>Prescot WCOB 24V IP62 3000K</b> to innowacyjna taśma LED nowej generacji. Dzięki wyeliminowaniu żółtego luminoforu na rzecz jednolitej białej powłoki silikonowej, taśma gwarantuje perfekcyjną estetykę zarówno przy włączonym, jak i wyłączonym oświetleniu. Zapewnia <b>1400 lm/m</b>, gęstość <b>320 diod/m</b> oraz kąt świecenia <b>180°</b>.",
+            "p1": "<b>Prescot WCOB 24V IP62 3000K</b> ma białą powłokę, która ogranicza widoczność żółtego luminoforu po wyłączeniu. Po włączeniu 320 diod na metr tworzy równą linię światła o strumieniu <b>1400 lm/m</b> i kącie świecenia <b>180°</b>.",
             "h2": "Zastosowanie i korzyści użytkowe",
-            "p2": "Dedykowana do oświetlenia podszafkowego, sufitów podwieszanych, mebli kuchennych, garderób i łazienek (ochrona <b>IP62</b>). Ciepła biel <b>3000K</b> wprowadza do wnętrza harmonię i przytulność, a odwzorowanie barw <b>Ra &gt; 90</b> gwarantuje najwyższą jakość wizualną.",
+            "p2": "Ciepła biel <b>3000K</b> pasuje do oświetlenia podszafkowego, sufitów podwieszanych, mebli, garderób i stref relaksu. Współczynnik <b>Ra &gt; 90</b> pozwala naturalnie oddać kolory materiałów i wyposażenia.",
             "h3": "Specyfikacja techniczna i zasady montażu",
             "p3": "Napięcie: <b>24V DC</b>, Moc: <b>10W/m</b>, Cięcie: co <b>25mm</b>, Szerokość: <b>8mm</b>. Wymaga montażu w profilu aluminiowym pełniącym funkcję radiatora. <b>5 lat gwarancji</b> producenta Prescot."
         }
@@ -118,9 +118,9 @@ WCOB_MODELS = [
         },
         "desc_shoper": {
             "h1": "24WCOB320NW5IP62 - Taśma LED WCOB 24V 320LED 10W/m IP62 4000K Biała Neutralna 5m",
-            "p1": "<b>Prescot WCOB 24V IP62 4000K</b> to nowoczesna taśma LED łącząca technologię ciągłej linii światła WCOB z estetyką białego paska bez żółtego luminoforu. Osiąga znakomitą wydajność <b>1450 lm/m (145 lm/W)</b> przy gęstości <b>320 diod/m</b> i kącie <b>180°</b>.",
+            "p1": "<b>Prescot WCOB 24V IP62 4000K</b> ma białą powłokę, która ogranicza widoczność żółtego luminoforu po wyłączeniu. Po włączeniu 320 diod na metr tworzy równą linię światła o strumieniu <b>1450 lm/m</b>, skuteczności <b>145 lm/W</b> i kącie świecenia <b>180°</b>.",
             "h2": "Zastosowanie w projektach oświetleniowych",
-            "p2": "Uniwersalna neutralna barwa <b>4000K</b> sprawdzi się idealnie pod szafkami kuchennymi, w łazienkach (ochrona <b>IP62</b>), biurach i garderobach. Wskaźnik <b>Ra &gt; 90</b> zapewnia wierne odwzorowanie kolorów otoczenia.",
+            "p2": "Neutralna biel <b>4000K</b> sprawdzi się nad blatami roboczymi, pod szafkami kuchennymi, w biurach, garderobach i ciągach komunikacyjnych. Współczynnik <b>Ra &gt; 90</b> pozwala naturalnie oddać kolory oświetlanych powierzchni.",
             "h3": "Dane techniczne i montaż",
             "p3": "Napięcie: <b>24V DC</b>, Moc: <b>10W/m</b>, Moduł cięcia: <b>25mm</b>, Szerokość: <b>8mm</b>. Wymaga instalacji w profilu aluminiowym. Produkt objęty <b>5-letnią gwarancją</b> Prescot."
         }
@@ -177,9 +177,9 @@ WCOB_MODELS = [
         },
         "desc_shoper": {
             "h1": "24WCOB320W5IP62 - Taśma LED WCOB 24V 320LED 10W/m IP62 6000K Biała Zimna 5m",
-            "p1": "<b>Prescot WCOB 24V IP62 6000K</b> to zaawansowana taśma LED nowej technologii WCOB bez żółtego paska. Zapewnia jednolitą linię światła o jasności <b>1350 lm/m (135 lm/W)</b> przy gęstości <b>320 diod/m</b> i kącie <b>180°</b>.",
+            "p1": "<b>Prescot WCOB 24V IP62 6000K</b> ma białą powłokę, która ogranicza widoczność żółtego luminoforu po wyłączeniu. Po włączeniu 320 diod na metr tworzy równą linię światła o strumieniu <b>1350 lm/m</b>, skuteczności <b>135 lm/W</b> i kącie świecenia <b>180°</b>.",
             "h2": "Zastosowanie w nowoczesnych aranżacjach",
-            "p2": "Zimna barwa <b>6000K</b> doskonale sprawdza się w aranżacjach minimalistycznych, gablotach, witrynach oraz pomieszczeniach o podwyższonej wilgotności (klasa <b>IP62</b>). Wskaźnik <b>Ra &gt; 90</b> zapewnia krystaliczną czystość bieli.",
+            "p2": "Zimna biel <b>6000K</b> pasuje do nowoczesnych aranżacji, gablot, witryn i oświetlenia zadaniowego wymagającego wyraźnego kontrastu. Współczynnik <b>Ra &gt; 90</b> pozwala naturalnie oddać kolory oświetlanych przedmiotów.",
             "h3": "Parametry i montaż",
             "p3": "Napięcie: <b>24V DC</b>, Moc: <b>10W/m</b>, Moduł cięcia: <b>25mm</b>, Szerokość: <b>8mm</b>. Montaż w profilu aluminiowym. <b>5 lat gwarancji</b> Prescot."
         }
@@ -236,9 +236,9 @@ WCOB_MODELS = [
         },
         "desc_shoper": {
             "h1": "24WCOB280CCT5IP62 - Taśma LED WCOB CCT 24V 280LED 17W/m IP62 2600-6000K 5m",
-            "p1": "<b>Prescot WCOB CCT 24V IP62</b> to innowacyjna taśma LED z płynną regulacją temperatury barwowej (<b>2600K - 6000K</b>). Zastosowanie technologii WCOB eliminuje żółty pasek, oferując nienaganną biel podłoża oraz jednolitą linię światła o jasności <b>1300 lm/m</b>.",
+            "p1": "<b>Prescot WCOB CCT 24V IP62</b> umożliwia płynną regulację temperatury barwowej od <b>2600K do 6000K</b>. Biała powłoka ogranicza widoczność żółtego luminoforu po wyłączeniu, a 280 diod na metr tworzy równą linię światła o strumieniu <b>1300 lm/m</b>.",
             "h2": "Zastosowanie w inteligentnych domach i strefach wilgotnych",
-            "p2": "Idealna do salonów, sypialni, kuchni i łazienek (klasa <b>IP62</b>). Pozwala na dostosowanie barwy światła do pory dnia. Wskaźnik <b>Ra &gt; 90</b> zapewnia najwyższą jakość odwzorowania barw.",
+            "p2": "Regulowana barwa pozwala użyć ciepłego światła do odpoczynku, neutralnego do codziennych czynności i chłodnego do pracy. Taśma sprawdzi się w salonach, sypialniach, kuchniach i oświetleniu meblowym, a współczynnik <b>Ra &gt; 90</b> wspiera naturalne odwzorowanie kolorów.",
             "h3": "Specyfikacja techniczna i sterowanie",
             "p3": "Napięcie: <b>24V DC</b>, Moc: <b>17W/m</b>, Cięcie: <b>25mm</b>, Szerokość: <b>8mm</b>. Wymaga sterownika CCT 24V oraz montażu w profilu aluminiowym. <b>5 lat gwarancji</b> Prescot."
         }
@@ -308,6 +308,47 @@ def build_blog_section(is_cct=False):
 def build_spec_section(model_info):
     return f"""<section class="product-parameters-section" style="font-family:inherit; margin:0 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;"><span style="font-family:inherit; display:inline-block; margin-bottom:15px; padding:5px 12px; border-radius:999px; background:#475569 !important; background-color:#475569 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;"><font color="#ffffff">Specyfikacja</font></span><div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 5px;"><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Typ diody</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['diode_type']}</span></div><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Napięcie</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['voltage']}</span></div><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Barwa</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['cct']}</span></div><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Jasność</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['lumen']}</span></div><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Moc</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['power']}</span></div><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Wydajność</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['efficiency']}</span></div><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">CRI</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['cri']}</span></div><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Stopień ochrony</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['ip']}</span></div><div style="display: flex; flex-direction: column; min-width: 0; word-break: break-word;"><span style="font-size: 12px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Gwarancja</span><span style="font-size: 15px; font-weight: 600; color: inherit;">{model_info['warranty']}</span></div></div></section>"""
 
+
+def build_shoper_description(model_info):
+    """Build simple semantic HTML that inherits all presentation from Shoper."""
+    desc = model_info["desc_shoper"]
+    intro = desc["p1"].replace("<b>", "<strong>").replace("</b>", "</strong>")
+    application = desc["p2"].replace("<b>", "<strong>").replace("</b>", "</strong>")
+    is_cct = "CCT" in model_info["id"]
+    controller_line = (
+        "- Regulacja barwy i jasności: TAK, ze sterownikiem CCT 24V"
+        if is_cct
+        else f"- Ściemnianie: {model_info['dimmable']}"
+    )
+    installation_note = (
+        "Do regulacji barwy i jasności potrzebny jest sterownik CCT 24V. "
+        if is_cct
+        else "Do regulacji jasności można zastosować zgodny ściemniacz PWM 24V. "
+    )
+
+    return f"""<section>
+<h2>{model_info['name_full']}</h2>
+<p>{intro}</p>
+<h3>{desc['h2']}</h3>
+<p>{application}</p>
+<h3>Najważniejsze parametry</h3>
+<p>- Technologia: {model_info['diode_type']}</p>
+<p>- Napięcie zasilania: {model_info['voltage']} DC</p>
+<p>- Moc: {model_info['power']} ({model_info['power_total']})</p>
+<p>- Strumień świetlny: {model_info['lumen']}</p>
+<p>- Skuteczność świetlna: {model_info['efficiency']}</p>
+<p>- Temperatura barwowa: {model_info['cct']}</p>
+<p>- Współczynnik oddawania barw: {model_info['cri']}</p>
+<p>- Kąt świecenia: {model_info['angle']}</p>
+<p>- Stopień ochrony: {model_info['ip']}</p>
+<p>- Sekcja cięcia: {model_info['cut_section']}</p>
+<p>- Wymiary: {model_info['dimensions']}</p>
+<p>{controller_line}</p>
+<p>- Gwarancja: {model_info['warranty']}</p>
+<h3>Montaż i dobór zasilania</h3>
+<p>Taśmę należy zamontować w profilu aluminiowym, który odprowadza ciepło. Maksymalna długość odcinka zasilanego jednostronnie wynosi {model_info['max_length_single']}. {installation_note}Dobierz zasilacz 24V z co najmniej 25% zapasem mocy. Stopień ochrony IP62 nie oznacza odporności na zanurzenie ani bezpośredni strumień wody.</p>
+</section>"""
+
 def build_accordion(model_info, platform, item_number):
     m_id = model_info["id"]
     ean = model_info["ean"]
@@ -319,7 +360,14 @@ def build_accordion(model_info, platform, item_number):
     badge_2_name = "Gdzie sprawdzi się najlepiej" if platform == "wapro" else ("Zastosowanie instalacyjne" if platform == "tim" else ("Zalety technologii WCOB" if platform == "allegro" else "Zastosowanie"))
     badge_3_name = "Parametry i montaż" if platform == "wapro" else ("Wytyczne montażu i zasilania" if platform == "tim" else ("Montaż i bezpieczeństwo" if platform == "allegro" else "Wytyczne instalacji"))
 
-    # Construct sections
+    if platform == "shoper":
+        view_inner = build_shoper_description(model_info)
+        textarea_inner = html.escape(view_inner)
+        return build_accordion_shell(
+            model_info, platform, item_number, view_inner, textarea_inner
+        )
+
+    # Construct rich sections for WAPRO, TIM and Allegro.
     sec1 = f"""<section style="font-family:inherit; margin:28px 0 18px 0; padding:22px 24px; background:none !important; background-color:transparent !important; border:1px solid currentColor; border-radius:12px; color:inherit;">
 <span style="font-family:inherit; display:inline-block; margin-bottom:10px; padding:5px 12px; border-radius:999px; background:#e94b25 !important; background-color:#e94b25 !important; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; line-height:1.2;">
 <font color="#ffffff">{badge_1_name}</font>
@@ -349,6 +397,16 @@ def build_accordion(model_info, platform, item_number):
 
     view_inner = f"{sec1}\n{sec2}\n{sec3}\n{sec4}\n{sec5}"
     textarea_inner = html.escape(f"{sec1}\n{sec2}\n{sec3}\n{sec4}\n{sec5}")
+
+    return build_accordion_shell(
+        model_info, platform, item_number, view_inner, textarea_inner
+    )
+
+
+def build_accordion_shell(model_info, platform, item_number, view_inner, textarea_inner):
+    m_id = model_info["id"]
+    ean = model_info["ean"]
+    badge_label = model_info["badge_label"]
 
     accordion_html = f"""<div class="product-accordion" data-model="{m_id}">
 <button class="product-trigger" onclick="toggleProduct(this)">
