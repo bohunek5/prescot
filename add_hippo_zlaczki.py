@@ -44,6 +44,7 @@ PARAGRAPH_STYLE = (
 PRODUCTS = (
     {
         "sku": "FC8-COB-MONO-TP-NW",
+        "ean": "5905475368424",
         "badge": "Hippo-M Max – 8mm, taśma–przewód, 4A",
         "name": "Złączka Hippo-M Max do taśmy LED SMD/COB MONO 8mm – taśma–przewód, 4A",
         "type": "taśma–przewód",
@@ -74,6 +75,7 @@ PRODUCTS = (
     },
     {
         "sku": "FC8-COB-MONO-TT-L",
+        "ean": "5905475368417",
         "badge": "Hippo-M Max – 8mm, narożna L, 4A",
         "name": "Złączka narożna Hippo-M Max do taśmy LED SMD/COB MONO 8mm – taśma–taśma, 4A",
         "type": "taśma–taśma, narożna L",
@@ -104,6 +106,7 @@ PRODUCTS = (
     },
     {
         "sku": "FC8-COB-MONO-TT",
+        "ean": "5905475368400",
         "badge": "Hippo-M Max – 8mm, prosta, 4A",
         "name": "Złączka prosta Hippo-M Max do taśmy LED SMD/COB MONO 8mm – taśma–taśma, 4A",
         "type": "taśma–taśma, prosta",
@@ -134,6 +137,7 @@ PRODUCTS = (
     },
     {
         "sku": "FC8-COB-MONO-TP",
+        "ean": "5905475368394",
         "badge": "Hippo-M Max – 8mm, przewód 15cm, 5A",
         "name": "Złączka Hippo-M Max do taśmy LED SMD/COB MONO 8mm – przewód 15cm, 5A",
         "type": "taśma–przewód",
@@ -337,6 +341,7 @@ DESCRIPTION_BUILDERS = {
 
 def build_accordion(product: dict[str, object], index: int, platform: str) -> str:
     sku = str(product["sku"])
+    ean = str(product["ean"])
     description = DESCRIPTION_BUILDERS[platform](product)
     escaped_description = html.escape(description, quote=False)
     return f'''<div class="product-accordion" data-model="{sku}">
@@ -358,7 +363,7 @@ def build_accordion(product: dict[str, object], index: int, platform: str) -> st
 <button class="control-btn btn-edit" id="btn-edit-{platform}-{sku}" onclick="toggleEdit('{platform}', 'zlaczki', '{sku}')">Edytuj opis</button>
 <button class="control-btn btn-save" id="btn-save-{platform}-{sku}" onclick="saveDescription('{platform}', 'zlaczki', '{sku}')" style="display: none;">Zapisz opis</button>
 <button class="control-btn btn-copy" onclick="copyDescriptionHtml('{platform}', '{sku}', this)" style="border-color: #f59e0b; color: #f59e0b;" title="Kopiuj opis HTML">Kopiuj opis HTML</button>
-<button class="control-btn btn-ean" onclick="navigator.clipboard.writeText('BRAK'); this.innerText='Skopiowano!'; setTimeout(()=&gt;this.innerText='EAN: BRAK', 2000);" style="border-color: #0ea5e9; color: #0ea5e9;" title="Skopiuj EAN">EAN: BRAK</button>
+<button class="control-btn btn-ean" onclick="navigator.clipboard.writeText('{ean}'); this.innerText='Skopiowano!'; setTimeout(()=&gt;this.innerText='EAN: {ean}', 2000);" style="border-color: #0ea5e9; color: #0ea5e9;" title="Skopiuj EAN">EAN: {ean}</button>
 <span class="control-status" id="status-{platform}-{sku}"></span>
 </div></div>
 </div>'''
@@ -454,6 +459,8 @@ def validate(source: str) -> list[str]:
                 f'id="textarea-{platform}-{sku}"',
                 f"toggleEdit('{platform}', 'zlaczki', '{sku}')",
                 f"copyDescriptionHtml('{platform}', '{sku}', this)",
+                f"navigator.clipboard.writeText('{product['ean']}')",
+                f">EAN: {product['ean']}</button>",
             )
             start, end = panel_bounds(source, platform)
             panel = source[start:end]
