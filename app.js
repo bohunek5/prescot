@@ -1,9 +1,10 @@
-import { generateDescription, PLATFORM_NAMES, plainTextFromHtml } from "./description-engine.js";
+import { generateDescription, renderSeoDescription, PLATFORM_NAMES, plainTextFromHtml } from "./description-engine.js";
 
 const PAGE_SIZE = 30;
 const state = {
   catalog: null,
   overrides: null,
+  generated: null,
   platform: "shoper",
   query: "",
   category: "",
@@ -94,12 +95,15 @@ function descriptionFor(product, platform = state.platform) {
   if (overrideId && state.overrides.descriptions?.[overrideId]) {
     return state.overrides.descriptions[overrideId];
   }
+  const generated = state.generated.products?.[product.key];
+  if (generated?.editorial) return renderSeoDescription(product, generated, platform);
   return generateDescription(product, platform);
 }
 
 function descriptionOrigin(product) {
   if (hasLocalEdit(product)) return { label: "edycja lokalna", className: "origin-local" };
   if (hasManualOverride(product)) return { label: "opis ręczny", className: "origin-manual" };
+  if (state.generated.products?.[product.key]?.editorial) return { label: "opis SEO po audycie", className: "origin-generated" };
   return { label: "opis z danych", className: "origin-generated" };
 }
 
@@ -435,12 +439,13 @@ function bindEvents() {
 async function initialize() {
   hydrateFromUrl();
   try {
-    const [catalogResponse, overridesResponse] = await Promise.all([
+    const [catalogResponse, overridesResponse, generatedResponse] = await Promise.all([
       fetch("./data/catalog.json", { cache: "no-cache" }),
       fetch("./data/manual-overrides.json", { cache: "no-cache" }),
+      fetch("./data/seo-descriptions.json", { cache: "no-cache" }),
     ]);
-    if (!catalogResponse.ok || !overridesResponse.ok) throw new Error("Nie udało się pobrać danych katalogu.");
-    [state.catalog, state.overrides] = await Promise.all([catalogResponse.json(), overridesResponse.json()]);
+    if (!catalogResponse.ok || !overridesResponse.ok || !generatedResponse.ok) throw new Error("Nie udało się pobrać danych katalogu.");
+    [state.catalog, state.overrides, state.generated] = await Promise.all([catalogResponse.json(), overridesResponse.json(), generatedResponse.json()]);
     renderPlatformTabs();
     renderCategoryOptions();
     elements.search.value = state.query;

@@ -469,6 +469,162 @@ function blogSection(product, platform, kind) {
   return `<section style="${STYLE.section}"><span style="${STYLE.pill}"><font color="#ffffff">Praktyczne poradniki</font></span><h3 style="${STYLE.heading}">${escapeHtml(heading)}</h3><p style="${STYLE.paragraph};margin-bottom:18px;">Materiały pomagają porównać parametry, przygotować montaż i uniknąć przypadkowego łączenia niezgodnych elementów.</p><div style="font-family:inherit;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;background:none!important;background-color:transparent!important;color:inherit;align-items:stretch;">${cards}</div></section>`;
 }
 
+const SEO_ADMIN_ATTRIBUTES = new Set([
+  "Producent odpowiedzialny",
+  "Podmiot odpowiedzialny",
+  "Nazwa galerii",
+  "Informacje o bezpieczeństwie",
+]);
+
+const SEO_BLOG_GUIDES = {
+  "Taśmy LED": {
+    heading: "Dobierz taśmę LED bez zgadywania",
+    description: "Cztery poradniki prowadzą przez parametry, barwę, profil i warunki montażu potrzebne przed zakupem taśmy.",
+    items: [
+      ["Jak czytać parametry taśmy LED?", "Moc, lumeny, CRI, napięcie i IP", "https://www.prescot.com.pl/pl/n/23"],
+      ["Montaż taśmy LED na zewnątrz", "IP, uszczelnienie i ochrona połączeń", "https://www.prescot.com.pl/pl/n/16"],
+      ["Jak dobrać taśmę LED do mieszkania?", "Barwa, moc i miejsce montażu", "https://www.prescot.com.pl/pl/n/12"],
+      ["Jak dobrać profil aluminiowy?", "Profil, klosz, chłodzenie i linia światła", "https://www.prescot.com.pl/pl/n/15"],
+    ],
+  },
+  "Profile do taśm LED": {
+    heading: "Dobierz profil i taśmę jako jeden układ",
+    description: "Poradniki pomagają zestawić profil, klosz i taśmę oraz zaplanować chłodzenie i wygląd linii światła.",
+    items: [
+      ["Jak dobrać profil aluminiowy?", "Profil, klosz, chłodzenie i estetyka linii światła", "https://www.prescot.com.pl/pl/n/15"],
+      ["Jak czytać parametry taśmy LED?", "Moc, lumeny, CRI, napięcie i IP", "https://www.prescot.com.pl/pl/n/23"],
+      ["Jak dobrać taśmę LED do mieszkania?", "Barwa, moc i miejsce montażu", "https://www.prescot.com.pl/pl/n/12"],
+    ],
+  },
+  "Zasilacze LED": {
+    heading: "Dobierz zasilacz LED do instalacji",
+    description: "Sprawdź sposób obliczania mocy, typ obudowy i stopień ochrony przed skompletowaniem układu LED.",
+    items: [
+      ["Jak dobrać zasilacz LED do taśmy?", "Moc W/m, długość taśmy i zapas mocy", "https://www.prescot.com.pl/pl/n/24"],
+      ["Zasilacze LED — gdzie użyć którego?", "Desktop, gniazdkowy, siatkowy, slim i hermetyczny", "https://www.prescot.com.pl/pl/n/25"],
+      ["Do czego służą zasilacze LED?", "Taśmy LED, moduły LED i sterowniki", "https://www.prescot.com.pl/pl/n/26"],
+      ["Stopnie IP — dlaczego to ważne?", "IP20, IP33, IP44 i IP67 w praktyce", "https://www.prescot.com.pl/pl/n/27"],
+    ],
+  },
+  "Sterowniki LED": {
+    heading: "Skompletuj sterowanie i zasilanie LED",
+    description: "Materiały wyjaśniają zależności między sterownikiem, taśmą, zasilaczem i profilem w jednym układzie.",
+    items: [
+      ["Jak dobrać zasilacz LED do taśmy?", "Moc W/m, długość odcinka i zapas mocy", "https://www.prescot.com.pl/pl/n/24"],
+      ["Do czego służą zasilacze LED?", "Zasilacz, sterownik i taśma w jednym układzie", "https://www.prescot.com.pl/pl/n/26"],
+      ["Jak czytać parametry taśmy LED?", "Napięcie, moc, lumeny i CRI w praktyce", "https://www.prescot.com.pl/pl/n/23"],
+    ],
+  },
+  "Akcesoria do zasilaczy i taśm LED": {
+    heading: "Sprawdź zgodność elementów instalacji LED",
+    description: "Poradniki pomagają porównać napięcie, taśmę, profil i warunki montażu przed doborem osprzętu.",
+    items: [
+      ["Jak czytać parametry taśmy LED?", "Moc, lumeny, CRI, napięcie i IP", "https://www.prescot.com.pl/pl/n/23"],
+      ["Jak dobrać profil aluminiowy?", "Profil, klosz, chłodzenie i linia światła", "https://www.prescot.com.pl/pl/n/15"],
+      ["Montaż taśmy LED na zewnątrz", "IP, uszczelnienie i ochrona połączeń", "https://www.prescot.com.pl/pl/n/16"],
+    ],
+  },
+};
+
+function seoPillStyle(color) {
+  return STYLE.pill.replaceAll("#e94b25", color);
+}
+
+function seoProductSpecs(product) {
+  const seen = new Set();
+  const specs = [];
+  for (const [rawLabel, rawValue] of Object.entries(product.attributes || {})) {
+    const label = normalize(rawLabel).replaceAll("_", " ");
+    const value = normalize(rawValue);
+    const identity = label.toLocaleLowerCase("pl");
+    if (!value || value === "-" || SEO_ADMIN_ATTRIBUTES.has(label) || seen.has(identity)) continue;
+    seen.add(identity);
+    specs.push([label, value]);
+  }
+  return specs;
+}
+
+function seoSection(data, { color = "#e94b25", label = "", heading = "" } = {}) {
+  const paragraphs = (data.paragraphs || []).map((value, index) => (
+    `<p style="${STYLE.paragraph}${index ? "margin-top:10px;" : ""}">${escapeHtml(normalize(value))}</p>`
+  )).join("");
+  return `<section style="${STYLE.section}"><span style="${seoPillStyle(color)}"><font color="#ffffff">${escapeHtml(normalize(label || data.label))}</font></span><h3 style="${STYLE.heading}">${escapeHtml(normalize(heading || data.heading))}</h3>${paragraphs}</section>`;
+}
+
+function seoPoints(label, heading, points, color = "#e94b25") {
+  const items = points.map((point) => `<li style="font-family:inherit;margin-bottom:7px;">${escapeHtml(normalize(point).replace(/\.$/, ""))}</li>`).join("");
+  return `<section style="${STYLE.section}"><span style="${seoPillStyle(color)}"><font color="#ffffff">${escapeHtml(label)}</font></span><h3 style="${STYLE.heading}">${escapeHtml(heading)}</h3><ul style="${STYLE.list}">${items}</ul></section>`;
+}
+
+function seoSpecs(product, color = "#475569") {
+  const items = seoProductSpecs(product).map(([label, value]) => (
+    `<div style="display:flex;flex-direction:column;min-width:0;word-break:break-word;"><span style="font-size:12px;color:#64748b;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">${escapeHtml(label)}</span><span style="font-size:15px;font-weight:700;color:inherit;">${escapeHtml(value)}</span></div>`
+  )).join("");
+  const code = product.manufacturerCode || product.code;
+  return `<section style="${STYLE.section}"><span style="${seoPillStyle(color)}"><font color="#ffffff">Parametry</font></span><h3 style="${STYLE.heading}">Dane wariantu ${escapeHtml(code)}</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:6px;">${items}</div></section>`;
+}
+
+function seoBenefits(points) {
+  const cards = points.map((point) => (
+    `<div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid currentColor;border-radius:10px;"><span style="display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;width:22px;height:22px;border-radius:999px;background:#16a34a!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-weight:800;line-height:1;">✓</span><span style="font-size:14px;line-height:1.45;color:inherit;">${escapeHtml(normalize(point).replace(/\.$/, ""))}</span></div>`
+  )).join("");
+  return `<section style="${STYLE.section}"><span style="${seoPillStyle("#16a34a")}"><font color="#ffffff">Dlaczego warto</font></span><h3 style="${STYLE.heading}">Najważniejsze korzyści tego wariantu</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:10px;">${cards}</div></section>`;
+}
+
+function seoGuides(product) {
+  const guide = SEO_BLOG_GUIDES[product.categoryRoot];
+  if (!guide) return "";
+  const cards = guide.items.map(([title, description, url]) => (
+    `<div style="font-family:inherit;min-height:190px;padding:18px;margin:0;background:none!important;background-color:transparent!important;border:1px solid currentColor;border-radius:12px;box-shadow:none!important;color:inherit;display:flex;flex-direction:column;"><strong style="font-family:inherit;display:block;color:inherit!important;font-size:15px;line-height:1.35;margin-bottom:6px;">${escapeHtml(title)}</strong><small style="font-family:inherit;display:block;color:inherit!important;opacity:.78;font-size:13px;line-height:1.45;margin-bottom:14px;">${escapeHtml(description)}</small><a href="${escapeHtml(url)}" style="font-family:inherit;margin-top:auto;color:inherit!important;font-size:13px;font-weight:700;text-decoration:underline;">Czytaj poradnik</a></div>`
+  )).join("");
+  return `<section style="${STYLE.section}"><div style="font-family:inherit;margin-bottom:18px;background:none!important;background-color:transparent!important;color:inherit;"><span style="${seoPillStyle("#e94b25")}"><font color="#ffffff">Praktyczne poradniki</font></span><h3 style="${STYLE.heading}">${escapeHtml(guide.heading)}</h3><p style="${STYLE.paragraph}">${escapeHtml(guide.description)}</p></div><div style="font-family:inherit;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;background:none!important;background-color:transparent!important;color:inherit;align-items:stretch;">${cards}</div></section>`;
+}
+
+function seoShoper(product, result) {
+  const identifierLabels = new Set(["producent", "kod produktu", "kod producenta", "ean"]);
+  const specs = seoProductSpecs(product);
+  const features = specs.filter(([label]) => !identifierLabels.has(label.toLocaleLowerCase("pl"))).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
+  const identifiers = specs.filter(([label]) => ["kod produktu", "kod producenta", "ean"].includes(label.toLocaleLowerCase("pl"))).map(([label, value]) => `${label}: ${value}`);
+  const points = (values) => values.map((value) => `<p>- ${escapeHtml(normalize(value).replace(/\.$/, ""))}</p>`).join("");
+  const intro = result.sections[0].paragraphs.map(normalize).join(" ");
+  return `<section><h2>${escapeHtml(product.name)}</h2><p>${escapeHtml(intro)}</p><h3>Najważniejsze cechy:</h3>${points(features)}<h3>Dlaczego warto:</h3>${points(result.benefits)}<h3>Gdzie użyć:</h3>${points(result.applications)}<h3>Dobór bez pomyłki:</h3>${points([...result.selection_checks, ...identifiers])}</section>`;
+}
+
+export function renderSeoDescription(product, saved, platform = "shoper") {
+  const result = saved?.editorial || saved;
+  if (!result?.sections?.length) return generateDescription(product, platform);
+  const selected = PLATFORM_NAMES[platform] ? platform : "shoper";
+  const code = product.manufacturerCode || product.code;
+  if (selected === "shoper") return seoShoper(product, result);
+  if (selected === "wapro") {
+    const sections = result.sections.map((item) => ({ ...item, paragraphs: [...item.paragraphs] }));
+    const thirdText = sections[2].paragraphs.join(" ");
+    const identifiers = [
+      product.manufacturerCode && !thirdText.includes(product.manufacturerCode) ? `kod producenta ${product.manufacturerCode}` : "",
+      product.ean && !thirdText.includes(product.ean) ? `EAN ${product.ean}` : "",
+    ].filter(Boolean);
+    if (identifiers.length) {
+      const last = sections[2].paragraphs.length - 1;
+      sections[2].paragraphs[last] = `${sections[2].paragraphs[last].replace(/\.$/, "")}. Identyfikacja wariantu do zamówienia: ${identifiers.join("; ")}.`;
+    }
+    return [...sections.map((item) => seoSection(item)), seoGuides(product)].filter(Boolean).join("\n");
+  }
+  if (selected === "tim") return [
+    seoSection({ label: "Opis techniczny", heading: `${code} — dane do doboru`, paragraphs: [result.channel_leads.tim] }),
+    seoSection(result.sections[1], { label: "Zastosowanie i dobór" }),
+    seoPoints("Parametry do zamówienia", `Co sprawdzić przed zakupem modelu ${code}`, result.selection_checks),
+    seoSpecs(product),
+    seoPoints("Uwagi instalacyjne", "Przed podłączeniem i montażem", result.installation_notes),
+  ].join("\n");
+  return [
+    seoSection({ label: "Sprawdź przed zakupem", heading: result.seo_title, paragraphs: [result.channel_leads.allegro] }, { color: "#16a34a" }),
+    seoBenefits(result.benefits),
+    seoSection(result.sections[1], { color: "#16a34a", label: "Gdzie użyć" }),
+    seoSpecs(product, "#16a34a"),
+    seoPoints("Dobór bez pomyłki", "Co sprawdzić przed montażem", [...result.selection_checks, ...result.installation_notes], "#16a34a"),
+  ].join("\n");
+}
+
 export function generateDescription(product, platform = "shoper") {
   const selectedPlatform = PLATFORM_NAMES[platform] ? platform : "shoper";
   const kind = productKind(product);

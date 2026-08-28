@@ -1,6 +1,6 @@
 # Prescot — baza opisów produktów
 
-Statyczny panel GitHub Pages z aktywnymi produktami z feedu WAPRO. Katalog jest ładowany z JSON-u, dlatego 3410 produktów nie powiększa DOM-u ani nie blokuje przeglądarki przy starcie.
+Statyczny panel GitHub Pages z aktywnymi produktami z feedu WAPRO. Katalog i audytowane opisy są ładowane z JSON-u, dlatego 3410 produktów nie powiększa DOM-u ani nie blokuje przeglądarki przy starcie.
 
 ## Zasady danych
 
@@ -8,17 +8,29 @@ Statyczny panel GitHub Pages z aktywnymi produktami z feedu WAPRO. Katalog jest 
 - podstawowym identyfikatorem jest EAN;
 - przy braku albo powtórzeniu EAN-u używany jest kod produktu i ID oferty;
 - stare, ręcznie dopracowane opisy są zachowane w `data/manual-overrides.json`;
-- pozostałe opisy powstają z nazwy, kategorii, parametrów i tekstu źródłowego, bez dopisywania niepotwierdzonych danych technicznych;
+- ręczny opis ma zawsze pierwszeństwo przed opisem audytowanym i generatorem awaryjnym;
+- pozostałe opisy powstają z nazwy, kodu, EAN-u, kategorii, parametrów i tekstu źródłowego, bez dopisywania niepotwierdzonych danych technicznych;
+- konflikty źródeł są rozstrzygane jawnie w `data/source-resolutions.json` i zawierają adresy stron użytych do weryfikacji;
 - opis jest dostępny w wariantach Shoper, WAPRO/MAG, TIM i Allegro.
 
 ## Aktualizacja katalogu
 
 ```bash
 python3 scripts/sync_cloud_catalog.py
+python3 scripts/build_research_queue.py
+python3 scripts/generate_seo_descriptions.py \
+  --rules-only \
+  --include-manual \
+  --include-research-needed \
+  --include-source-conflicts \
+  --editorial-only \
+  --force
 npm run validate -- --write
 ```
 
-Skrypt pobiera `https://prescot.wapromag.pl/prescotcloud.xml`, aktualizuje `data/catalog.json` i zachowuje istniejące ręczne nadpisania. Można też wskazać pobrany plik:
+Pierwszy skrypt pobiera `https://prescot.wapromag.pl/prescotcloud.xml`, aktualizuje `data/catalog.json` i zachowuje istniejące ręczne nadpisania. Kolejka researchu wskazuje rekordy skąpe lub sprzeczne. Generator buduje warstwę redakcyjną `data/seo-descriptions.json`, a układy HTML dla czterech kanałów są renderowane w przeglądarce przez `description-engine.js`.
+
+Można też wskazać wcześniej pobrany feed:
 
 ```bash
 python3 scripts/sync_cloud_catalog.py --source /tmp/prescotcloud.xml
@@ -30,4 +42,4 @@ python3 scripts/sync_cloud_catalog.py --source /tmp/prescotcloud.xml
 npm run serve
 ```
 
-Panel będzie dostępny pod `http://localhost:8080/`. Walidator sprawdza wszystkie produkty i cztery kanały, w tym identyfikatory, minimalną długość, strukturę sekcji HTML, dokładne duplikaty oraz podstawowe sprzeczności danych.
+Panel będzie dostępny pod `http://localhost:8080/`. Walidator sprawdza kompletność katalogu i cztery kanały dla każdego produktu: identyfikatory, zakres długości, strukturę sekcji HTML, duplikaty, obce liczby i jednostki, niepotwierdzone twierdzenia oraz sprzeczności z danymi produktu.

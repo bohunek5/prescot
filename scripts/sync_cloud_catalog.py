@@ -13,6 +13,7 @@ import hashlib
 import html
 import json
 import re
+import subprocess
 import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
@@ -171,17 +172,30 @@ def minify_description(fragment: str) -> str:
     return fragment.strip()
 
 
+def load_legacy_html(legacy_path: Path, git_ref: str) -> str:
+    if git_ref:
+        return subprocess.check_output(
+            ["git", "show", f"{git_ref}:index.html"],
+            text=True,
+            encoding="utf-8",
+        )
+    if legacy_path.exists():
+        return legacy_path.read_text(encoding="utf-8")
+    return ""
+
+
 def load_legacy_overrides(
-    legacy_path: Path,
+    legacy_html: str,
     products: list[dict[str, Any]],
 ) -> tuple[dict[str, Any], dict[str, int]]:
-    if not legacy_path.exists():
-        return {"descriptions": {}, "products": {}}, {"cards": 0, "matched": 0}
+    """Extract legacy descriptions by exact string boundaries.
 
-    try:
-        from bs4 import BeautifulSoup
-    except ImportError as exc:  # pragma: no cover - developer environment guard
-        raise RuntimeError("BeautifulSoup4 is required to migrate legacy descriptions") from exc
+    The former 10 MB document contains malformed and deeply nested markup.
+    DOM parsers can therefore attach a description to the wrong accordion.
+    Exact view/edit IDs are the only reliable boundaries.
+    """
+    if not legacy_html:
+        return {"descriptions": {}, "products": {}}, {"cards": 0, "matched": 0}
 
     by_ean: dict[str, list[dict[str, Any]]] = defaultdict(list)
     by_code: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -192,34 +206,35 @@ def load_legacy_overrides(
             if code:
                 by_code[code.casefold()].append(product)
 
-    soup = BeautifulSoup(legacy_path.read_text(encoding="utf-8"), "html.parser")
     descriptions: dict[str, str] = {}
     assignments: dict[str, dict[str, str]] = defaultdict(dict)
     cards = 0
     matched = 0
 
-    for view in soup.select("div.model-block[id^='desc-view-']"):
-        identifier = view.get("id", "")
-        match = re.match(r"desc-view-(shoper|wapro|tim|allegro)-(.+)$", identifier)
-        if not match:
+    view_pattern = re.compile(
+        r'<div\s+class="model-block"\s+id="desc-view-'
+        r'(shoper|wapro|tim|allegro)-([^"]+)">'
+    )
+    matches = list(view_pattern.finditer(legacy_html))
+    for index, view_match in enumerate(matches):
+        platform, model = view_match.groups()
+        end_marker = f'<div class="edit-block" id="desc-edit-{platform}-{model}"'
+        end_index = legacy_html.find(end_marker, view_match.end())
+        if end_index < 0:
             continue
         cards += 1
-        platform, model = match.groups()
-        accordion = view.find_parent("div", class_="product-accordion")
 
-        ean = ""
-        if accordion:
-            ean_button = accordion.select_one("button.btn-ean")
-            if ean_button:
-                ean_match = re.search(r"\b(\d{8,14})\b", ean_button.get_text(" ", strip=True))
-                if ean_match:
-                    ean = ean_match.group(1)
-
-        candidates = by_ean.get(ean, []) if ean else []
+        candidates = by_code.get(model.casefold(), [])
         if len(candidates) != 1:
-            code_matches = by_code.get(model.casefold(), [])
-            if code_matches:
-                candidates = code_matches
+            next_view_index = matches[index + 1].start() if index + 1 < len(matches) else len(legacy_html)
+            card_tail = legacy_html[end_index:next_view_index]
+            ean_match = re.search(
+                r"navigator\.clipboard\.writeText\(['\"](\d{8,14})['\"]\)",
+                card_tail,
+            )
+            ean = ean_match.group(1) if ean_match else ""
+            if ean:
+                candidates = by_ean.get(ean, [])
         if len(candidates) > 1:
             exact = [
                 product
@@ -232,12 +247,8 @@ def load_legacy_overrides(
         if len(candidates) != 1:
             continue
 
-        sections = [
-            str(section)
-            for section in view.find_all("section", recursive=False)
-            if "product-parameters-section" not in (section.get("class") or [])
-        ]
-        raw_html = "".join(sections) if sections else view.decode_contents()
+        raw_html = legacy_html[view_match.end():end_index]
+        raw_html = re.sub(r"</div>\s*$", "", raw_html, count=1)
         raw_html = minify_description(raw_html)
         if len(plain_description(raw_html)) < 40:
             continue
@@ -271,40 +282,68 @@ def write_json(path: Path, value: Any) -> None:
     )
 
 
+def merge_existing_overrides(
+    extracted: dict[str, Any],
+    existing: dict[str, Any],
+    active_keys: set[str],
+) -> dict[str, Any]:
+    """Preserve hand-written channels that are absent from the legacy snapshot."""
+    assignments: dict[str, dict[str, str]] = {
+        key: dict(channels)
+        for key, channels in existing.get("products", {}).items()
+        if key in active_keys
+    }
+    for key, channels in extracted.get("products", {}).items():
+        if key not in active_keys:
+            continue
+        assignments.setdefault(key, {}).update(channels)
+
+    descriptions = {
+        **existing.get("descriptions", {}),
+        **extracted.get("descriptions", {}),
+    }
+    used_ids = {
+        description_id
+        for channels in assignments.values()
+        for description_id in channels.values()
+    }
+    return {
+        "descriptions": {
+            description_id: descriptions[description_id]
+            for description_id in sorted(used_ids)
+            if description_id in descriptions
+        },
+        "products": assignments,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", default=DEFAULT_FEED)
     parser.add_argument("--legacy", default="index.html")
+    parser.add_argument("--legacy-git-ref", default="")
+    parser.add_argument("--existing-overrides", default="")
     parser.add_argument("--output-dir", default="data")
     args = parser.parse_args()
 
     xml_bytes = read_source(args.source)
     products, metadata = build_catalog(xml_bytes)
     output_dir = Path(args.output_dir)
-    overrides, migration = load_legacy_overrides(Path(args.legacy), products)
-    existing_overrides_path = output_dir / "manual-overrides.json"
-    if not migration["cards"] and existing_overrides_path.exists():
-        overrides = json.loads(existing_overrides_path.read_text(encoding="utf-8"))
-        active_keys = {product["key"] for product in products}
-        overrides["products"] = {
-            key: value
-            for key, value in overrides.get("products", {}).items()
-            if key in active_keys
-        }
-        used_ids = {
-            description_id
-            for assignments in overrides["products"].values()
-            for description_id in assignments.values()
-        }
-        overrides["descriptions"] = {
-            description_id: description
-            for description_id, description in overrides.get("descriptions", {}).items()
-            if description_id in used_ids
-        }
+    legacy_html = load_legacy_html(Path(args.legacy), args.legacy_git_ref)
+    overrides, migration = load_legacy_overrides(legacy_html, products)
+    existing_overrides_path = Path(args.existing_overrides) if args.existing_overrides else output_dir / "manual-overrides.json"
+    existing_overrides = (
+        json.loads(existing_overrides_path.read_text(encoding="utf-8"))
+        if existing_overrides_path.exists()
+        else {"descriptions": {}, "products": {}}
+    )
+    active_keys = {product["key"] for product in products}
+    overrides = merge_existing_overrides(overrides, existing_overrides, active_keys)
+    if not migration["cards"]:
         migration = {
             "cards": 0,
             "matched": sum(len(value) for value in overrides["products"].values()),
-            "source": "existing manual-overrides.json",
+            "source": str(existing_overrides_path),
         }
     metadata["legacyMigration"] = migration
     metadata["manualOverrideProducts"] = len(overrides["products"])

@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "updatedAt": "2026-08-29T00:05:00+02:00",
+    "purpose": "Jawne rozstrzygnięcia rekordów, w których opis źródłowy należy do innego wariantu lub produktu."
+  },
+  "products": {
+    "ean:5902280373193": {
+      "status": "verified",
+      "ignoreSourceDescription": true,
+      "resolution": "Dokładna nazwa i SKU wskazują wariant bez LED i bez zasilacza. Tekst źródłowy opisuje rodzinę MI-WAVE z wariantami wyposażonymi w źródło i nie może być użyty dla tego SKU.",
+      "additionalAttributes": {
+        "Źródło światła": "bez LED",
+        "Wyposażenie": "bez zasilacza",
+        "Montaż": "Zwieszany",
+        "Klasa szczelności": "IP20",
+        "Kolor": "Czarny anodowany",
+        "System": "MI-WAVE-02 / MIFOR-70"
+      },
+      "verifiedSources": [
+        {
+          "url": "https://www.prescot.com.pl/pl/p/Oprawa-MI-WAVE-02%2C-zwieszana%2C-bez-LED-i-zasilacza%2C-IP20%2C-czarny-anodowany-KLUS/14316",
+          "scope": "dokładna nazwa, EAN i SKU wariantu"
+        },
+        {
+          "url": "https://klusdesign.pl/produkt/oprawa-mi-wave-02-53171",
+          "scope": "oficjalna karta rodziny MI-WAVE-02; potwierdza system i pokazuje, że tekst o źródle dotyczy rodziny skonfigurowanych wariantów"
+        }
+      ]
+    },
+    "ean:5902280369301": {
+      "status": "verified",
+      "ignoreSourceDescription": true,
+      "resolution": "Dokładna nazwa i SKU wskazują wariant bez LED. Tekst źródłowy o obecności źródła jest opisem rodziny SERPENT i pozostaje sprzeczny z tym wariantem.",
+      "additionalAttributes": {
+        "Źródło światła": "bez LED",
+        "Montaż": "Natynkowy",
+        "Kierunek światła": "W dół",
+        "Klosz": "Mikropryzma",
+        "Kolor": "Srebrny anodowany",
+        "System": "SERPENT"
+      },
+      "verifiedSources": [
+        {
+          "url": "https://www.prescot.com.pl/pl/p/Oprawa-Serpent-14-R500%2C-NT%2C-down%2C-klosz-Mikropryzma%2C-bez-LED%2C-srebrny-anodowany-KLUS/14873",
+          "scope": "dokładna nazwa, EAN i SKU wariantu"
+        },
+        {
+          "url": "https://klusdesign.pl/sitemap-pl.xml",
+          "scope": "oficjalna mapa kart rodziny SERPENT"
+        }
+      ]
+    },
+    "ean:5907577492908": {
+      "status": "verified",
+      "ignoreSourceDescription": true,
+      "resolution": "Opis łącznika schodowego został omyłkowo przypisany do ramki. Zachowano wyłącznie tożsamość produktu potwierdzoną nazwą, EAN-em i kodem RO-1U/67.",
+      "additionalAttributes": {
+        "Typ": "Ramka ozdobna mocująca",
+        "Seria": "ARIA",
+        "Kolor": "Srebro"
+      },
+      "verifiedSources": [
+        {
+          "url": "https://www.prescot.com.pl/pl/p/ARIA-SREBRO-RAMKA-OZDOBNA-MOCUJACA/11885",
+          "scope": "dokładna nazwa, EAN i kod producenta; strona ujawnia błędny opis łącznika"
+        }
+      ]
+    },
+    "ean:5907577437817": {
+      "status": "verified",
+      "ignoreSourceDescription": true,
+      "resolution": "Pierwszy akapit opisuje inne gniazdo. Użyto strukturalnych pól przypisanych do zgodnych EAN-u i kodu ramki R-1Y/00.",
+      "additionalAttributes": {
+        "Typ": "Ramka pojedyncza",
+        "Seria": "IMPRESJA",
+        "Kolor": "Biały",
+        "Wykonanie (materiał)": "Tworzywo sztuczne",
+        "Krotność": "1x",
+        "Kierunek montażu": "Uniwersalny",
+        "Szerokość": "84 mm",
+        "Wysokość": "84 mm"
+      },
+      "verifiedSources": [
+        {
+          "url": "https://www.prescot.com.pl/pl/p/IMPRESJA-BIALY-RAMKA-POJEDYNCZA/11325",
+          "scope": "EAN, kod producenta i pola strukturalne ramki; pominięto błędny akapit o gnieździe"
+        }
+      ]
+    }
+  }
+}
