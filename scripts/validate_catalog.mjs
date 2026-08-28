@@ -29,7 +29,7 @@ assert(products.every((product) => generated.products?.[product.key]?.editorial)
 const invalidEans = products.filter((product) => product.ean && !/^\d{8,14}$/.test(product.ean));
 assert(!invalidEans.length, `Nieprawidłowy format EAN: ${invalidEans.map((product) => product.ean).join(", ")}`);
 
-const generatedFingerprints = new Map();
+const descriptionFingerprints = new Map();
 let generatedCount = 0;
 let manualCount = 0;
 let shortestDescription = { length: Number.POSITIVE_INFINITY, product: null, platform: "" };
@@ -37,7 +37,14 @@ let longestDescription = { length: 0, product: null, platform: "" };
 
 for (const product of products) {
   for (const platform of platforms) {
-    const overrideId = overrides.products?.[product.key]?.[platform];
+    const assignment = overrides.products?.[product.key];
+    let overrideId = "";
+    if (platform === "shoper") overrideId = assignment?.wapro || "";
+    else if (platform === "wapro") overrideId = assignment?.shoper || "";
+    else {
+      overrideId = assignment?.[platform] || "";
+      if (overrideId && overrideId === assignment?.wapro) overrideId = "";
+    }
     const manualHtml = overrideId ? overrides.descriptions?.[overrideId] : "";
     const savedSeo = generated.products?.[product.key];
     const html = manualHtml || (savedSeo ? renderSeoDescription(product, savedSeo, platform) : generateDescription(product, platform));
@@ -48,17 +55,21 @@ for (const product of products) {
     assert(text.length >= 180, `Zbyt krótki opis: ${product.key} / ${platform} (${text.length} znaków).`);
     assert(!/\b(?:undefined|null|nan)\b/i.test(text), `Niedozwolona wartość w opisie: ${product.key} / ${platform}.`);
     assert(occurrences(html, /<section\b/gi) === occurrences(html, /<\/section>/gi), `Niezbilansowane sekcje: ${product.key} / ${platform}.`);
+    if (platform === "wapro") {
+      assert(!/\sstyle\s*=/i.test(html), `WAPRO zawiera niedozwolone style inline: ${product.key}.`);
+    }
+
+    const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
+    const existing = descriptionFingerprints.get(fingerprint);
+    if (existing) {
+      errors.push(`Identyczny opis dla ${existing} oraz ${product.key}/${platform}.`);
+    } else {
+      descriptionFingerprints.set(fingerprint, `${product.key}/${platform}`);
+    }
 
     if (!manualHtml) {
       const identifier = product.ean || product.manufacturerCode || product.code;
       assert(text.includes(identifier), `Brak identyfikatora w opisie: ${product.key} / ${platform}.`);
-      const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
-      const existing = generatedFingerprints.get(fingerprint);
-      if (existing) {
-        errors.push(`Identyczny opis wygenerowany dla ${existing} oraz ${product.key}/${platform}.`);
-      } else {
-        generatedFingerprints.set(fingerprint, `${product.key}/${platform}`);
-      }
       const name = product.name.toLocaleLowerCase("pl");
       if ((name.includes("bez led") || name.includes("bez źródła")) && /zawiera źródło światła|ze źródłem światła/i.test(text)) {
         errors.push(`Sprzeczność „bez LED” w opisie ${product.key}/${platform}.`);
@@ -86,6 +97,7 @@ const report = {
   totalDescriptions: products.length * platforms.length,
   generatedDescriptions: generatedCount,
   manualDescriptions: manualCount,
+  exactDuplicateDescriptions: 0,
   exactDuplicateGeneratedDescriptions: 0,
   productsWithEan: products.filter((product) => product.ean).length,
   productsWithoutEan: products.filter((product) => !product.ean).length,

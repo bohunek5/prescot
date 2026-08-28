@@ -77,7 +77,19 @@ function editKey(product, platform = state.platform) {
 }
 
 function manualOverrideId(product, platform = state.platform) {
-  return state.overrides.products?.[product.key]?.[platform] || "";
+  const assignment = state.overrides.products?.[product.key];
+  if (!assignment) return "";
+
+  // Starsza baza ręcznych opisów miała kanały Shoper i WAPRO przypisane odwrotnie
+  // do obecnego klucza: bogaty opis z poradnikami należy do Shopera, a prosty HTML do WAPRO.
+  if (platform === "shoper") return assignment.wapro || "";
+  if (platform === "wapro") return assignment.shoper || "";
+
+  const overrideId = assignment[platform] || "";
+  // Nie powielaj jednego ręcznego tekstu między Shoperem, TIM-em i Allegro.
+  // Gdy stara baza współdzieliła ID, TIM/Allegro dostają osobny opis redakcyjny.
+  if (overrideId && overrideId === assignment.wapro) return "";
+  return overrideId;
 }
 
 function hasManualOverride(product, platform = state.platform) {

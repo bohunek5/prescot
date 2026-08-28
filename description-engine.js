@@ -580,14 +580,24 @@ function seoGuides(product) {
   return `<section style="${STYLE.section}"><div style="font-family:inherit;margin-bottom:18px;background:none!important;background-color:transparent!important;color:inherit;"><span style="${seoPillStyle("#e94b25")}"><font color="#ffffff">Praktyczne poradniki</font></span><h3 style="${STYLE.heading}">${escapeHtml(guide.heading)}</h3><p style="${STYLE.paragraph}">${escapeHtml(guide.description)}</p></div><div style="font-family:inherit;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;background:none!important;background-color:transparent!important;color:inherit;align-items:stretch;">${cards}</div></section>`;
 }
 
-function seoShoper(product, result) {
+function seoWapro(product, result) {
   const identifierLabels = new Set(["producent", "kod produktu", "kod producenta", "ean"]);
   const specs = seoProductSpecs(product);
   const features = specs.filter(([label]) => !identifierLabels.has(label.toLocaleLowerCase("pl"))).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
   const identifiers = specs.filter(([label]) => ["kod produktu", "kod producenta", "ean"].includes(label.toLocaleLowerCase("pl"))).map(([label, value]) => `${label}: ${value}`);
-  const points = (values) => values.map((value) => `<p>- ${escapeHtml(normalize(value).replace(/\.$/, ""))}</p>`).join("");
-  const intro = result.sections[0].paragraphs.map(normalize).join(" ");
-  return `<section><h2>${escapeHtml(product.name)}</h2><p>${escapeHtml(intro)}</p><h3>Najważniejsze cechy:</h3>${points(features)}<h3>Dlaczego warto:</h3>${points(result.benefits)}<h3>Gdzie użyć:</h3>${points(result.applications)}<h3>Dobór bez pomyłki:</h3>${points([...result.selection_checks, ...identifiers])}</section>`;
+  const points = (values) => `<ul>${values.map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("")}</ul>`;
+  return `<div><h2>${escapeHtml(product.name)}</h2><p>${escapeHtml(normalize(result.channel_leads.wapro))}</p><h3>Najważniejsze dane</h3>${points(features)}<h3>Zastosowanie</h3>${points(result.applications)}<h3>Dobór wariantu</h3>${points([...result.selection_checks, ...identifiers])}</div>`;
+}
+
+function seoShoper(product, result) {
+  return [
+    seoSection(result.sections[0], { label: "Opis produktu" }),
+    seoBenefits(result.benefits),
+    seoSection(result.sections[1], { label: "Zastosowanie i dobór" }),
+    seoSpecs(product),
+    seoPoints("Dobór bez pomyłki", "Co sprawdzić przed montażem", [...result.selection_checks, ...result.installation_notes]),
+    seoGuides(product),
+  ].filter(Boolean).join("\n");
 }
 
 export function renderSeoDescription(product, saved, platform = "shoper") {
@@ -596,19 +606,7 @@ export function renderSeoDescription(product, saved, platform = "shoper") {
   const selected = PLATFORM_NAMES[platform] ? platform : "shoper";
   const code = product.manufacturerCode || product.code;
   if (selected === "shoper") return seoShoper(product, result);
-  if (selected === "wapro") {
-    const sections = result.sections.map((item) => ({ ...item, paragraphs: [...item.paragraphs] }));
-    const thirdText = sections[2].paragraphs.join(" ");
-    const identifiers = [
-      product.manufacturerCode && !thirdText.includes(product.manufacturerCode) ? `kod producenta ${product.manufacturerCode}` : "",
-      product.ean && !thirdText.includes(product.ean) ? `EAN ${product.ean}` : "",
-    ].filter(Boolean);
-    if (identifiers.length) {
-      const last = sections[2].paragraphs.length - 1;
-      sections[2].paragraphs[last] = `${sections[2].paragraphs[last].replace(/\.$/, "")}. Identyfikacja wariantu do zamówienia: ${identifiers.join("; ")}.`;
-    }
-    return [...sections.map((item) => seoSection(item)), seoGuides(product)].filter(Boolean).join("\n");
-  }
+  if (selected === "wapro") return seoWapro(product, result);
   if (selected === "tim") return [
     seoSection({ label: "Opis techniczny", heading: `${code} — dane do doboru`, paragraphs: [result.channel_leads.tim] }),
     seoSection(result.sections[1], { label: "Zastosowanie i dobór" }),

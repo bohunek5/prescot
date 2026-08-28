@@ -1,22 +1,23 @@
 {
-  "checkedAt": "2026-08-28T22:47:34.128Z",
+  "checkedAt": "2026-08-28T23:03:49.524Z",
   "activeProducts": 3410,
   "platforms": 4,
   "totalDescriptions": 13640,
-  "generatedDescriptions": 13120,
-  "manualDescriptions": 520,
+  "generatedDescriptions": 13132,
+  "manualDescriptions": 508,
+  "exactDuplicateDescriptions": 0,
   "exactDuplicateGeneratedDescriptions": 0,
   "productsWithEan": 3384,
   "productsWithoutEan": 26,
   "shortestDescription": {
-    "length": 447,
-    "product": "ean:5906555612918",
-    "platform": "shoper"
+    "length": 382,
+    "product": "ean:5902020215073",
+    "platform": "wapro"
   },
   "longestDescription": {
-    "length": 2313,
-    "product": "ean:5905475364167",
-    "platform": "wapro"
+    "length": 2403,
+    "product": "ean:5901885265445",
+    "platform": "shoper"
   },
   "warnings": [],
   "errors": []
