@@ -1,0 +1,9 @@
+{
+  "name": "prescot-description-catalog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "python3 -m http.server 8080",
+    "validate": "node scripts/validate_catalog.mjs"
+  }
+}
