@@ -113,12 +113,19 @@ function editKey(product, platform = state.platform) {
 function manualOverrideId(product, platform = state.platform) {
   const assignment = state.overrides.products?.[product.key];
   if (!assignment) return "";
-  const id = assignment[platform] || "";
-  // 45 dawnych wpisów WAPRO ma po właściwej czwartej sekcji drugi,
+  // Historyczne pole `wapro` zawiera bogaty, pomarańczowy układ sklepu.
+  // Proste ręczne wpisy zawierają miejscami stare wartości, dlatego WAPRO
+  // zawsze renderujemy na nowo w klasycznym układzie z aktualnych danych.
+  let id = platform === "shoper" ? assignment.wapro : assignment[platform];
+  id ||= "";
+  // 45 dawnych wpisów bogatego układu ma po właściwej czwartej sekcji drugi,
   // doklejony blok blogowy. Część zawiera też parametry sprzed aktualizacji
   // chmury (np. 900 zamiast 1000 lm/m). Nie wolno ich ponownie publikować.
-  if (platform === "wapro" && id && state.overrides.descriptions?.[id]?.includes('class="blog-grid"')) return "";
-  if (["tim", "allegro"].includes(platform) && id && id === assignment.wapro) return "";
+  if (platform === "shoper" && id && state.overrides.descriptions?.[id]?.includes('class="blog-grid"')) return "";
+  // TIM zawsze dostaje aktualny, czysty opis techniczny. Allegro nie przejmuje
+  // starego układu sklepowego, jeśli kiedyś wskazywało ten sam rekord.
+  if (["wapro", "tim"].includes(platform)) return "";
+  if (platform === "allegro" && id && id === assignment.wapro) return "";
   return id;
 }
 
@@ -255,7 +262,7 @@ function parameterSection(product) {
   ].filter(([, value]) => value);
   const entries = [...params, ...identity];
   if (!entries.length) return "";
-  return `<section class="parameter-section"><span class="parameter-label">Parametry z chmury</span><div class="parameter-grid">${entries.map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join("")}</div></section>`;
+  return `<section class="parameter-section"><span class="parameter-label">Atrybuty</span><div class="parameter-grid">${entries.map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join("")}</div></section>`;
 }
 
 function productBody(product) {
@@ -263,7 +270,7 @@ function productBody(product) {
   const [originLabel, originClass] = descriptionOrigin(product);
   return `<div class="product-body">
     <div class="description-preview" data-role="preview">${description}</div>
-    ${parameterSection(product)}
+    ${state.platform === "shoper" ? "" : parameterSection(product)}
     <div class="edit-panel" data-role="editor" hidden>
       <textarea class="edit-textarea" spellcheck="false">${escapeHtml(description)}</textarea>
       <div class="edit-actions">

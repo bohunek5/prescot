@@ -12,7 +12,8 @@ Statyczny panel GitHub Pages z aktywnymi produktami z feedu WAPRO. Katalog i aud
 - pozostałe opisy powstają z nazwy, kodu, EAN-u, kategorii, parametrów i tekstu źródłowego, bez dopisywania niepotwierdzonych danych technicznych;
 - konflikty źródeł są rozstrzygane jawnie w `data/source-resolutions.json` i zawierają adresy stron użytych do weryfikacji;
 - opis jest dostępny w wariantach Shoper, WAPRO/MAG, TIM i Allegro;
-- WAPRO otrzymuje dawny rodzinny układ kart z poradnikami (dla zasilaczy także tabelę parametrów), Shoper prosty układ sklepu, TIM dane do doboru i uwagi montażowe dla instalatora, a Allegro układ sprzedażowy;
+- Shoper otrzymuje dawny pomarańczowy układ kart z poradnikami (dla zasilaczy także tabelę parametrów) i nie dokleja pod opisem osobnego bloku atrybutów;
+- WAPRO otrzymuje klasyczny, lekki HTML bez stylów prezentacyjnych, generowany z aktualnych danych zamiast starych ręcznych liczb; TIM dostaje czysty opis techniczny dla TIM.pl, a Allegro osobny układ sprzedażowy;
 - walidator wymaga unikalności pełnego tekstu każdego z 13 640 opisów, także ręcznych.
 
 Panel zachowuje dawny wygląd bazy: wyszukiwarkę, pływające logotypy platform, kafle rodzin oraz akordeony produktów. Liczby w kaflach są obliczane z aktualnego katalogu. Wyszukiwanie po EAN-ie, SKU i treści działa we wszystkich rodzinach, także w sekcji „Pozostałe aktywne”.

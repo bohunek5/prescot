@@ -580,23 +580,31 @@ function seoGuides(product) {
   return `<section style="${STYLE.section}"><div style="font-family:inherit;margin-bottom:18px;background:none!important;background-color:transparent!important;color:inherit;"><span style="${seoPillStyle("#e94b25")}"><font color="#ffffff">Praktyczne poradniki</font></span><h3 style="${STYLE.heading}">${escapeHtml(guide.heading)}</h3><p style="${STYLE.paragraph}">${escapeHtml(guide.description)}</p></div><div style="font-family:inherit;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;background:none!important;background-color:transparent!important;color:inherit;align-items:stretch;">${cards}</div></section>`;
 }
 
-function seoShoper(product, result) {
+function seoWapro(product, result) {
   const identifierLabels = new Set(["producent", "kod produktu", "kod producenta", "ean"]);
   const specs = seoProductSpecs(product);
   const features = specs.filter(([label]) => !identifierLabels.has(label.toLocaleLowerCase("pl"))).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
   const identifiers = specs.filter(([label]) => ["kod produktu", "kod producenta", "ean"].includes(label.toLocaleLowerCase("pl"))).map(([label, value]) => `${label}: ${value}`);
   const points = (values) => values.map((value) => `<p>- ${escapeHtml(normalize(value).replace(/\.$/, ""))}</p>`).join("");
   const intro = result.sections[0].paragraphs.map(normalize).join(" ");
-  return `<section><h2>${escapeHtml(product.name)}</h2><p>${escapeHtml(intro)}</p><h3>Najważniejsze cechy:</h3>${points(features)}<h3>Dlaczego warto:</h3>${points(result.benefits)}<h3>Gdzie użyć:</h3>${points(result.applications)}<h3>Dobór bez pomyłki:</h3>${points([...result.selection_checks, ...identifiers])}</section>`;
+  const featurePoints = features.length ? features : result.benefits;
+  const benefitBlock = features.length ? `<h3>Dlaczego warto:</h3>${points(result.benefits)}` : "";
+  return `<section><h2>${escapeHtml(product.name)}</h2><p>${escapeHtml(intro)}</p><h3>Najważniejsze cechy:</h3>${points(featurePoints)}${benefitBlock}<h3>Gdzie użyć:</h3>${points(result.applications)}<h3>Dobór bez pomyłki:</h3>${points([...result.selection_checks, ...identifiers])}</section>`;
+}
+
+function seoTim(product, result) {
+  const code = product.manufacturerCode || product.code;
+  const points = (values) => values.map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("");
+  const specs = seoProductSpecs(product).map(([label, value]) => `${label}: ${value}`);
+  return `<section><h2>Opis dla TIM.pl: ${escapeHtml(product.name)}</h2><p>${escapeHtml(normalize(result.channel_leads.tim))}</p><h3>Dane techniczne modelu ${escapeHtml(code)}</h3><ul>${points(specs)}</ul><h3>Zastosowanie i dobór</h3><ul>${points([...result.applications, ...result.selection_checks])}</ul><h3>Uwagi dla instalatora</h3><ul>${points(result.installation_notes)}</ul></section>`;
 }
 
 export function renderSeoDescription(product, saved, platform = "shoper") {
   const result = saved?.editorial || saved;
   if (!result?.sections?.length) return generateDescription(product, platform);
   const selected = PLATFORM_NAMES[platform] ? platform : "shoper";
-  const code = product.manufacturerCode || product.code;
-  if (selected === "shoper") return seoShoper(product, result);
-  if (selected === "wapro") {
+  if (selected === "wapro") return seoWapro(product, result);
+  if (selected === "shoper") {
     const family = result.rule_family || "";
     const identifier = product.ean || product.manufacturerCode || product.code;
     const sourceSections = result.sections.map((item) => ({ ...item, paragraphs: [...(item.paragraphs || [])] }));
@@ -610,13 +618,7 @@ export function renderSeoDescription(product, saved, platform = "shoper") {
     }
     return [...sections, seoGuides(product)].filter(Boolean).join("\n");
   }
-  if (selected === "tim") return [
-    seoSection({ label: "Opis techniczny", heading: `${code} — dane do doboru`, paragraphs: [result.channel_leads.tim] }),
-    seoSection(result.sections[1], { label: "Zastosowanie i dobór" }),
-    seoPoints("Parametry do zamówienia", `Co sprawdzić przed zakupem modelu ${code}`, result.selection_checks),
-    seoSpecs(product),
-    seoPoints("Uwagi instalacyjne", "Przed podłączeniem i montażem", result.installation_notes),
-  ].join("\n");
+  if (selected === "tim") return seoTim(product, result);
   return [
     seoSection({ label: "Sprawdź przed zakupem", heading: result.seo_title, paragraphs: [result.channel_leads.allegro] }, { color: "#16a34a" }),
     seoBenefits(result.benefits),

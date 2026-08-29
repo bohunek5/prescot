@@ -31,26 +31,29 @@ async function searchAndOpen(ean) {
 }
 
 await searchAndOpen("5901885264851");
-assert.equal(await page.locator(".description-preview > section").count(), 4);
+assert.equal(await page.locator(".description-preview > section").count(), 1);
 assert.match(await page.locator(".description-preview").innerText(), /S-shape/i);
-assert.match(await page.locator(".description-preview").innerText(), /3000K/i);
-assert.match(await page.locator(".description-preview").innerText(), /1000\s*lm\/m/i);
-await page.screenshot({ path: "/tmp/prescot-s-shape.png", fullPage: true });
+assert.match(await page.locator(".parameter-label").innerText(), /^atrybuty$/i);
+await page.screenshot({ path: "/tmp/prescot-s-shape-wapro.png", fullPage: true });
 
 await page.locator('[data-platform="shoper"]').click();
 await page.locator(".product-trigger").click();
-assert.equal(await page.locator(".description-preview > section").count(), 1);
-assert.match(await page.locator(".description-preview").innerText(), /Najważniejsze cechy|Premium S-shape/i);
+assert.equal(await page.locator(".description-preview > section").count(), 4);
+assert.match(await page.locator(".description-preview").innerText(), /3000K/i);
+assert.match(await page.locator(".description-preview").innerText(), /1000\s*lm\/m/i);
+assert.equal(await page.locator(".parameter-section").count(), 0);
+await page.screenshot({ path: "/tmp/prescot-s-shape.png", fullPage: true });
 
 await page.locator('[data-platform="tim"]').click();
 await page.locator(".product-trigger").click();
-assert.ok(await page.locator(".description-preview > section").count() >= 4);
-assert.match(await page.locator(".description-preview").innerText(), /Parametry|dane do doboru/i);
+assert.equal(await page.locator(".description-preview > section").count(), 1);
+assert.match(await page.locator(".description-preview").innerText(), /Opis dla TIM\.pl|Dane techniczne/i);
+await page.screenshot({ path: "/tmp/prescot-s-shape-tim.png", fullPage: true });
 
 assert.deepEqual(consoleErrors, []);
 console.log("UI: 4 platformy, 6 rodzin, WAPRO domyślne.");
 console.log("EAN: wyszukiwanie zwraca dokładnie jeden aktywny produkt.");
-console.log("S-Shape: WAPRO 4 sekcje; Shoper układ prosty; TIM układ techniczny.");
+console.log("S-Shape: WAPRO klasyczny; Shoper 4 pomarańczowe sekcje bez dodatkowych atrybutów; TIM czysty techniczny HTML.");
 console.log("Konsola przeglądarki: 0 błędów.");
 
 await browser.close();

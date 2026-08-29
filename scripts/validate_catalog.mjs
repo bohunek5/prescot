@@ -38,10 +38,11 @@ let longestDescription = { length: 0, product: null, platform: "" };
 for (const product of products) {
   for (const platform of platforms) {
     const assignment = overrides.products?.[product.key];
-    let overrideId = "";
-    overrideId = assignment?.[platform] || "";
-    if (platform === "wapro" && overrideId && overrides.descriptions?.[overrideId]?.includes('class="blog-grid"')) overrideId = "";
-    if (["tim", "allegro"].includes(platform) && overrideId === assignment?.wapro) overrideId = "";
+    let overrideId = platform === "shoper" ? assignment?.wapro : assignment?.[platform];
+    overrideId ||= "";
+    if (platform === "shoper" && overrideId && overrides.descriptions?.[overrideId]?.includes('class="blog-grid"')) overrideId = "";
+    if (["wapro", "tim"].includes(platform)) overrideId = "";
+    if (platform === "allegro" && overrideId === assignment?.wapro) overrideId = "";
     const manualHtml = overrideId ? overrides.descriptions?.[overrideId] : "";
     const savedSeo = generated.products?.[product.key];
     const html = manualHtml || (savedSeo ? renderSeoDescription(product, savedSeo, platform) : generateDescription(product, platform));
@@ -52,7 +53,14 @@ for (const product of products) {
     assert(text.length >= 180, `Zbyt krótki opis: ${product.key} / ${platform} (${text.length} znaków).`);
     assert(!/\b(?:undefined|null|nan)\b/i.test(text), `Niedozwolona wartość w opisie: ${product.key} / ${platform}.`);
     assert(occurrences(html, /<section\b/gi) === occurrences(html, /<\/section>/gi), `Niezbilansowane sekcje: ${product.key} / ${platform}.`);
-    if (platform === "wapro") assert(occurrences(html, /<section\b/gi) >= 3, `WAPRO nie ma rodzinnego układu sekcji: ${product.key}.`);
+    if (platform === "shoper") {
+      assert(occurrences(html, /<section\b/gi) >= 3, `Shoper nie ma pomarańczowego układu sekcji: ${product.key}.`);
+      assert(/#(?:e94b25|f04923)/i.test(html), `Shoper nie ma pomarańczowego motywu: ${product.key}.`);
+    }
+    if (["wapro", "tim"].includes(platform)) {
+      assert(occurrences(html, /<section\b/gi) === 1, `${platform.toUpperCase()} nie ma klasycznego układu jednej sekcji: ${product.key}.`);
+      assert(!/\sstyle=/i.test(html), `${platform.toUpperCase()} zawiera zbędne style prezentacyjne: ${product.key}.`);
+    }
 
     const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
     const existing = descriptionFingerprints.get(fingerprint);
