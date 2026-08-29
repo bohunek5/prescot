@@ -11,6 +11,15 @@ function countSections(html) {
   return (html.match(/<section\b/gi) || []).length;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function resolve(product, platform) {
   const assignment = overrides.products?.[product.key];
   let id = platform === "shoper" ? assignment?.wapro : assignment?.[platform];
@@ -55,9 +64,11 @@ for (const [ean, label, markers] of references) {
     assert.doesNotMatch(text, /\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i, `${label}: niedozwolona nazwa identyfikatora w ${platform}`);
   }
   const timText = plainTextFromHtml(descriptions.tim);
-  if (product.categoryRoot === "Taśmy LED") assert.match(timText, /Do czego służy i gdzie użyć tej taśmy LED/i, `${label}: TIM nie ma zastosowania pod instalatora`);
+  assert.match(timText, /Do czego służy i gdzie użyć\s*:/i, `${label}: TIM nie ma nagłówka zastosowania`);
+  assert.ok(descriptions.tim.includes(`<h2>Do czego służy i gdzie użyć: ${escapeHtml(product.name)}</h2>`), `${label}: TIM nie ma nazwy artykułu w nagłówku`);
+  assert.ok(descriptions.tim.includes(`<h3>Wskazówki przy instalacji modelu: ${escapeHtml(product.code)}</h3>`), `${label}: TIM nie ma indeksu handlowego w nagłówku porad`);
   assert.doesNotMatch(timText, /Opis dla TIM\.pl|Dane techniczne|Indeks handlowy|Producent\s*:|EAN\s*:|Dane służą do porównania wariantu/i, `${label}: TIM powtarza dane karty produktu`);
-  assert.match(timText, /Wskazówki dla instalatora/i, `${label}: TIM nie ma porad instalacyjnych`);
+  assert.match(timText, /Wskazówki przy instalacji modelu\s*:/i, `${label}: TIM nie ma porad instalacyjnych`);
   console.log(`${label}: Shoper ${countSections(descriptions.shoper)} karty; WAPRO ${countSections(descriptions.wapro)} sekcja; TIM ${countSections(descriptions.tim)} sekcja; 4 unikatowe kanały.`);
 }
 

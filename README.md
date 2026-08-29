@@ -15,8 +15,8 @@ Statyczny panel GitHub Pages z aktywnymi produktami z feedu WAPRO. Katalog i aud
 - Shoper otrzymuje dawny pomarańczowy układ kart z poradnikami (dla zasilaczy także tabelę parametrów) i nie dokleja pod opisem osobnego bloku atrybutów;
 - WAPRO otrzymuje klasyczny, lekki HTML bez stylów prezentacyjnych, generowany z aktualnych danych zamiast starych ręcznych liczb; TIM dostaje czysty opis zastosowania i montażu bez osobnej tabeli atrybutów, a Allegro osobny układ sprzedażowy;
 - w treściach WAPRO, Shoper i Allegro oraz w eksporcie publicznym własny kod WAPRO występuje jako „Indeks handlowy”; kod producenta pozostaje wyłącznie wewnętrzną daną importu i nie jest publikowany jako identyfikator produktu;
-- TIM nie powtarza nazwy produktu, modelu, producenta, EAN-u, indeksu ani danych technicznych dostępnych w polach platformy; opis zawiera tylko zastosowanie oraz wskazówki dla instalatora, a dla taśm korzysta z potwierdzonych sekcji Shopera;
-- walidator wymaga unikalności pełnego tekstu w Shoperze, WAPRO i Allegro; w TIM dopuszcza tę samą treść wyłącznie wtedy, gdy różne warianty mają faktycznie identyczne zastosowanie i zalecenia montażowe — bez sztucznego obracania synonimami.
+- TIM zawiera tylko zastosowanie oraz wskazówki dla instalatora, a dla taśm korzysta z potwierdzonych sekcji Shopera; pierwszy nagłówek zawiera nazwę artykułu, a drugi własny indeks handlowy, bez producenta, osobnego EAN-u, tabeli ani bloku danych technicznych;
+- walidator wymaga unikalności pełnego tekstu każdego z 13 640 opisów, także ręcznych.
 
 Panel zachowuje dawny wygląd bazy: wyszukiwarkę, pływające logotypy platform, kafle rodzin oraz akordeony produktów. Liczby w kaflach są obliczane z aktualnego katalogu. Wyszukiwanie po EAN-ie, SKU i treści działa we wszystkich rodzinach, także w sekcji „Pozostałe aktywne”.
 

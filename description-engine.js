@@ -647,7 +647,6 @@ function seoWapro(product, result) {
 function seoTim(product, result) {
   const points = (values) => values.map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("");
   const paragraphs = (values) => values.map((value) => `<p>${escapeHtml(normalize(value))}</p>`).join("");
-  const isTape = result.rule_family === "tape" || product.categoryRoot === "Taśmy LED";
   const family = result.rule_family || "fallback";
   const identityPattern = /\b(?:model|symbolu modelu|indeks handlowy|ean|kod produktu|kod producenta|kod elementu|kod modułu|pełna nazwa|identyfikuje|dane służą)\b/i;
   const identifierValues = [...new Set([product.code, product.ean, product.manufacturerCode].map(normalize).filter(Boolean))];
@@ -798,8 +797,9 @@ function seoTim(product, result) {
     .filter((value) => value && !identityPattern.test(value))
     .filter((value, index, values) => values.findIndex((candidate) => candidate.toLocaleLowerCase("pl") === value.toLocaleLowerCase("pl")) === index)
     .slice(0, 4);
-  const useHeading = isTape ? "Do czego służy i gdzie użyć tej taśmy LED" : "Do czego służy i gdzie użyć";
-  return `<section><h2>${useHeading}</h2>${paragraphs(useParagraphs)}<ul>${points(applications)}</ul><h3>Wskazówki dla instalatora</h3><ul>${points(installerPoints)}</ul></section>`;
+  const useHeading = `Do czego służy i gdzie użyć: ${product.name}`;
+  const installerHeading = `Wskazówki przy instalacji modelu: ${product.code}`;
+  return `<section><h2>${escapeHtml(useHeading)}</h2>${paragraphs(useParagraphs)}<ul>${points(applications)}</ul><h3>${escapeHtml(installerHeading)}</h3><ul>${points(installerPoints)}</ul></section>`;
 }
 
 export function renderSeoDescription(product, saved, platform = "shoper") {

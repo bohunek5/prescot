@@ -18,6 +18,15 @@ function occurrences(value, pattern) {
   return (value.match(pattern) || []).length;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 const products = catalog.products;
 assert(products.length === catalog.meta.activeProducts, "Liczba produktów nie zgadza się z metadanymi.");
 assert(new Set(products.map((product) => product.key)).size === products.length, "Klucze produktów nie są unikalne.");
@@ -34,7 +43,6 @@ let generatedCount = 0;
 let manualCount = 0;
 let shortestDescription = { length: Number.POSITIVE_INFINITY, product: null, platform: "" };
 let longestDescription = { length: 0, product: null, platform: "" };
-let sharedTimPurposeDescriptions = 0;
 
 for (const product of products) {
   for (const platform of platforms) {
@@ -68,16 +76,15 @@ for (const product of products) {
       assert(occurrences(html, /<section\b/gi) === 1, `${platform.toUpperCase()} nie ma klasycznego układu jednej sekcji: ${product.key}.`);
       assert(!/\sstyle=/i.test(html), `${platform.toUpperCase()} zawiera zbędne style prezentacyjne: ${product.key}.`);
     }
-    if (platform === "tim" && product.categoryRoot === "Taśmy LED") {
-      assert(/Do czego służy i gdzie użyć tej taśmy LED/i.test(text), `TIM nie ma zastosowań taśmy dla instalatora: ${product.key}.`);
-    }
     if (platform === "tim") {
       assert(!/Opis dla TIM\.pl|Dane techniczne|Indeks handlowy|Producent\s*:|EAN\s*:|Dane służą do porównania wariantu/i.test(text), `TIM powtarza dane karty produktu: ${product.key}.`);
-      assert(!/\b(?:napięcie|moc(?: wyjściowa)?|prąd|wymiar(?:y)?|klasa szczelności|kod(?: produktu| producenta| elementu| modułu)?|model)\s*:/i.test(text), `TIM zawiera blok parametrów zamiast porady: ${product.key}.`);
+      assert(!/\b(?:napięcie|moc(?: wyjściowa)?|prąd|wymiar(?:y)?|klasa szczelności|kod(?: produktu| producenta| elementu| modułu)?)\s*:/i.test(text), `TIM zawiera blok parametrów zamiast porady: ${product.key}.`);
       assert(!/<table\b/i.test(html), `TIM zawiera tabelę parametrów: ${product.key}.`);
-      assert(!product.ean || !text.includes(product.ean), `TIM powtarza EAN: ${product.key}.`);
-      if (product.code.length >= 5) assert(!text.toLocaleLowerCase("pl").includes(product.code.toLocaleLowerCase("pl")), `TIM powtarza indeks handlowy bez etykiety: ${product.key}.`);
-      assert(/Wskazówki dla instalatora/i.test(text), `TIM nie ma porad dla instalatora: ${product.key}.`);
+      assert(!product.ean || product.ean === product.code || !text.includes(product.ean), `TIM powtarza EAN poza indeksem handlowym: ${product.key}.`);
+      assert(html.includes(`<h2>Do czego służy i gdzie użyć: ${escapeHtml(product.name)}</h2>`), `TIM nie ma nazwy artykułu w nagłówku: ${product.key}.`);
+      assert(html.includes(`<h3>Wskazówki przy instalacji modelu: ${escapeHtml(product.code)}</h3>`), `TIM nie ma indeksu handlowego w nagłówku porad: ${product.key}.`);
+      assert(/Do czego służy i gdzie użyć\s*:/i.test(text), `TIM nie ma nagłówka zastosowania: ${product.key}.`);
+      assert(/Wskazówki przy instalacji modelu\s*:/i.test(text), `TIM nie ma nagłówka porad instalacyjnych: ${product.key}.`);
       assert(occurrences(html, /<h2\b/gi) === 1 && occurrences(html, /<h3\b/gi) === 1, `TIM ma więcej niż dwa bloki treści: ${product.key}.`);
       const timLists = [...html.matchAll(/<ul>(.*?)<\/ul>/gis)].map((match) => occurrences(match[1], /<li\b/gi));
       assert(timLists.length === 2 && timLists[0] >= 2, `TIM nie ma dwóch konkretnych zastosowań: ${product.key}.`);
@@ -87,13 +94,7 @@ for (const product of products) {
     const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
     const existing = descriptionFingerprints.get(fingerprint);
     if (existing) {
-      if (platform === "tim" && existing.platform === "tim") {
-        // Różne warianty handlowe mogą mieć identyczne zastosowanie i zalecenia
-        // montażowe. TIM celowo nie dostaje sztucznych synonimów ani identyfikatorów.
-        sharedTimPurposeDescriptions += 1;
-      } else {
-        errors.push(`Identyczny opis dla ${existing.label} oraz ${product.key}/${platform}.`);
-      }
+      errors.push(`Identyczny opis dla ${existing.label} oraz ${product.key}/${platform}.`);
     } else {
       descriptionFingerprints.set(fingerprint, { label: `${product.key}/${platform}`, platform });
     }
@@ -128,9 +129,8 @@ const report = {
   totalDescriptions: products.length * platforms.length,
   generatedDescriptions: generatedCount,
   manualDescriptions: manualCount,
-  exactDuplicateDescriptions: sharedTimPurposeDescriptions,
-  exactDuplicateGeneratedDescriptions: sharedTimPurposeDescriptions,
-  sharedTimPurposeDescriptions,
+  exactDuplicateDescriptions: 0,
+  exactDuplicateGeneratedDescriptions: 0,
   productsWithEan: products.filter((product) => product.ean).length,
   productsWithoutEan: products.filter((product) => !product.ean).length,
   shortestDescription,
