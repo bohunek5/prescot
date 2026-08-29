@@ -74,6 +74,7 @@ for (const product of products) {
     if (platform === "tim") {
       assert(!/Opis dla TIM\.pl|Dane techniczne|Indeks handlowy|Producent\s*:|EAN\s*:|Dane służą do porównania wariantu/i.test(text), `TIM powtarza dane karty produktu: ${product.key}.`);
       assert(!/\b(?:napięcie|moc(?: wyjściowa)?|prąd|wymiar(?:y)?|klasa szczelności|kod(?: produktu| producenta| elementu| modułu)?|model)\s*:/i.test(text), `TIM zawiera blok parametrów zamiast porady: ${product.key}.`);
+      assert(!/<table\b/i.test(html), `TIM zawiera tabelę parametrów: ${product.key}.`);
       assert(!product.ean || !text.includes(product.ean), `TIM powtarza EAN: ${product.key}.`);
       if (product.code.length >= 5) assert(!text.toLocaleLowerCase("pl").includes(product.code.toLocaleLowerCase("pl")), `TIM powtarza indeks handlowy bez etykiety: ${product.key}.`);
       assert(/Wskazówki dla instalatora/i.test(text), `TIM nie ma porad dla instalatora: ${product.key}.`);

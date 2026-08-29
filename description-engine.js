@@ -668,7 +668,14 @@ function seoTim(product, result) {
       .replace(/po potwierdzeniu symbolu modelu/gi, "po potwierdzeniu zgodności elementów")
       .replace(/zgodnego z kodem i serią/gi, "zgodnego z serią")
       .replace(/zgodnych z kodem i serią/gi, "zgodnych z serią")
-      .replace(/Montaż w warunkach zgodnych z klasą\s+IP\s*\d{2}/gi, "Montaż w miejscu odpowiadającym warunkom przewidzianym dla oprawy");
+      .replace(/Montaż w warunkach zgodnych z klasą\s+IP\s*\d{2}/gi, "Montaż w miejscu odpowiadającym warunkom przewidzianym dla oprawy")
+      .replace(/\bIP\s*\d{2}\b/gi, "")
+      .replace(/\b\d+(?:[.,]\d+)?(?:\s*[-–]\s*\d+(?:[.,]\d+)?)?\s*(?:V|W|A|mA|lm|mm|cm|K|dB)(?:\b|\/)/gi, "")
+      .replace(/^Zastosowanie oprawy w formie:\s*oprawa\s+oprawy\s+/i, "Oświetlenie za pomocą oprawy ")
+      .replace(/^Zastosowanie oprawy w formie:\s*/i, "Oświetlenie w formie: ")
+      .replace(/\s+[-–—]\s*$/g, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
     const colorMatch = cleaned.match(/^Dekoracyjne akcenty w barwie\s+(.+)$/i);
     if (!colorMatch) return cleaned;
     const color = colorMatch[1].toLocaleLowerCase("pl");

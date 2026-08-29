@@ -1,18 +1,18 @@
 {
-  "checkedAt": "2026-08-29T14:11:03.988Z",
+  "checkedAt": "2026-08-29T14:13:54.804Z",
   "activeProducts": 3410,
   "platforms": 4,
   "totalDescriptions": 13640,
   "generatedDescriptions": 13431,
   "manualDescriptions": 209,
-  "exactDuplicateDescriptions": 2573,
-  "exactDuplicateGeneratedDescriptions": 2573,
-  "sharedTimPurposeDescriptions": 2573,
+  "exactDuplicateDescriptions": 2694,
+  "exactDuplicateGeneratedDescriptions": 2694,
+  "sharedTimPurposeDescriptions": 2694,
   "productsWithEan": 3384,
   "productsWithoutEan": 26,
   "shortestDescription": {
-    "length": 370,
-    "product": "ean:4014501013472",
+    "length": 357,
+    "product": "ean:8009935004550",
     "platform": "tim"
   },
   "longestDescription": {
