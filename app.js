@@ -147,7 +147,7 @@ function descriptionFor(product, platform = state.platform) {
   const saved = state.generated.products?.[product.key];
   if (!html && saved?.editorial) html = renderSeoDescription(product, saved, platform);
   if (!html) html = generateDescription(product, platform);
-  return normalizeDescriptionIdentity(product, html);
+  return normalizeDescriptionIdentity(product, html, { ensureTradeIndex: platform !== "tim" });
 }
 
 function descriptionOrigin(product) {
@@ -442,7 +442,7 @@ function exportEdits() {
       ean: product?.ean || "",
       tradeIndex: product?.code || "",
       name: product?.name || "",
-      description: product ? normalizeDescriptionIdentity(product, description) : description,
+      description: product ? normalizeDescriptionIdentity(product, description, { ensureTradeIndex: platform !== "tim" }) : description,
     };
   });
   const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), edits }, null, 2)], { type: "application/json" });

@@ -13,10 +13,10 @@ Statyczny panel GitHub Pages z aktywnymi produktami z feedu WAPRO. Katalog i aud
 - konflikty źródeł są rozstrzygane jawnie w `data/source-resolutions.json` i zawierają adresy stron użytych do weryfikacji;
 - opis jest dostępny w wariantach Shoper, WAPRO/MAG, TIM i Allegro;
 - Shoper otrzymuje dawny pomarańczowy układ kart z poradnikami (dla zasilaczy także tabelę parametrów) i nie dokleja pod opisem osobnego bloku atrybutów;
-- WAPRO otrzymuje klasyczny, lekki HTML bez stylów prezentacyjnych, generowany z aktualnych danych zamiast starych ręcznych liczb; TIM dostaje czysty opis techniczny dla TIM.pl bez osobnej tabeli atrybutów, a Allegro osobny układ sprzedażowy;
-- w treściach i eksporcie publicznym własny kod WAPRO występuje jako „Indeks handlowy”; kod producenta pozostaje wyłącznie wewnętrzną daną importu i nie jest publikowany jako identyfikator produktu;
-- opisy TIM dla taśm wykorzystują potwierdzone sekcje zastosowań z Shopera oraz osobne wskazówki dla instalatora;
-- walidator wymaga unikalności pełnego tekstu każdego z 13 640 opisów, także ręcznych.
+- WAPRO otrzymuje klasyczny, lekki HTML bez stylów prezentacyjnych, generowany z aktualnych danych zamiast starych ręcznych liczb; TIM dostaje czysty opis zastosowania i montażu bez osobnej tabeli atrybutów, a Allegro osobny układ sprzedażowy;
+- w treściach WAPRO, Shoper i Allegro oraz w eksporcie publicznym własny kod WAPRO występuje jako „Indeks handlowy”; kod producenta pozostaje wyłącznie wewnętrzną daną importu i nie jest publikowany jako identyfikator produktu;
+- TIM nie powtarza nazwy produktu, modelu, producenta, EAN-u, indeksu ani danych technicznych dostępnych w polach platformy; opis zawiera tylko zastosowanie oraz wskazówki dla instalatora, a dla taśm korzysta z potwierdzonych sekcji Shopera;
+- walidator wymaga unikalności pełnego tekstu w Shoperze, WAPRO i Allegro; w TIM dopuszcza tę samą treść wyłącznie wtedy, gdy różne warianty mają faktycznie identyczne zastosowanie i zalecenia montażowe — bez sztucznego obracania synonimami.
 
 Panel zachowuje dawny wygląd bazy: wyszukiwarkę, pływające logotypy platform, kafle rodzin oraz akordeony produktów. Liczby w kaflach są obliczane z aktualnego katalogu. Wyszukiwanie po EAN-ie, SKU i treści działa we wszystkich rodzinach, także w sekcji „Pozostałe aktywne”.
 

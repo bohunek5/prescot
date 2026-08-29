@@ -18,7 +18,11 @@ function resolve(product, platform) {
   if (platform === "shoper" && id && overrides.descriptions?.[id]?.includes('class="blog-grid"')) id = "";
   if (["wapro", "tim"].includes(platform)) id = "";
   if (platform === "allegro" && id === assignment?.wapro) id = "";
-  return normalizeDescriptionIdentity(product, (id && overrides.descriptions?.[id]) || renderSeoDescription(product, generated.products?.[product.key], platform) || generateDescription(product, platform));
+  return normalizeDescriptionIdentity(
+    product,
+    (id && overrides.descriptions?.[id]) || renderSeoDescription(product, generated.products?.[product.key], platform) || generateDescription(product, platform),
+    { ensureTradeIndex: platform !== "tim" },
+  );
 }
 
 const references = [
@@ -47,10 +51,13 @@ for (const [ean, label, markers] of references) {
   assert.ok(!/\sstyle=/i.test(descriptions.tim), `${label}: TIM zawiera style prezentacyjne`);
   for (const platform of platforms) {
     const text = plainTextFromHtml(descriptions[platform]);
-    assert.match(text, new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i"), `${label}: brak indeksu handlowego w ${platform}`);
+    if (platform !== "tim") assert.match(text, new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i"), `${label}: brak indeksu handlowego w ${platform}`);
     assert.doesNotMatch(text, /\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i, `${label}: niedozwolona nazwa identyfikatora w ${platform}`);
   }
-  if (product.categoryRoot === "Taśmy LED") assert.match(plainTextFromHtml(descriptions.tim), /Gdzie użyć tej taśmy LED i do czego służy ten wariant/i, `${label}: TIM nie ma zastosowania pod instalatora`);
+  const timText = plainTextFromHtml(descriptions.tim);
+  if (product.categoryRoot === "Taśmy LED") assert.match(timText, /Do czego służy i gdzie użyć tej taśmy LED/i, `${label}: TIM nie ma zastosowania pod instalatora`);
+  assert.doesNotMatch(timText, /Opis dla TIM\.pl|Dane techniczne|Indeks handlowy|Producent\s*:|EAN\s*:|Dane służą do porównania wariantu/i, `${label}: TIM powtarza dane karty produktu`);
+  assert.match(timText, /Wskazówki dla instalatora/i, `${label}: TIM nie ma porad instalacyjnych`);
   console.log(`${label}: Shoper ${countSections(descriptions.shoper)} karty; WAPRO ${countSections(descriptions.wapro)} sekcja; TIM ${countSections(descriptions.tim)} sekcja; 4 unikatowe kanały.`);
 }
 

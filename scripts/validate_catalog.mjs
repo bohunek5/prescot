@@ -34,6 +34,7 @@ let generatedCount = 0;
 let manualCount = 0;
 let shortestDescription = { length: Number.POSITIVE_INFINITY, product: null, platform: "" };
 let longestDescription = { length: 0, product: null, platform: "" };
+let sharedTimPurposeDescriptions = 0;
 
 for (const product of products) {
   for (const platform of platforms) {
@@ -45,7 +46,11 @@ for (const product of products) {
     if (platform === "allegro" && overrideId === assignment?.wapro) overrideId = "";
     const manualHtml = overrideId ? overrides.descriptions?.[overrideId] : "";
     const savedSeo = generated.products?.[product.key];
-    const html = normalizeDescriptionIdentity(product, manualHtml || (savedSeo ? renderSeoDescription(product, savedSeo, platform) : generateDescription(product, platform)));
+    const html = normalizeDescriptionIdentity(
+      product,
+      manualHtml || (savedSeo ? renderSeoDescription(product, savedSeo, platform) : generateDescription(product, platform)),
+      { ensureTradeIndex: platform !== "tim" },
+    );
     const text = plainTextFromHtml(html);
     if (manualHtml) manualCount += 1;
     else generatedCount += 1;
@@ -53,7 +58,7 @@ for (const product of products) {
     assert(text.length >= 180, `Zbyt krótki opis: ${product.key} / ${platform} (${text.length} znaków).`);
     assert(!/\b(?:undefined|null|nan)\b/i.test(text), `Niedozwolona wartość w opisie: ${product.key} / ${platform}.`);
     assert(!/\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i.test(text), `Niedozwolona nazwa identyfikatora: ${product.key} / ${platform}.`);
-    assert(new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i").test(text), `Brak indeksu handlowego: ${product.key} / ${platform}.`);
+    if (platform !== "tim") assert(new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i").test(text), `Brak indeksu handlowego: ${product.key} / ${platform}.`);
     assert(occurrences(html, /<section\b/gi) === occurrences(html, /<\/section>/gi), `Niezbilansowane sekcje: ${product.key} / ${platform}.`);
     if (platform === "shoper") {
       assert(occurrences(html, /<section\b/gi) >= 3, `Shoper nie ma pomarańczowego układu sekcji: ${product.key}.`);
@@ -64,20 +69,37 @@ for (const product of products) {
       assert(!/\sstyle=/i.test(html), `${platform.toUpperCase()} zawiera zbędne style prezentacyjne: ${product.key}.`);
     }
     if (platform === "tim" && product.categoryRoot === "Taśmy LED") {
-      assert(/Gdzie użyć tej taśmy LED i do czego służy ten wariant/i.test(text), `TIM nie ma zastosowań taśmy dla instalatora: ${product.key}.`);
+      assert(/Do czego służy i gdzie użyć tej taśmy LED/i.test(text), `TIM nie ma zastosowań taśmy dla instalatora: ${product.key}.`);
+    }
+    if (platform === "tim") {
+      assert(!/Opis dla TIM\.pl|Dane techniczne|Indeks handlowy|Producent\s*:|EAN\s*:|Dane służą do porównania wariantu/i.test(text), `TIM powtarza dane karty produktu: ${product.key}.`);
+      assert(!/\b(?:napięcie|moc(?: wyjściowa)?|prąd|wymiar(?:y)?|klasa szczelności|kod(?: produktu| producenta| elementu| modułu)?|model)\s*:/i.test(text), `TIM zawiera blok parametrów zamiast porady: ${product.key}.`);
+      assert(!product.ean || !text.includes(product.ean), `TIM powtarza EAN: ${product.key}.`);
+      if (product.code.length >= 5) assert(!text.toLocaleLowerCase("pl").includes(product.code.toLocaleLowerCase("pl")), `TIM powtarza indeks handlowy bez etykiety: ${product.key}.`);
+      assert(/Wskazówki dla instalatora/i.test(text), `TIM nie ma porad dla instalatora: ${product.key}.`);
+      assert(occurrences(html, /<h2\b/gi) === 1 && occurrences(html, /<h3\b/gi) === 1, `TIM ma więcej niż dwa bloki treści: ${product.key}.`);
+      const timLists = [...html.matchAll(/<ul>(.*?)<\/ul>/gis)].map((match) => occurrences(match[1], /<li\b/gi));
+      assert(timLists.length === 2 && timLists[0] >= 2, `TIM nie ma dwóch konkretnych zastosowań: ${product.key}.`);
+      assert(timLists[1] >= 3, `TIM nie ma co najmniej trzech porad montażowych: ${product.key}.`);
     }
 
     const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
     const existing = descriptionFingerprints.get(fingerprint);
     if (existing) {
-      errors.push(`Identyczny opis dla ${existing} oraz ${product.key}/${platform}.`);
+      if (platform === "tim" && existing.platform === "tim") {
+        // Różne warianty handlowe mogą mieć identyczne zastosowanie i zalecenia
+        // montażowe. TIM celowo nie dostaje sztucznych synonimów ani identyfikatorów.
+        sharedTimPurposeDescriptions += 1;
+      } else {
+        errors.push(`Identyczny opis dla ${existing.label} oraz ${product.key}/${platform}.`);
+      }
     } else {
-      descriptionFingerprints.set(fingerprint, `${product.key}/${platform}`);
+      descriptionFingerprints.set(fingerprint, { label: `${product.key}/${platform}`, platform });
     }
 
     if (!manualHtml) {
       const identifier = product.ean || product.code;
-      assert(text.includes(identifier), `Brak identyfikatora w opisie: ${product.key} / ${platform}.`);
+      if (platform !== "tim") assert(text.includes(identifier), `Brak identyfikatora w opisie: ${product.key} / ${platform}.`);
       const name = product.name.toLocaleLowerCase("pl");
       if ((name.includes("bez led") || name.includes("bez źródła")) && /zawiera źródło światła|ze źródłem światła/i.test(text)) {
         errors.push(`Sprzeczność „bez LED” w opisie ${product.key}/${platform}.`);
@@ -105,8 +127,9 @@ const report = {
   totalDescriptions: products.length * platforms.length,
   generatedDescriptions: generatedCount,
   manualDescriptions: manualCount,
-  exactDuplicateDescriptions: 0,
-  exactDuplicateGeneratedDescriptions: 0,
+  exactDuplicateDescriptions: sharedTimPurposeDescriptions,
+  exactDuplicateGeneratedDescriptions: sharedTimPurposeDescriptions,
+  sharedTimPurposeDescriptions,
   productsWithEan: products.filter((product) => product.ean).length,
   productsWithoutEan: products.filter((product) => !product.ean).length,
   shortestDescription,

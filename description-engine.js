@@ -100,10 +100,10 @@ function replaceDescriptionIdentity(product, htmlValue) {
     .replace(/\b(?:numeru|nr) katalogowego(?: producenta)?\b/gi, "indeksu handlowego");
 }
 
-export function normalizeDescriptionIdentity(product, htmlValue) {
+export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIndex = true } = {}) {
   const tradeIndex = normalize(product?.code);
   let value = replaceDescriptionIdentity(product, htmlValue);
-  if (!tradeIndex) return value;
+  if (!ensureTradeIndex || !tradeIndex) return value;
   const text = value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ");
   const hasNamedTradeIndex = /indeks handlowy/i.test(text) && text.includes(tradeIndex);
   if (hasNamedTradeIndex) return value;
@@ -645,16 +645,154 @@ function seoWapro(product, result) {
 }
 
 function seoTim(product, result) {
-  const code = product.code;
   const points = (values) => values.map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("");
-  const paragraphs = (values) => values.filter(Boolean).map((value) => `<p>${escapeHtml(normalize(value))}</p>`).join("");
-  const specs = seoProductSpecs(product).map(([label, value]) => `${label}: ${value}`);
+  const paragraphs = (values) => values.map((value) => `<p>${escapeHtml(normalize(value))}</p>`).join("");
   const isTape = result.rule_family === "tape" || product.categoryRoot === "Taśmy LED";
-  const shoperUse = isTape
-    ? result.sections.slice(1, 3).flatMap((section) => section.paragraphs || [])
-    : result.sections[1]?.paragraphs || [];
-  const useHeading = isTape ? "Gdzie użyć tej taśmy LED i do czego służy ten wariant" : "Zastosowanie i dobór";
-  return `<section><h2>Opis dla TIM.pl: ${escapeHtml(product.name)}</h2><p>${escapeHtml(normalize(result.channel_leads.tim))}</p><h3>Dane techniczne — indeks handlowy ${escapeHtml(code)}</h3><ul>${points(specs)}</ul><h3>${useHeading}</h3>${paragraphs(shoperUse)}<ul>${points(result.applications)}</ul><h3>Wskazówki dla instalatora</h3><ul>${points([...result.selection_checks, ...result.installation_notes])}</ul></section>`;
+  const family = result.rule_family || "fallback";
+  const identityPattern = /\b(?:model|symbolu modelu|indeks handlowy|ean|kod produktu|kod producenta|kod elementu|kod modułu|pełna nazwa|identyfikuje|dane służą)\b/i;
+  const identifierValues = [...new Set([product.code, product.ean, product.manufacturerCode].map(normalize).filter(Boolean))];
+  const redactIdentifiers = (value) => identifierValues.reduce((current, identifier) => {
+    const escaped = identifier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return current.replace(new RegExp(`(^|[^\\p{L}\\p{N}])${escaped}(?=$|[^\\p{L}\\p{N}])`, "giu"), "$1tego wariantu");
+  }, normalize(value));
+  const cleanApplication = (value) => {
+    const colorCases = {
+      czerwona: "czerwonym",
+      niebieska: "niebieskim",
+      pomarańczowa: "pomarańczowym",
+      różowa: "różowym",
+      zielona: "zielonym",
+      żółta: "żółtym",
+    };
+    const cleaned = redactIdentifiers(value)
+      .replace(/po potwierdzeniu symbolu modelu/gi, "po potwierdzeniu zgodności elementów")
+      .replace(/zgodnego z kodem i serią/gi, "zgodnego z serią")
+      .replace(/zgodnych z kodem i serią/gi, "zgodnych z serią")
+      .replace(/Montaż w warunkach zgodnych z klasą\s+IP\s*\d{2}/gi, "Montaż w miejscu odpowiadającym warunkom przewidzianym dla oprawy");
+    const colorMatch = cleaned.match(/^Dekoracyjne akcenty w barwie\s+(.+)$/i);
+    if (!colorMatch) return cleaned;
+    const color = colorMatch[1].toLocaleLowerCase("pl");
+    const locative = colorCases[color];
+    return locative
+      ? `Oświetlenie dekoracyjne, podświetlenia ekspozycyjne i oznaczenia w kolorze ${locative}`
+      : "Oświetlenie dekoracyjne, podświetlenia ekspozycyjne i oznaczenia kolorystyczne";
+  };
+  const cleanInstaller = (value) => redactIdentifiers(value)
+    .replace(/Stosuj zasilacz zgodny z napięciem\s+[^.;]+/i, "Przed podłączeniem potwierdź zgodność napięcia taśmy i zasilacza")
+    .replace(/Dziel taśmę zgodnie z modułem cięcia\s+[^.;]+/i, "Dziel taśmę wyłącznie w oznaczonych miejscach cięcia")
+    .replace(/Nie stosuj zestawu w warunkach przekraczających podaną klasę szczelności/i, "Miejsce montażu dobierz do warunków dopuszczonych w instrukcji zestawu");
+
+  const familyInstaller = {
+    tape: [
+      "Przed montażem oczyść i odtłuść podłoże albo profil",
+      "Na dłuższych odcinkach zaplanuj punkty zasilania tak, aby ograniczyć spadki napięcia",
+      "Połączenia i miejsca cięcia zabezpiecz odpowiednio do warunków pracy instalacji",
+    ],
+    power: [
+      "Zsumuj pobór wszystkich odbiorników i pozostaw bezpieczny zapas mocy",
+      "Przed podłączeniem potwierdź zgodność strony wejściowej, wyjściowej i sposobu sterowania",
+      "Zapewnij wentylację obudowy oraz dostęp serwisowy do zacisków",
+    ],
+    profile: [
+      "Przed cięciem sprawdź zgodność profilu, klosza, zaślepek i uchwytów",
+      "Profil przytnij i zamocuj przed wklejeniem taśmy LED",
+      "Powierzchnię pod taśmę oczyść i odtłuść, a przewody wyprowadź bez ostrych załamań",
+    ],
+    profile_accessory: [
+      "Przed montażem potwierdź zgodność akcesorium z rodziną i przekrojem profilu",
+      "Najpierw wykonaj próbne złożenie całego odcinka bez taśmy LED",
+      "Element osadź bez nadmiernego naprężania profilu, klosza ani przewodów",
+    ],
+    profile_cover: [
+      "Przed cięciem potwierdź zgodność osłony z rodziną i przekrojem profilu",
+      "Osłonę przytnij na gotowym wymiarze profilu i osadź bez jej skręcania",
+      "Przed zamknięciem profilu sprawdź działanie całej linii LED",
+    ],
+    controller: [
+      "Przed podłączeniem potwierdź zgodność typu taśmy, zasilacza i liczby kanałów",
+      "Oznacz przewody przed wpięciem ich do zacisków sterownika",
+      "Po uruchomieniu sprawdź każdy kanał oraz pełny zakres regulacji",
+    ],
+    control_input: [
+      "Przed parowaniem potwierdź zgodność nadajnika z odbiornikiem i strefą sterowania",
+      "Panel lub pilot sparuj przed ostatecznym zamknięciem zabudowy",
+      "Po montażu sprawdź reakcję wszystkich przypisanych odbiorników",
+    ],
+    control_accessory: [
+      "Przed zabudową potwierdź zgodność akcesorium z panelem lub sterownikiem",
+      "Zostaw dostęp serwisowy do przewodów i połączeń",
+      "Przed zamknięciem zabudowy wykonaj próbę działania sterowania",
+    ],
+    accessory: [
+      "Przed podłączeniem porównaj typ złącza po obu stronach instalacji",
+      "Przewody przygotuj bez uszkadzania żył i wykonaj próbę połączenia przed zabudową",
+      "Po montażu sprawdź pewność styku oraz zabezpiecz połączenie przed wyrwaniem",
+    ],
+    module: [
+      "Podłączaj moduł przy odłączonym zasilaniu i z zachowaniem polaryzacji",
+      "Zapewnij odprowadzanie ciepła odpowiednie dla źródła LED",
+      "Przed zamknięciem oprawy sprawdź zasilanie i równomierność świecenia",
+    ],
+    sensor: [
+      "Miejsce montażu wybierz zgodnie z instrukcją i zakresem działania czujnika",
+      "Po montażu wykonaj pełny test działania",
+      "Zostaw dostęp potrzebny do kontroli, czyszczenia i serwisu urządzenia",
+    ],
+    battery: [
+      "Przed wymianą sprawdź format ogniwa i polaryzację w urządzeniu",
+      "Nie zwieraj biegunów podczas przechowywania ani wymiany",
+      "Zużyte ogniwo oddaj do właściwego punktu zbiórki baterii",
+    ],
+    technical_component: [
+      "Przed montażem odłącz zasilanie i potwierdź brak napięcia",
+      "Sprawdź zgodność elementu ze źródłem oraz urządzeniem współpracującym",
+      "Podłączenie wykonaj według schematu właściwego dla całego układu",
+    ],
+    festive: [
+      "Przed montażem sprawdź przewód, oprawki i wszystkie połączenia",
+      "Trasę przewodu zaplanuj bez naprężeń i miejsc narażonych na uszkodzenie",
+      "Przed uruchomieniem sprawdź warunki pracy oraz sposób zasilania zestawu",
+    ],
+    luminaire: [
+      "Przed pracami odłącz zasilanie i sprawdź kompletność elementów",
+      "Miejsce oraz sposób mocowania dobierz do konstrukcji oprawy i warunków pracy",
+      "Przed zamknięciem zabudowy wykonaj próbę działania oświetlenia",
+    ],
+    light_source: [
+      "Wymianę wykonuj przy odłączonym zasilaniu i po ostygnięciu oprawy",
+      "Potwierdź zgodność źródła z oprawką, statecznikiem lub układem zasilającym",
+      "Po montażu sprawdź stabilny zapłon i pracę źródła",
+    ],
+  };
+  const electricalInstaller = [
+    "Montaż instalacji elektrycznej powierz osobie z odpowiednimi kwalifikacjami",
+    "Przed pracami odłącz zasilanie i potwierdź brak napięcia",
+    "Po montażu sprawdź połączenia i działanie całego obwodu przed założeniem osłon",
+  ];
+  const defaultInstaller = [
+    "Przed montażem sprawdź zgodność wszystkich łączonych elementów",
+    "Prace wykonuj przy odłączonym zasilaniu i według instrukcji urządzeń współpracujących",
+    "Przed zamknięciem zabudowy wykonaj próbę działania całego układu",
+  ];
+  const isElectrical = ["electrical", "electrical_frame", "electrical_switch", "electrical_socket", "distribution_board"].includes(family);
+  const technicalValuePattern = /\b(?:IP\s*\d{2}|CRI\s*>?\s*\d+|\d+(?:[.,]\d+)?\s*(?:V|W|A|mA|lm|mm|cm|m|K|dB)(?:\b|\/)|napięci[eu]|moc(?:y|ą)?|prąd(?:u|em)?|wymiar(?:y|u|em)?|klas(?:a|y|ą) szczelności|gęstość diod|moduł cięcia)\b/i;
+  const useParagraphs = (result.sections || [])
+    .slice(1, 3)
+    .flatMap((section) => section.paragraphs || [])
+    .map(redactIdentifiers)
+    .filter((value) => value.length >= 55 && !identityPattern.test(value) && !technicalValuePattern.test(value) && !/\b(?:pełnej nazwie|wskazany w nazwie|dane tego wariantu)\b/i.test(value))
+    .slice(0, 2);
+  const applications = (result.applications || [])
+    .map(cleanApplication)
+    .filter((value) => value && !identityPattern.test(value))
+    .slice(0, 4);
+  const installerPoints = [...(result.installation_notes || []), ...(familyInstaller[family] || (isElectrical ? electricalInstaller : defaultInstaller))]
+    .map(cleanInstaller)
+    .filter((value) => value && !identityPattern.test(value))
+    .filter((value, index, values) => values.findIndex((candidate) => candidate.toLocaleLowerCase("pl") === value.toLocaleLowerCase("pl")) === index)
+    .slice(0, 4);
+  const useHeading = isTape ? "Do czego służy i gdzie użyć tej taśmy LED" : "Do czego służy i gdzie użyć";
+  return `<section><h2>${useHeading}</h2>${paragraphs(useParagraphs)}<ul>${points(applications)}</ul><h3>Wskazówki dla instalatora</h3><ul>${points(installerPoints)}</ul></section>`;
 }
 
 export function renderSeoDescription(product, saved, platform = "shoper") {
@@ -676,7 +814,7 @@ export function renderSeoDescription(product, saved, platform = "shoper") {
     }
     return normalizeDescriptionIdentity(product, [...sections, seoGuides(product)].filter(Boolean).join("\n"));
   }
-  if (selected === "tim") return normalizeDescriptionIdentity(product, seoTim(product, result));
+  if (selected === "tim") return normalizeDescriptionIdentity(product, seoTim(product, result), { ensureTradeIndex: false });
   return normalizeDescriptionIdentity(product, [
     seoSection({ label: "Sprawdź przed zakupem", heading: result.seo_title, paragraphs: [result.channel_leads.allegro] }, { color: "#16a34a" }),
     seoBenefits(result.benefits),
@@ -696,7 +834,7 @@ export function generateDescription(product, platform = "shoper") {
     technicalSection(product, selectedPlatform),
     blogSection(product, selectedPlatform, kind),
   ];
-  return normalizeDescriptionIdentity(product, parts.filter(Boolean).join("\n"));
+  return normalizeDescriptionIdentity(product, parts.filter(Boolean).join("\n"), { ensureTradeIndex: selectedPlatform !== "tim" });
 }
 
 export function plainTextFromHtml(htmlValue) {
