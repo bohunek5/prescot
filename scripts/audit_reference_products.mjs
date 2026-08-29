@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { generateDescription, renderSeoDescription, plainTextFromHtml } from "../description-engine.js";
+import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, plainTextFromHtml } from "../description-engine.js";
 
 const catalog = JSON.parse(await readFile(new URL("../data/catalog.json", import.meta.url), "utf8"));
 const overrides = JSON.parse(await readFile(new URL("../data/manual-overrides.json", import.meta.url), "utf8"));
@@ -18,7 +18,7 @@ function resolve(product, platform) {
   if (platform === "shoper" && id && overrides.descriptions?.[id]?.includes('class="blog-grid"')) id = "";
   if (["wapro", "tim"].includes(platform)) id = "";
   if (platform === "allegro" && id === assignment?.wapro) id = "";
-  return (id && overrides.descriptions?.[id]) || renderSeoDescription(product, generated.products?.[product.key], platform) || generateDescription(product, platform);
+  return normalizeDescriptionIdentity(product, (id && overrides.descriptions?.[id]) || renderSeoDescription(product, generated.products?.[product.key], platform) || generateDescription(product, platform));
 }
 
 const references = [
@@ -45,6 +45,12 @@ for (const [ean, label, markers] of references) {
   assert.ok(!descriptions.shoper.includes('class="blog-grid"'), `${label}: wykryto drugi, doklejony blog`);
   assert.ok(!/\sstyle=/i.test(descriptions.wapro), `${label}: WAPRO zawiera style prezentacyjne`);
   assert.ok(!/\sstyle=/i.test(descriptions.tim), `${label}: TIM zawiera style prezentacyjne`);
+  for (const platform of platforms) {
+    const text = plainTextFromHtml(descriptions[platform]);
+    assert.match(text, new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i"), `${label}: brak indeksu handlowego w ${platform}`);
+    assert.doesNotMatch(text, /\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i, `${label}: niedozwolona nazwa identyfikatora w ${platform}`);
+  }
+  if (product.categoryRoot === "Taśmy LED") assert.match(plainTextFromHtml(descriptions.tim), /Gdzie użyć tej taśmy LED i do czego służy ten wariant/i, `${label}: TIM nie ma zastosowania pod instalatora`);
   console.log(`${label}: Shoper ${countSections(descriptions.shoper)} karty; WAPRO ${countSections(descriptions.wapro)} sekcja; TIM ${countSections(descriptions.tim)} sekcja; 4 unikatowe kanały.`);
 }
 

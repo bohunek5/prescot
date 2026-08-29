@@ -30,6 +30,10 @@ OLLAMA_URL = "http://127.0.0.1:11434/api/chat"
 DEFAULT_MODEL = "qwen3.5:latest"
 PLATFORMS = ("shoper", "wapro", "tim", "allegro")
 ADMIN_ATTRIBUTE_LABELS = {
+    "producent",
+    "kod produktu",
+    "kod producenta",
+    "ean",
     "producent odpowiedzialny",
     "podmiot odpowiedzialny",
     "nazwa galerii",
@@ -231,7 +235,7 @@ def unique_meta_description(meta: str, product: dict[str, Any], used_description
         return normalized
 
     identifier = normalize(product.get("code") or product.get("manufacturerCode") or product.get("ean"))
-    suffix = f"; kod produktu: {identifier}."
+    suffix = f"; indeks handlowy: {identifier}."
     maximum_base_length = 170 - len(suffix)
     base = normalized[:maximum_base_length].rstrip(" .;,–—-|")
     if len(normalized) > maximum_base_length and " " in base:
@@ -475,8 +479,7 @@ def facts_payload(product: dict[str, Any]) -> dict[str, Any]:
         "nazwa": product["name"],
         "kategoria": product["category"],
         "producent": product["producer"],
-        "kod_produktu": product["code"],
-        "kod_producenta": product["manufacturerCode"],
+        "indeks_handlowy": product["code"],
         "ean": product["ean"],
         "parametry": public_attributes,
         "opis_zrodlowy": normalize(product["sourceDescription"])[:3500],
@@ -658,7 +661,10 @@ def all_generated_text(result: dict[str, Any]) -> str:
         values = result.get(field, [])
         if isinstance(values, list):
             parts.extend(values)
-    return normalize(" ".join(parts))
+    # Kropka oddziela niezależne pola. Bez niej indeks kończący się cyfrą i
+    # następne zdanie zaczynające się od „W” wyglądały jak fałszywa moc, np.
+    # „MIL-00013 W”.
+    return normalize(". ".join(parts))
 
 
 def normalize_measure(value: str) -> str:
@@ -953,7 +959,12 @@ def product_specs(product: dict[str, Any]) -> list[tuple[str, str]]:
             continue
         seen.add(identity)
         specs.append((display_label, clean_value))
-    return specs
+    return [
+        *([("Producent", product["producer"])] if product["producer"] else []),
+        *([("Indeks handlowy", product["code"])] if product["code"] else []),
+        *([("EAN", product["ean"])] if product["ean"] else []),
+        *specs,
+    ]
 
 
 def render_specs(product: dict[str, Any], color: str = "#475569") -> str:
@@ -968,7 +979,7 @@ def render_specs(product: dict[str, Any], color: str = "#475569") -> str:
     return (
         f'<section style="{STYLE["section"]}">'
         f'<span style="{pill_style(color)}"><font color="#ffffff">Parametry</font></span>'
-        f'<h3 style="{STYLE["heading"]}">Dane wariantu {html.escape(product["manufacturerCode"] or product["code"])}</h3>'
+        f'<h3 style="{STYLE["heading"]}">Dane wariantu {html.escape(product["code"])}</h3>'
         '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:6px;">'
         f'{"".join(items)}</div></section>'
     )
@@ -1027,9 +1038,9 @@ def render_blog_guides(product: dict[str, Any]) -> str:
 
 
 def render_shoper(product: dict[str, Any], result: dict[str, Any]) -> str:
-    identifier_labels = {"producent", "kod produktu", "kod producenta", "ean"}
+    identifier_labels = {"producent", "indeks handlowy", "ean"}
     feature_specs = [item for item in product_specs(product) if item[0].lower() not in identifier_labels][:7]
-    identifiers = [item for item in product_specs(product) if item[0].lower() in {"kod produktu", "kod producenta", "ean"}]
+    identifiers = [item for item in product_specs(product) if item[0].lower() in {"indeks handlowy", "ean"}]
 
     def paragraph_points(points: list[str]) -> str:
         return "".join(f'<p>- {html.escape(normalize(point).removesuffix("."))}</p>' for point in points)
@@ -1055,7 +1066,7 @@ def render_shoper(product: dict[str, Any], result: dict[str, Any]) -> str:
 
 def render_channels(product: dict[str, Any], result: dict[str, Any]) -> dict[str, str]:
     leads = result["channel_leads"]
-    model_code = product["manufacturerCode"] or product["code"]
+    model_code = product["code"]
     wapro_parts = [render_section(section) for section in result["sections"]]
     guides = render_blog_guides(product)
     if guides:
@@ -1258,7 +1269,7 @@ def main() -> None:
         last_result: dict[str, Any] | None = None
         last_errors: list[str] = []
         if not args.quiet:
-            print(f"[{position}/{len(selected)}] {product['manufacturerCode'] or product['code']} — {product['name']}", flush=True)
+            print(f"[{position}/{len(selected)}] {product['code']} — {product['name']}", flush=True)
 
         attempt_limit = 1 if args.rules_only else args.max_retries
         for attempt in range(1, attempt_limit + 1):

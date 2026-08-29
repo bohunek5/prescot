@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readFile, writeFile } from "node:fs/promises";
-import { generateDescription, renderSeoDescription, plainTextFromHtml, PLATFORM_NAMES } from "../description-engine.js";
+import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, plainTextFromHtml, PLATFORM_NAMES } from "../description-engine.js";
 
 const catalog = JSON.parse(await readFile(new URL("../data/catalog.json", import.meta.url), "utf8"));
 const overrides = JSON.parse(await readFile(new URL("../data/manual-overrides.json", import.meta.url), "utf8"));
@@ -45,13 +45,15 @@ for (const product of products) {
     if (platform === "allegro" && overrideId === assignment?.wapro) overrideId = "";
     const manualHtml = overrideId ? overrides.descriptions?.[overrideId] : "";
     const savedSeo = generated.products?.[product.key];
-    const html = manualHtml || (savedSeo ? renderSeoDescription(product, savedSeo, platform) : generateDescription(product, platform));
+    const html = normalizeDescriptionIdentity(product, manualHtml || (savedSeo ? renderSeoDescription(product, savedSeo, platform) : generateDescription(product, platform)));
     const text = plainTextFromHtml(html);
     if (manualHtml) manualCount += 1;
     else generatedCount += 1;
 
     assert(text.length >= 180, `Zbyt krótki opis: ${product.key} / ${platform} (${text.length} znaków).`);
     assert(!/\b(?:undefined|null|nan)\b/i.test(text), `Niedozwolona wartość w opisie: ${product.key} / ${platform}.`);
+    assert(!/\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i.test(text), `Niedozwolona nazwa identyfikatora: ${product.key} / ${platform}.`);
+    assert(new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i").test(text), `Brak indeksu handlowego: ${product.key} / ${platform}.`);
     assert(occurrences(html, /<section\b/gi) === occurrences(html, /<\/section>/gi), `Niezbilansowane sekcje: ${product.key} / ${platform}.`);
     if (platform === "shoper") {
       assert(occurrences(html, /<section\b/gi) >= 3, `Shoper nie ma pomarańczowego układu sekcji: ${product.key}.`);
@@ -60,6 +62,9 @@ for (const product of products) {
     if (["wapro", "tim"].includes(platform)) {
       assert(occurrences(html, /<section\b/gi) === 1, `${platform.toUpperCase()} nie ma klasycznego układu jednej sekcji: ${product.key}.`);
       assert(!/\sstyle=/i.test(html), `${platform.toUpperCase()} zawiera zbędne style prezentacyjne: ${product.key}.`);
+    }
+    if (platform === "tim" && product.categoryRoot === "Taśmy LED") {
+      assert(/Gdzie użyć tej taśmy LED i do czego służy ten wariant/i.test(text), `TIM nie ma zastosowań taśmy dla instalatora: ${product.key}.`);
     }
 
     const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
@@ -71,7 +76,7 @@ for (const product of products) {
     }
 
     if (!manualHtml) {
-      const identifier = product.ean || product.manufacturerCode || product.code;
+      const identifier = product.ean || product.code;
       assert(text.includes(identifier), `Brak identyfikatora w opisie: ${product.key} / ${platform}.`);
       const name = product.name.toLocaleLowerCase("pl");
       if ((name.includes("bez led") || name.includes("bez źródła")) && /zawiera źródło światła|ze źródłem światła/i.test(text)) {

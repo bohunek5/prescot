@@ -17,6 +17,8 @@ ADMIN_FIELDS = {
     "nazwa galerii",
     "informacje o bezpieczeństwie",
 }
+# Nazwy pól w surowym eksporcie. Publicznie pokazujemy wyłącznie własny
+# `product["code"]` pod nazwą „Indeks handlowy”.
 IDENTITY_FIELDS = {"producent", "kod produktu", "kod producenta", "ean"}
 
 
@@ -188,12 +190,12 @@ def exact_spec_sentence(specs: list[tuple[str, str]]) -> str:
 
 def title_for(product: dict[str, Any]) -> str:
     name = normalize(product["name"]).replace(" | ", " – ")
-    code = normalize(product["manufacturerCode"] or product["code"])
+    code = normalize(product["code"])
     title = name
     if len(title) < 45 and code and code.casefold() not in title.casefold():
-        title = f"{title} – kod {code}"
+        title = f"{title} – indeks handlowy {code}"
     if len(title) < 40:
-        title = f"{title} – kod produktu {code}"
+        title = f"{title} – indeks handlowy {code}"
     if len(title) < 40 and product.get("ean"):
         title = f"{title} | EAN {product['ean']}"
     if len(title) > 70:
@@ -207,7 +209,7 @@ def title_for(product: dict[str, Any]) -> str:
 
 def meta_for(product: dict[str, Any], specs: list[tuple[str, str]]) -> str:
     name = normalize(product["name"])
-    code = normalize(product["manufacturerCode"] or product["code"])
+    code = normalize(product["code"])
     ean = normalize(product["ean"])
     facts = [f"{label.lower()} {value}" for label, value in specs[:5]]
     prefix = f"{name.rstrip('.')}. "
@@ -216,7 +218,7 @@ def meta_for(product: dict[str, Any], specs: list[tuple[str, str]]) -> str:
         suffixes.append(sentence_case(join_polish(facts)) + ".")
     identity = []
     if code:
-        identity.append(f"kod {code}")
+        identity.append(f"indeks handlowy {code}")
     if identity:
         suffixes.append(sentence_case(join_polish(identity)) + ".")
     if ean:
@@ -229,7 +231,7 @@ def meta_for(product: dict[str, Any], specs: list[tuple[str, str]]) -> str:
     meta = normalize(meta)
     if len(meta) < 120:
         exact_additions = [
-            f"Kod producenta: {code}." if code and code.casefold() not in meta.casefold() else "",
+            f"Indeks handlowy: {code}." if code and code.casefold() not in meta.casefold() else "",
             f"EAN: {ean}." if ean and ean not in meta else "",
             f"Typ: {product['category'].split('/')[-1]}." if product.get("category") else "",
         ]
@@ -237,29 +239,29 @@ def meta_for(product: dict[str, Any], specs: list[tuple[str, str]]) -> str:
             if addition and len(meta) < 120 and len(f"{meta} {addition}") <= 170:
                 meta = f"{meta} {addition}"
     if len(meta) < 120 and code:
-        addition = f"Wariant identyfikowany kodem {code}."
+        addition = f"Wariant identyfikowany indeksem handlowym {code}."
         if len(f"{meta} {addition}") <= 170:
             meta = f"{meta} {addition}"
     if len(meta) < 120:
-        addition = "Przed zakupem porównaj kod i EAN."
+        addition = "Przed zakupem porównaj indeks handlowy i EAN."
         if len(f"{meta} {addition}") <= 170:
             meta = f"{meta} {addition}"
     if len(meta) > 170:
         compact_name = title_for(product)
         meta = f"{compact_name.rstrip('.')}. {sentence_case(join_polish(facts[:4]))}."
         if len(meta) < 120 and code:
-            meta += f" Kod producenta {code}."
+            meta += f" Indeks handlowy {code}."
     if len(meta) > 170:
         cut = meta[:167].rsplit(" ", 1)[0].rstrip(" ,;:-")
         meta = cut + "."
     if len(meta) < 120:
-        addition = "Przed zakupem porównaj kod i EAN."
+        addition = "Przed zakupem porównaj indeks handlowy i EAN."
         if len(f"{meta} {addition}") <= 170:
             meta = f"{meta} {addition}"
     meta = re.sub(r"(?<=\d)\.{2,3}(?=\d)", "–", meta)
     meta = re.sub(r"\.{2,}", ".", meta)
     if len(meta) < 120:
-        addition = "Przed zakupem porównaj kod i EAN."
+        addition = "Przed zakupem porównaj indeks handlowy i EAN."
         if len(f"{meta} {addition}") <= 170:
             meta = f"{meta} {addition}"
     return meta
@@ -401,7 +403,7 @@ def finish(
     notes: list[str],
     specs: list[tuple[str, str]],
 ) -> dict[str, Any]:
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     title = title_for(product)
     meta = meta_for(product, specs)
     code = normalize(code)
@@ -453,7 +455,7 @@ def finish(
     if len(checks) < 2:
         checks.extend(f"Porównaj parametr „{label}”: {value}" for label, value in specs)
     if len(checks) < 2:
-        checks.extend([f"Porównaj pełny kod produktu {code}", f"Zweryfikuj EAN {product['ean']} przed zamówieniem"])
+        checks.extend([f"Porównaj pełny indeks handlowy {code}", f"Zweryfikuj EAN {product['ean']} przed zamówieniem"])
     if not notes:
         notes.append("Przed montażem porównaj parametry wszystkich łączonych elementów")
 
@@ -473,11 +475,11 @@ def finish(
         for value in checks
     ]
 
-    lead_facts = exact_spec_sentence(specs[:3]) if specs else f"Kod produktu: {code}."
-    wapro_lead = normalize(f"{title.rstrip('.')}. Najważniejsze dane: {benefits[0].lower()} oraz {benefits[1].lower()}. Kod: {code}.")
+    lead_facts = exact_spec_sentence(specs[:3]) if specs else f"Indeks handlowy: {code}."
+    wapro_lead = normalize(f"{title.rstrip('.')}. Najważniejsze dane: {benefits[0].lower()} oraz {benefits[1].lower()}. Indeks handlowy: {code}.")
     tim_lead = normalize(f"Model {code}. {lead_facts} Dane służą do porównania wariantu przed zamówieniem. EAN: {product['ean']}.")
     first_check = re.sub(r"(?i)^(?:przed zakupem )?sprawdź(?: przed zakupem)?:\s*", "", checks[0])
-    allegro_lead = normalize(f"{applications[0]}. Przed zakupem sprawdź: {first_check.lower()}. Kod wariantu: {code}.")
+    allegro_lead = normalize(f"{applications[0]}. Przed zakupem sprawdź: {first_check.lower()}. Indeks handlowy: {code}.")
     return {
         "seo_title": title,
         "meta_description": meta,
@@ -559,7 +561,7 @@ def tape_editorial(product: dict[str, Any]) -> dict[str, Any]:
     name = product["name"]
     lower = name.casefold()
     source = normalize(product.get("sourceDescription", ""))
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
 
     def found(pattern: str, *values: str) -> str:
         for value in values:
@@ -695,7 +697,7 @@ def tape_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 def manufacturer_source_editorial(product: dict[str, Any], family_label: str) -> dict[str, Any]:
     """Preserve manufacturer copy for external brands while adding only catalog identity and checks."""
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     specs = public_specs(product)[:10]
     source = source_sentences(product, 4)
     raw_source = normalize(product.get("sourceDescription", ""))
@@ -713,14 +715,14 @@ def manufacturer_source_editorial(product: dict[str, Any], family_label: str) ->
         return normalize(value)
 
     source = [clean_source(value) for value in source if clean_source(value)]
-    identity = f"Pełna nazwa wariantu: {product['name']}. Kod producenta: {code}."
+    identity = f"Pełna nazwa wariantu: {product['name']}. Indeks handlowy: {code}."
     first = source[0] if source else identity
     second = source[1] if len(source) > 1 else f"Produkt należy do grupy {product['category'].split('/')[-1]} i zachowuje oznaczenie modelu {code} nadane przez producenta."
     third = source[2] if len(source) > 2 else f"Przeznaczenie i zgodność wariantu należy potwierdzić po symbolu {code}, a nie wyłącznie po wyglądzie elementu."
     fourth = source[3] if len(source) > 3 else "Elementy współpracujące oraz sposób montażu dobiera się według oznaczeń podanych dla tej samej rodziny producenta."
     spec_sentence = exact_spec_sentence(specs[:6])
     if not spec_sentence or spec_sentence in {first, second, third}:
-        spec_sentence = f"Identyfikatory katalogowe tego wariantu to kod {code} oraz EAN {product['ean']}."
+        spec_sentence = f"Identyfikatory tego wariantu to indeks handlowy {code} oraz EAN {product['ean']}."
     first_paragraphs = [first]
     if first != identity:
         first_paragraphs.append(identity)
@@ -734,16 +736,16 @@ def manufacturer_source_editorial(product: dict[str, Any], family_label: str) ->
         f"Zastosowanie przewidziane dla grupy {product['category'].split('/')[-1]}",
         f"Kompletacja systemu {family_label} po potwierdzeniu symbolu modelu",
     ]
-    checks = [f"Sprawdź kod producenta {code}", f"Porównaj EAN {product['ean']}"]
+    checks = [f"Sprawdź indeks handlowy {code}", f"Porównaj EAN {product['ean']}"]
     checks.extend(f"Zweryfikuj {label.casefold()}: {value}" for label, value in specs[:2])
-    notes = ["Przed montażem porównaj kod elementu i zgodność z pozostałymi częściami systemu producenta"]
+    notes = ["Przed montażem porównaj indeks handlowy elementu i zgodność z pozostałymi częściami systemu"]
     return finish(product, sections, benefits, applications, checks, notes, specs)
 
 
 def battery_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:8]
     name = product["name"]
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     format_match = re.search(r"(?i)\bCR\s*\d{4}\b", name)
     voltage_match = re.search(r"(?i)\b\d+(?:[.,]\d+)?\s*V\b", name)
     battery_format = normalize(format_match.group(0)).replace(" ", "").upper() if format_match else code
@@ -754,7 +756,7 @@ def battery_editorial(product: dict[str, Any]) -> dict[str, Any]:
             "label": "Format ogniwa",
             "heading": f"Bateria {battery_format}{f' o napięciu {voltage}' if voltage else ''}",
             "paragraphs": [
-                f"Pełna nazwa wariantu: {name}. Kod producenta: {code}; EAN: {product['ean']}.",
+                f"Pełna nazwa wariantu: {name}. Indeks handlowy: {code}; EAN: {product['ean']}.",
                 "Oznaczenie formatu określa wymiary i układ styków ogniwa, dlatego zamiennik należy dobrać po pełnym symbolu baterii.",
             ],
         },
@@ -810,7 +812,7 @@ def profile_cover_editorial(product: dict[str, Any]) -> dict[str, Any]:
         10,
     )
     name = product["name"]
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     length_match = re.search(r"(?i)\b\d+(?:[.,]\d+)?\s*m\b", name)
     length = attr(product, "Długość") or (normalize(length_match.group(0)).replace(" ", "") if length_match else "")
     color = attr(product, "Kolor osłony", "Kolor")
@@ -850,7 +852,7 @@ def profile_cover_editorial(product: dict[str, Any]) -> dict[str, Any]:
             "label": "Zgodność z profilem",
             "heading": f"Osłona do systemu {target}",
             "paragraphs": [
-                f"Pełna nazwa wariantu: {name}. Kod producenta: {code}.",
+                f"Pełna nazwa wariantu: {name}. Indeks handlowy: {code}.",
                 f"Element należy dobrać do profilu z rodziny {target}; podobny przekrój lub kolor nie potwierdza zgodności mocowania.",
             ],
         },
@@ -911,7 +913,7 @@ def profile_accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
     )
     name = product["name"]
     lower = name.casefold()
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     accessory_type, role, application = next(
         (
             entry
@@ -946,7 +948,7 @@ def profile_accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
         {
             "label": "Rola elementu",
             "heading": f"{sentence_case(accessory_type)} — model {code}",
-            "paragraphs": [f"Pełna nazwa wariantu: {name}. Kod producenta: {code}.", role],
+            "paragraphs": [f"Pełna nazwa wariantu: {name}. Indeks handlowy: {code}.", role],
         },
         {
             "label": "Wykonanie i montaż",
@@ -960,7 +962,7 @@ def profile_accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
             "label": "Dobór bez pomyłki",
             "heading": "Rodzina profilu, funkcja elementu i pełny kod",
             "paragraphs": [
-                f"Kod producenta: {code}; EAN: {product['ean']}; typ elementu: {accessory_type}.",
+                f"Indeks handlowy: {code}; EAN: {product['ean']}; typ elementu: {accessory_type}.",
                 "Nie dobieraj akcesorium wyłącznie na podstawie zdjęcia — porównaj nazwę rodziny, wymiary, funkcję oraz sposób mocowania.",
             ],
         },
@@ -989,7 +991,7 @@ def profile_editorial(product: dict[str, Any]) -> dict[str, Any]:
     if "KLUŚ" in product.get("producer", "").upper():
         return manufacturer_source_editorial(product, "KLUŚ")
     specs = preferred_specs(product, ["Wykonanie (materiał)", "Kolor profilu", "Kolor", "Wykończenie", "Długość", "Szerokość profilu", "Szerokość świecenia", "Montaż", "Kolor osłony", "Przeznaczenie produktu", "Gwarancja"], 11)
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     material = attr(product, "Wykonanie (materiał)") or ("aluminium" if "alumini" in f"{product['category']} {product['name']}".casefold() else "")
     color = attr(product, "Kolor profilu", "Kolor", "Wykończenie") or product_color(product)
     length = attr(product, "Długość") or name_value(product, r"\b\d+(?:[.,]\d+)?\s*m\b")
@@ -1004,9 +1006,9 @@ def profile_editorial(product: dict[str, Any]) -> dict[str, Any]:
     sold_without_cover = "bez osłony" in source_lower or "osłon" in source_lower and "sprzedawan" in source_lower
     thermal_text = "Aluminiowy korpus odbiera ciepło z taśmy LED, dlatego profil jest częścią układu montażowego, a nie wyłącznie wykończeniem." if "alumini" in material.casefold() else "Profil porządkuje montaż taśmy LED i wyznacza formę gotowej linii światła."
     sections = [
-        {"label": "Konstrukcja", "heading": f"{sentence_case(material) if material else 'Profil LED'} w wariancie {color or product['manufacturerCode']}", "paragraphs": [f"Pełna nazwa wariantu: {product['name']}. Kod producenta: {product['manufacturerCode'] or product['code']}. {exact_spec_sentence(specs[:4])}", thermal_text]},
+        {"label": "Konstrukcja", "heading": f"{sentence_case(material) if material else 'Profil LED'} w wariancie {color or product['code']}", "paragraphs": [f"Pełna nazwa wariantu: {product['name']}. Indeks handlowy: {product['code']}. {exact_spec_sentence(specs[:4])}", thermal_text]},
         {"label": "Wymiar i montaż", "heading": f"{f'Długość {length}' if length else f'Model {code}'} i montaż {mounting or 'w systemie profilu'}", "paragraphs": [exact_spec_sentence([(k, v) for k, v in [("Długość", length), ("Szerokość profilu", width), ("Szerokość świecenia", light_width), ("Montaż", mounting)] if v]), source_summary[0] if source_summary and ("montaż" in source_summary[0].casefold() or "sufit" in source_summary[0].casefold()) else "Wymiary profilu należy porównać z taśmą, osłoną, zaślepkami i dostępną przestrzenią montażową."]},
-        {"label": "Kompletacja systemu", "heading": "Osłona, zaślepki i akcesoria do właściwego modelu", "paragraphs": [f"Profil jest sprzedawany bez osłony; klosz i elementy końcowe dobierz do rodziny {product['manufacturerCode'] or product['code']}." if sold_without_cover else f"Kolor osłony: {cover}; pozostałe elementy dobierz do kodu profilu." if cover else "Osłonę i elementy końcowe dobierz do konkretnej rodziny oraz kodu profilu.", f"Przeznaczenie wskazane w danych: {purpose}." if purpose else "Przed cięciem sprawdź długość elementu i sposób mocowania podany dla tego wariantu."]},
+        {"label": "Kompletacja systemu", "heading": "Osłona, zaślepki i akcesoria do właściwego modelu", "paragraphs": [f"Profil jest sprzedawany bez osłony; klosz i elementy końcowe dobierz do rodziny {product['code']}." if sold_without_cover else f"Kolor osłony: {cover}; pozostałe elementy dobierz do kodu profilu." if cover else "Osłonę i elementy końcowe dobierz do konkretnej rodziny oraz kodu profilu.", f"Przeznaczenie wskazane w danych: {purpose}." if purpose else "Przed cięciem sprawdź długość elementu i sposób mocowania podany dla tego wariantu."]},
     ]
     benefits = [x for x in [f"Wykonanie: {material}" if material else "", f"Wariant kolorystyczny: {color}" if color else "", f"Długość elementu: {length}" if length else "", f"Szerokość świecenia: {light_width}" if light_width else "", f"Sposób montażu: {mounting}" if mounting else "", "Osłona dobierana osobno" if sold_without_cover else ""] if x]
     clean_spaces = re.sub(r",(?=\S)", ", ", spaces).replace("/", " / ") if spaces else ""
@@ -1050,7 +1052,7 @@ def power_editorial(product: dict[str, Any]) -> dict[str, Any]:
         else attr(product, "Typ") or product["category"].split("/")[-1]
     )
     size = attr(product, "Wymiar")
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     output_facts = [(label, value) for label, value in [("Napięcie wyjściowe", vout), ("Prąd wyjściowy", current), ("Moc", power)] if value]
     electrical_facts = [(label, value) for label, value in [("Napięcie wejściowe", vin), ("Napięcie wyjściowe", vout), ("Prąd", current), ("Moc", power)] if value]
     output_heading = (
@@ -1063,7 +1065,7 @@ def power_editorial(product: dict[str, Any]) -> dict[str, Any]:
         else f"Parametry wyjściowe modelu {code}"
     )
     sections = [
-        {"label": "Parametry wyjściowe", "heading": output_heading, "paragraphs": [f"{product['name']}. Kod producenta: {code}. {exact_spec_sentence(output_facts)}", "W zasilaczu stałoprądowym wartość prądu musi odpowiadać wymaganiom modułu LED, a zakres napięcia pracy trzeba potwierdzić w karcie modelu." if is_constant_current else "Napięcie wyjściowe musi odpowiadać odbiornikom LED, a ich łączne obciążenie powinno mieścić się w mocy znamionowej zasilacza."]},
+        {"label": "Parametry wyjściowe", "heading": output_heading, "paragraphs": [f"{product['name']}. Indeks handlowy: {code}. {exact_spec_sentence(output_facts)}", "W zasilaczu stałoprądowym wartość prądu musi odpowiadać wymaganiom modułu LED, a zakres napięcia pracy trzeba potwierdzić w karcie modelu." if is_constant_current else "Napięcie wyjściowe musi odpowiadać odbiornikom LED, a ich łączne obciążenie powinno mieścić się w mocy znamionowej zasilacza."]},
         {"label": "Obudowa i miejsce pracy", "heading": f"{sentence_case(kind)}{f' i klasa {ip}' if ip else ''}", "paragraphs": [exact_spec_sentence([(k, v) for k, v in [("Typ", kind), ("Klasa szczelności", ip), ("Wymiar", size)] if v]), f"{ingress_guidance(ip)} Wymiary i sposób zabudowy porównaj z miejscem przeznaczonym na zasilacz." if ip else "Wymiary, wentylację i sposób zabudowy porównaj z miejscem przeznaczonym na zasilacz."]},
         {"label": "Dobór zasilania", "heading": "Prąd, napięcie i obciążenie kompletowanego obwodu", "paragraphs": [exact_spec_sentence(electrical_facts or specs[:3]), "Przed podłączeniem sprawdź zgodność parametrów wyjściowych z odbiornikiem oraz nie przekraczaj wartości znamionowych przypisanych do modelu."]},
     ]
@@ -1079,7 +1081,7 @@ def controller_editorial(product: dict[str, Any]) -> dict[str, Any]:
     if producer and not producer.casefold().startswith("prescot"):
         return manufacturer_source_editorial(product, producer)
     specs = preferred_specs(product, ["Napięcie Wejściowe", "Napięcie Wyjściowe", "Moc", "Prąd maksymalny", "Prąd na 1 kanał", "Ilość stref", "Komunikacja", "Zasięg", "Ilość programów", "Zasilanie pilota", "Wymiar", "Kolor", "Gwarancja"], 12)
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     voltage = attr(product, "Napięcie Wejściowe", "Napięcie Wyjściowe") or name_value(product, r"\b\d+(?:[.,]\d+)?\s*[-–]\s*\d+(?:[.,]\d+)?\s*V(?:DC)?\b") or name_value(product, r"\b(?:5|12|24|36|48|230)\s*V(?:DC)?\b")
     current = attr(product, "Prąd maksymalny", "Prąd", "Prąd na 1 kanał") or name_value(product, r"\b\d+(?:[.,]\d+)?\s*A\s*/\s*(?:kan\.?|kanał)\b") or name_value(product, r"\bmax\.?\s*\d+(?:[.,]\d+)?\s*A\b")
     zones = attr(product, "Ilość stref")
@@ -1113,7 +1115,7 @@ def control_input_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = preferred_specs(product, ["Ilość stref", "Komunikacja", "Zasięg", "Zasilanie pilota", "Napięcie Wejściowe", "Kolor", "Wymiar", "Gwarancja"], 9)
     name = product["name"]
     lower = name.casefold()
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     device = "pilot" if lower.startswith("pilot ") else "panel sterujący"
     mode = "RGB+CCT" if "rgb" in lower and "cct" in lower else "RGBW" if "rgbw" in lower else "RGB" if "rgb" in lower else "CCT" if "cct" in lower else "MONO" if "mono" in lower else "ALL" if re.search(r"\bALL\b", name, re.I) else "LED"
     zones = attr(product, "Ilość stref")
@@ -1131,7 +1133,7 @@ def control_input_editorial(product: dict[str, Any]) -> dict[str, Any]:
     sections = [
         {"label": "Element sterujący", "heading": f"{sentence_case(device)} {mode} — model {code}", "paragraphs": [f"{name}. {exact_spec_sentence(known[:4])}", f"Ten {device} służy do wybierania funkcji zgodnego systemu {mode}; prąd obciążenia określa sparowany odbiornik, nie sam nadajnik."]},
         {"label": "Strefy i obsługa", "heading": f"{zones or 'Obsługa przypisanego odbiornika'}{f' przez {communication}' if communication else ''}", "paragraphs": [exact_spec_sentence([(label, value) for label, value in [("Liczba stref", zones), ("Komunikacja", communication), ("Zasięg", reach), ("Sposób montażu", mounting)] if value]), "Przed zakupem porównaj system światła, liczbę obsługiwanych stref i sposób komunikacji z odbiornikiem zamontowanym przy taśmie lub oprawie." ]},
-        {"label": "Zasilanie i parowanie", "heading": f"{sentence_case(supply or 'Parowanie z odbiornikiem')} — {code}", "paragraphs": [f"Zasilanie elementu sterującego: {supply}; kolor: {color}; kod producenta: {code}." if supply or color else f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}.", "Parowanie, przypisanie stref i zmianę trybu wykonaj według instrukcji zgodnego odbiornika oraz tego panelu lub pilota."]},
+        {"label": "Zasilanie i parowanie", "heading": f"{sentence_case(supply or 'Parowanie z odbiornikiem')} — {code}", "paragraphs": [f"Zasilanie elementu sterującego: {supply}; kolor: {color}; indeks handlowy: {code}." if supply or color else f"Indeks handlowy: {code}; indeks handlowy: {product['code']}; EAN: {product['ean']}.", "Parowanie, przypisanie stref i zmianę trybu wykonaj według instrukcji zgodnego odbiornika oraz tego panelu lub pilota."]},
     ]
     benefits = [f"Sterowanie systemem {mode}", f"Obsługa {zones}" if zones else f"Typ urządzenia: {device}", f"Komunikacja {communication}" if communication else "", f"Wariant kolorystyczny {color}" if color else ""]
     applications = [f"Obsługa odbiorników pracujących w systemie {mode}", "Sterowanie naścienne" if device == "panel sterujący" else "Zdalna obsługa sparowanego odbiornika"]
@@ -1144,7 +1146,7 @@ def control_accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:8]
     name = product["name"]
     lower = name.casefold()
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     if "puszka" in lower:
         role = "puszka podtynkowa do osadzenia panelu sterującego LED"
         selection = "Porównaj wymiary panelu, sposób mocowania i głębokość przygotowanego otworu montażowego."
@@ -1160,9 +1162,9 @@ def control_accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
     source_summary = source_sentences(product, 1)
     compatibility = source_summary[0] if source_summary else f"Akcesorium {code} należy kompletować z elementem sterującym wskazanym w jego pełnej nazwie lub instrukcji systemu."
     sections = [
-        {"label": "Funkcja akcesorium", "heading": f"{sentence_case(role)} — {code}", "paragraphs": [f"{name}. Kod producenta: {code}; EAN: {product['ean']}.", f"To {role}; element nie zastępuje sterownika, panelu ani pilota."]},
+        {"label": "Funkcja akcesorium", "heading": f"{sentence_case(role)} — {code}", "paragraphs": [f"{name}. Indeks handlowy: {code}; EAN: {product['ean']}.", f"To {role}; element nie zastępuje sterownika, panelu ani pilota."]},
         {"label": "Zgodność systemowa", "heading": "Model współpracujący i sposób mocowania", "paragraphs": [compatibility, selection]},
-        {"label": "Przed montażem", "heading": f"Wymiary, mocowanie i kod {code}", "paragraphs": [exact_spec_sentence(specs[:4]) if specs else f"Kod produktu: {product['code']}; kod producenta: {code}; EAN: {product['ean']}.", "Nie dobieraj tego elementu wyłącznie po wyglądzie obudowy — sprawdź pełny symbol zgodnego panelu, pilota lub sterownika."]},
+        {"label": "Przed montażem", "heading": f"Wymiary, mocowanie i indeks {code}", "paragraphs": [exact_spec_sentence(specs[:4]) if specs else f"Indeks handlowy: {code}; EAN: {product['ean']}.", "Nie dobieraj tego elementu wyłącznie po wyglądzie obudowy — sprawdź pełny symbol zgodnego panelu, pilota lub sterownika."]},
     ]
     benefits = [f"Funkcja: {role}", f"Identyfikacja kodem {code}"]
     applications = [sentence_case(role), "Kompletacja zgodnego systemu sterowania LED"]
@@ -1201,13 +1203,13 @@ def accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
         "Akcesorium służy do kompletacji instalacji zgodnie z funkcją, wymiarami i sposobem połączenia wskazanymi w pełnej nazwie.",
     )
     sections = [
-        {"label": "Wariant akcesorium", "heading": f"{leaf}: model {product['manufacturerCode'] or product['code']}", "paragraphs": [exact_spec_sentence(specs[:5]), role]},
+        {"label": "Wariant akcesorium", "heading": f"{leaf}: model {product['code']}", "paragraphs": [exact_spec_sentence(specs[:5]), role]},
         {"label": "Połączenie", "heading": f"{length or tape_width or ends or 'Parametry'} do porównania z instalacją", "paragraphs": [exact_spec_sentence([(k, v) for k, v in [("Długość przewodu", length), ("Przekrój przewodu", gauge), ("Szerokość taśmy", tape_width), ("Zakończenia", ends)] if v]), "Przed zakupem porównaj typ złącza, liczbę styków, szerokość taśmy i zakończenia przewodu tylko w zakresie podanym dla tego modelu."]},
-        {"label": "Identyfikacja", "heading": "Kod, EAN i wariant kolorystyczny", "paragraphs": [f"Kod producenta: {product['manufacturerCode'] or product['code']}; EAN: {product['ean']}; kolor: {color or 'zgodny z nazwą produktu'}.", "Identyfikatory pozwalają odróżnić ten element od podobnych wtyków, gniazd, przewodów i złączek w tej samej grupie."]},
+        {"label": "Identyfikacja", "heading": "Kod, EAN i wariant kolorystyczny", "paragraphs": [f"Indeks handlowy: {product['code']}; EAN: {product['ean']}; kolor: {color or 'zgodny z nazwą produktu'}.", "Identyfikatory pozwalają odróżnić ten element od podobnych wtyków, gniazd, przewodów i złączek w tej samej grupie."]},
     ]
     benefits = [x for x in [f"Przewód o długości {length}" if length else "", f"Przekrój przewodu {gauge}" if gauge else "", f"Wariant do taśmy o szerokości {tape_width}" if tape_width else "", f"Kolor {color}" if color else ""] if x]
     applications = [f"Kompletacja instalacji w grupie: {leaf}", "Połączenie elementów zgodnych z typem i parametrami tego wariantu"]
-    checks = [x for x in [f"Typ i kod elementu: {product['manufacturerCode'] or product['code']}", f"Długość przewodu: {length}" if length else "", f"Przekrój przewodu: {gauge}" if gauge else "", f"Szerokość taśmy: {tape_width}" if tape_width else ""] if x]
+    checks = [x for x in [f"Typ i kod elementu: {product['code']}", f"Długość przewodu: {length}" if length else "", f"Przekrój przewodu: {gauge}" if gauge else "", f"Szerokość taśmy: {tape_width}" if tape_width else ""] if x]
     notes = ["Przed podłączeniem porównaj typ złącza po obu stronach instalacji", "Nie opieraj doboru wyłącznie na wyglądzie elementu; sprawdź kod i wymiary"]
     return finish(product, sections, benefits, applications, checks, notes, specs)
 
@@ -1283,7 +1285,7 @@ def luminaire_editorial(product: dict[str, Any]) -> dict[str, Any]:
         "regulacja CCT" if "cct" in lower else "",
         "głośnik Bluetooth" if "bluetooth" in name.casefold() and "głośnik" in name.casefold() else "",
     ])
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     sections = [
         {"label": "Światło", "heading": f"{power or source or 'Oprawa'} w wariancie {color_temp or color or code}", "paragraphs": [f"Pełna nazwa wariantu: {name}. {exact_spec_sentence(specs[:5])}", f"Zasilanie: {voltage}{f'; moc: {power}' if power else ''}{f'; wyposażenie: {equipment}' if equipment else ''}." if voltage else f"Kod {code} identyfikuje sposób zasilania i elementy przyłączeniowe{f'; wyposażenie wariantu: {equipment}' if equipment else ''}."]},
         {"label": "Forma oprawy", "heading": f"{sentence_case(form)}{f', kolor {color}' if color else ''}", "paragraphs": [exact_spec_sentence([(k, v) for k, v in [("Kolor", color), ("Wymiar", size), ("Klasa szczelności", ip), ("Forma", form)] if v]), "Wymiar, wykończenie i sposób montażu decydują o dopasowaniu oprawy do przygotowanego miejsca."]},
@@ -1330,16 +1332,16 @@ def light_source_editorial(product: dict[str, Any]) -> dict[str, Any]:
             specs.append((label, value))
             existing.add(label.casefold())
 
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     if is_uvc:
         sections = [
-            {"label": "Promieniowanie UV-C", "heading": f"Świetlówka {base or 'UV-C'} o mocy {power or code}", "paragraphs": [f"{name}. Opis źródłowy wskazuje emisję promieniowania UV-C o efekcie bakteriobójczym.", f"Kod producenta: {code}; EAN: {product['ean']}; {exact_spec_sentence(derived[:4])}"]},
+            {"label": "Promieniowanie UV-C", "heading": f"Świetlówka {base or 'UV-C'} o mocy {power or code}", "paragraphs": [f"{name}. Opis źródłowy wskazuje emisję promieniowania UV-C o efekcie bakteriobójczym.", f"Indeks handlowy: {code}; EAN: {product['ean']}; {exact_spec_sentence(derived[:4])}"]},
             {"label": "Dopasowanie do urządzenia", "heading": f"Format {base or 'świetlówki'}{f' i długość {size}' if size else ''}", "paragraphs": [exact_spec_sentence([(label, value) for label, value in [("Format", base), ("Moc", power), ("Długość", size)] if value]), "To źródło należy stosować wyłącznie w urządzeniu przewidzianym dla świetlówki UV-C o zgodnym formacie, mocy i wymiarze."]},
             {"label": "Użytkowanie", "heading": "Osłona urządzenia, instrukcja i wymiana źródła", "paragraphs": ["Promieniowanie UV-C wymaga przestrzegania instrukcji urządzenia; świetlówki nie należy traktować jak zwykłego źródła do oświetlania pomieszczenia.", "Wymianę wykonuj przy odłączonym zasilaniu, a sposób osłonięcia źródła i procedurę uruchomienia zachowaj zgodnie z dokumentacją urządzenia."]},
         ]
         benefits = [f"Źródło UV-C o mocy {power}" if power else "Źródło promieniowania UV-C", f"Format {base}" if base else f"Kod modelu {code}", f"Długość {size}" if size else ""]
         applications = ["Urządzenia przeznaczone do pracy ze świetlówką UV-C", "Wymiana źródła po zgodności formatu, mocy i wymiaru"]
-        checks = [f"Format źródła: {base}" if base else f"Kod produktu: {code}", f"Moc: {power}" if power else "", f"Długość: {size}" if size else "", "Instrukcja i osłona urządzenia UV-C"]
+        checks = [f"Format źródła: {base}" if base else f"Indeks handlowy: {code}", f"Moc: {power}" if power else "", f"Długość: {size}" if size else "", "Instrukcja i osłona urządzenia UV-C"]
         notes = ["Nie używaj świetlówki UV-C jako zwykłego oświetlenia pomieszczenia", "Wymieniaj źródło przy odłączonym zasilaniu i według instrukcji urządzenia"]
         return finish(product, sections, benefits, applications, checks, notes, specs or derived)
 
@@ -1354,7 +1356,7 @@ def light_source_editorial(product: dict[str, Any]) -> dict[str, Any]:
     sections = [
         {"label": "Parametry światła", "heading": f"{sentence_case(kind)} {color or code}{f' — {power}' if power else ''}", "paragraphs": [f"{name}. {exact_spec_sentence([(label, value) for label, value in [('Barwa światła', color), ('Strumień świetlny', lumens), ('CRI', cri), ('Moc', power), ('Kąt świecenia', angle)] if value])}", light_text]},
         {"label": "Dopasowanie do oprawy", "heading": f"{base or kind}{f' — długość {size}' if size else ''}", "paragraphs": [exact_spec_sentence([(label, value) for label, value in [("Trzonek lub format", base), ("Długość lub wymiar", size), ("Napięcie", voltage)] if value]), "Przed zakupem sprawdź standard mocowania, ilość miejsca w oprawie oraz napięcie wymagane przez konkretny wariant źródła."]},
-        {"label": "Wybór wariantu", "heading": "Moc, strumień, barwa i pełny kod produktu", "paragraphs": [f"W tej rodzinie różnice mogą dotyczyć mocy {power or 'źródła'}, barwy {color or 'światła'}, strumienia, kąta oraz wymiaru; porównuj wyłącznie wartości przypisane do kodu {code}.", f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}."]},
+        {"label": "Wybór wariantu", "heading": "Moc, strumień, barwa i pełny indeks handlowy", "paragraphs": [f"W tej rodzinie różnice mogą dotyczyć mocy {power or 'źródła'}, barwy {color or 'światła'}, strumienia, kąta oraz wymiaru; porównuj wyłącznie wartości przypisane do indeksu {code}.", f"Indeks handlowy: {code}; EAN: {product['ean']}."]},
     ]
     benefits = [x for x in [f"Barwa światła {color}" if color else "", f"Strumień świetlny {lumens}" if lumens else "", f"Moc źródła {power}" if power else "", f"Trzonek w standardzie {base}" if base else ""] if x]
     applications = [f"Oprawy przeznaczone dla formatu {base}" if base else f"Oprawy przeznaczone dla źródła typu {kind}", "Ekspozycja produktów spożywczych wymagająca barwy mięsnej" if "mięsn" in lower or "food" in lower else light_application(color) if color else "Wymiana źródła po zgodności mocy, napięcia i wymiaru"]
@@ -1374,7 +1376,7 @@ def electrical_editorial(product: dict[str, Any]) -> dict[str, Any]:
     name = product["name"]
     lower = name.casefold()
     leaf = product["category"].split("/")[-1]
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     voltage = attr(product, "Napięcie Wejściowe", "Napięcie Wyjściowe") or name_value(product, r"\b\d+(?:[.,]\d+)?\s*V\b")
     current = attr(product, "Prąd") or name_value(product, r"\b\d+(?:[.,]\d+)?\s*A\b")
     ip = attr(product, "Klasa szczelności") or name_value(product, r"\bIP\s*\d{2}\b")
@@ -1392,9 +1394,9 @@ def electrical_editorial(product: dict[str, Any]) -> dict[str, Any]:
         mounting = "na szynę" if "szyn" in lower else ""
         known = [(label, value) for label, value in [("Zasilanie", voltage or ("bateryjne" if "bat" in lower else "")), ("Zasięg", range_value), ("Liczba melodii", tones), ("Sygnał", tone_type), ("Montaż", mounting), ("Kolor", color)] if value]
         sections = [
-            {"label": "Sygnał wejściowy", "heading": f"{sentence_case(kind)}{f' — {tones}' if tones else ''}", "paragraphs": [f"{name}. Kod producenta: {code}.", f"Model jest przeznaczony do sygnalizowania wywołania{f' i oferuje {tones}' if tones else f' w wersji {tone_type}' if tone_type else ''}."]},
+            {"label": "Sygnał wejściowy", "heading": f"{sentence_case(kind)}{f' — {tones}' if tones else ''}", "paragraphs": [f"{name}. Indeks handlowy: {code}.", f"Model jest przeznaczony do sygnalizowania wywołania{f' i oferuje {tones}' if tones else f' w wersji {tone_type}' if tone_type else ''}."]},
             {"label": "Zasilanie i zasięg", "heading": f"{voltage or ('Zasilanie bateryjne' if 'bat' in lower else 'Parametry montażowe')}{f'; zasięg {range_value}' if range_value else ''}", "paragraphs": [exact_spec_sentence(known), "Dla wersji bezprzewodowej porównaj miejsce nadajnika i odbiornika z deklarowanym zasięgiem, a dla wariantu zasilanego z instalacji przygotuj właściwe napięcie." if wireless else "Przed montażem porównaj napięcie z instalacją oraz sposób zamocowania dzwonka w wybranym miejscu."]},
-            {"label": "Dobór wariantu", "heading": f"Model {code}, sposób zasilania i sygnał", "paragraphs": [f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}.", "Przed zakupem sprawdź, czy zestaw obejmuje potrzebny nadajnik i odbiornik oraz jaki rodzaj zasilania przewidziano dla każdego elementu."]},
+            {"label": "Dobór wariantu", "heading": f"Model {code}, sposób zasilania i sygnał", "paragraphs": [f"Indeks handlowy: {code}; indeks handlowy: {product['code']}; EAN: {product['ean']}.", "Przed zakupem sprawdź, czy zestaw obejmuje potrzebny nadajnik i odbiornik oraz jaki rodzaj zasilania przewidziano dla każdego elementu."]},
         ]
         benefits = [sentence_case(kind), f"Zasięg {range_value}" if range_value else f"Sygnał {tone_type}" if tone_type else f"Kod modelu {code}", f"Wybór spośród {tones}" if tones else f"Zasilanie {voltage}" if voltage else ""]
         applications = ["Sygnalizacja wejścia w domu, lokalu lub pomieszczeniu użytkowym", "Montaż bezprzewodowy" if wireless else f"Montaż {mounting}" if mounting else "Instalacja dzwonkowa zgodna z napięciem modelu"]
@@ -1427,9 +1429,9 @@ def electrical_editorial(product: dict[str, Any]) -> dict[str, Any]:
             form_values.append((label, value))
     electrical = [(label, value) for label, value in [("Napięcie", voltage), ("Prąd", current), ("Klasa szczelności", ip)] if value]
     sections = [
-        {"label": "Funkcja elementu", "heading": f"{sentence_case(kind)} — model {code}", "paragraphs": [f"{name}. Kod producenta: {code}; EAN: {product['ean']}.", f"Zastosowanie elementu: {role}."]},
+        {"label": "Funkcja elementu", "heading": f"{sentence_case(kind)} — model {code}", "paragraphs": [f"{name}. Indeks handlowy: {code}; EAN: {product['ean']}.", f"Zastosowanie elementu: {role}."]},
         {"label": "Parametry doboru", "heading": f"{join_polish([value for _, value in (electrical + form_values)[:3]]) or code}: cechy konkretnego wariantu", "paragraphs": [exact_spec_sentence((electrical + form_values) or specs[:4]), "Przed zamówieniem porównaj wszystkie wymiary, standard połączenia oraz wartości elektryczne występujące przy tym kodzie."]},
-        {"label": "Montaż i zgodność", "heading": "Pełny kod, element współpracujący i miejsce instalacji", "paragraphs": [source_sentences(product, 1)[0] if source_sentences(product, 1) else f"Kod produktu: {product['code']}; kod producenta: {code}; EAN: {product['ean']}.", "Nie zastępuj tego wariantu podobnym elementem wyłącznie na podstawie wyglądu — potwierdź funkcję, format i sposób połączenia."]},
+        {"label": "Montaż i zgodność", "heading": "Pełny indeks, element współpracujący i miejsce instalacji", "paragraphs": [source_sentences(product, 1)[0] if source_sentences(product, 1) else f"Indeks handlowy: {code}; EAN: {product['ean']}.", "Nie zastępuj tego wariantu podobnym elementem wyłącznie na podstawie wyglądu — potwierdź funkcję, format i sposób połączenia."]},
     ]
     benefits = [sentence_case(kind), *[f"{label}: {value}" for label, value in (electrical + form_values)[:3]]]
     applications = [sentence_case(role), f"Kompletacja instalacji w grupie {leaf}"]
@@ -1459,7 +1461,7 @@ def electrical_frame_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:8]
     name = product["name"]
     lower = name.casefold()
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     series = name.split()[0].upper() if name.split() else product["producer"]
     color = product_color(product)
     count_names = [
@@ -1481,7 +1483,7 @@ def electrical_frame_editorial(product: dict[str, Any]) -> dict[str, Any]:
             "label": "Ramka osprzętowa",
             "heading": f"Seria {series}, {capacity or frame_type}{f', kolor {color}' if color else ''}",
             "paragraphs": [
-                f"{name}. Kod producenta {code} wskazuje konkretną ramkę w obrębie serii {series}.",
+                f"{name}. Indeks handlowy {code} wskazuje konkretną ramkę w obrębie serii {series}.",
                 aligned_source[0] if aligned_source else f"Wariant przewidziano na {capacity}; mechanizmy i elementy wykończeniowe trzeba dobrać z tej samej serii." if capacity else f"To {frame_type}; zgodny mechanizm i elementy wykończeniowe trzeba dobrać z tej samej serii.",
             ],
         },
@@ -1517,7 +1519,7 @@ def electrical_switch_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:9]
     name = product["name"]
     lower = f"{name} {product.get('sourceDescription', '')}".casefold()
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     series = name.split()[0].upper() if name.split() else product["producer"]
     color = product_color(product)
     switch_type = (
@@ -1550,7 +1552,7 @@ def electrical_switch_editorial(product: dict[str, Any]) -> dict[str, Any]:
     if len(parameter_text) < 45:
         parameter_text = f"{parameter_text.removesuffix('.')} — funkcję mechanizmu trzeba porównać ze schematem przygotowanego obwodu."
     sections = [
-        {"label": "Funkcja łącznika", "heading": f"{sentence_case(switch_type)} w serii {series}", "paragraphs": [aligned_source[0] if aligned_source else function_text, f"Pełna nazwa wariantu: {name}. Kod producenta: {code}."]},
+        {"label": "Funkcja łącznika", "heading": f"{sentence_case(switch_type)} w serii {series}", "paragraphs": [aligned_source[0] if aligned_source else function_text, f"Pełna nazwa wariantu: {name}. Indeks handlowy: {code}."]},
         {"label": "Obwód i parametry", "heading": f"{voltage or 'Parametry z oznaczenia'}{f', {current}' if current else ''}{f', {ip}' if ip else ''}", "paragraphs": [exact_spec_sentence([(k, v) for k, v in [("Napięcie", voltage), ("Prąd", current), ("Klasa szczelności", ip)] if v]), parameter_text]},
         {"label": "Seria i wykończenie", "heading": f"{f'Kolor {color}' if color else f'Wariant {code}'} oraz osprzęt serii {series}", "paragraphs": [f"Wariant kolorystyczny: {color}; seria: {series}; EAN: {product['ean']}." if color else f"Seria: {series}; kod: {code}; EAN: {product['ean']}.", "Ramkę, klawisz i pozostałe elementy wykończeniowe dobierz do tej samej serii osprzętu."]},
     ]
@@ -1567,7 +1569,7 @@ def electrical_socket_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:9]
     name = product["name"]
     lower = f"{name} {product.get('sourceDescription', '')}".casefold()
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     series = name.split()[0].upper() if name.split() else product["producer"]
     color = product_color(product)
     voltage = attr(product, "Napięcie", "Napięcie Wejściowe") or name_value(product, r"\b\d{2,3}\s*V\b")
@@ -1579,7 +1581,7 @@ def electrical_socket_editorial(product: dict[str, Any]) -> dict[str, Any]:
         "z USB" if "usb" in lower else "",
     ])
     sections = [
-        {"label": "Typ gniazda", "heading": f"Gniazdo {socket_type} w serii {series}", "paragraphs": [f"{name}. Oznaczenie wskazuje gniazdo {socket_type}{f' w kolorze {color}' if color else ''}.", f"Kod producenta {code} oraz EAN {product['ean']} identyfikują konkretny mechanizm i jego wykończenie."]},
+        {"label": "Typ gniazda", "heading": f"Gniazdo {socket_type} w serii {series}", "paragraphs": [f"{name}. Oznaczenie wskazuje gniazdo {socket_type}{f' w kolorze {color}' if color else ''}.", f"Indeks handlowy {code} oraz EAN {product['ean']} identyfikują konkretny mechanizm i jego wykończenie."]},
         {"label": "Parametry instalacji", "heading": f"{voltage or f'Model {code}'}{f', {current}' if current else ''}{f' i klasa {ip}' if ip else ''}", "paragraphs": [exact_spec_sentence([(k, v) for k, v in [("Napięcie", voltage), ("Prąd", current), ("Klasa szczelności", ip)] if v]), "Parametry gniazda trzeba porównać z obwodem, przewodami ochronnymi oraz warunkami w miejscu montażu."]},
         {"label": "Kompletacja osprzętu", "heading": f"Ramka i elementy serii {series}", "paragraphs": [f"Kolor: {color}; seria: {series}." if color else f"Seria osprzętu: {series}; kod mechanizmu: {code}.", "Przed zamówieniem sprawdź, czy produkt jest mechanizmem, kompletem z ramką czy elementem wymagającym osobnego wykończenia."]},
     ]
@@ -1596,7 +1598,7 @@ def electrical_socket_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 def distribution_board_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:10]
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     kind = attr(product, "Typ") or "rozdzielnica"
     voltage = attr(product, "Zasilanie", "Napięcie", "Napięcie Wejściowe")
     size = attr(product, "Wymiar")
@@ -1605,7 +1607,7 @@ def distribution_board_editorial(product: dict[str, Any]) -> dict[str, Any]:
     sections = [
         {"label": "Rozdzielnica", "heading": f"{sentence_case(kind)} — model {code}", "paragraphs": [f"Pełna nazwa produktu: {product['name']}. {exact_spec_sentence(specs[:5])}", "Typ obudowy oraz wyposażenie przyłączeniowe trzeba porównać z projektem rozdziału obwodów."]},
         {"label": "Wymiary i pojemność", "heading": f"{size or 'Wymiary z danych'}{f'; {fields}' if fields else ''}", "paragraphs": [exact_spec_sentence([(k, v) for k, v in [("Wymiar", size), ("Pola", fields), ("Kolor", color)] if v]), "Przed montażem sprawdź miejsce na obudowę, liczbę wymaganych pól i sposób wprowadzenia przewodów."]},
-        {"label": "Parametry elektryczne", "heading": f"Zasilanie {voltage or 'zgodne z projektem instalacji'}", "paragraphs": [f"Zasilanie: {voltage}; kod producenta: {code}; EAN: {product['ean']}." if voltage else f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}.", "Aparaturę, listwy i przewody dobierz według dokumentacji rozdzielnicy oraz parametrów zabezpieczanych obwodów."]},
+        {"label": "Parametry elektryczne", "heading": f"Zasilanie {voltage or 'zgodne z projektem instalacji'}", "paragraphs": [f"Zasilanie: {voltage}; indeks handlowy: {code}; EAN: {product['ean']}." if voltage else f"Indeks handlowy: {code}; indeks handlowy: {product['code']}; EAN: {product['ean']}.", "Aparaturę, listwy i przewody dobierz według dokumentacji rozdzielnicy oraz parametrów zabezpieczanych obwodów."]},
     ]
     benefits = [f"Typ: {kind}", f"Wymiar {size}" if size else f"Model {code}", f"Liczba pól: {fields}" if fields else f"Kolor {color}" if color else ""]
     applications = ["Rozdział i uporządkowanie obwodów instalacji", "Montaż aparatury zgodnej z pojemnością obudowy"]
@@ -1618,7 +1620,7 @@ def distribution_board_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 def sensor_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:12]
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     text = normalize(product.get("sourceDescription", ""))
     lower = f"{product['name']} {text}".casefold()
     summaries = source_sentences(product, 3)
@@ -1652,7 +1654,7 @@ def sensor_editorial(product: dict[str, Any]) -> dict[str, Any]:
             "heading": sentence_case(join_polish(functions)),
             "paragraphs": [
                 summaries[0] if is_alarm and summaries else f"{product['name']}. Model {code} realizuje funkcję: {join_polish(functions)}.",
-                summaries[1] if is_alarm and len(summaries) > 1 else f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}.",
+                summaries[1] if is_alarm and len(summaries) > 1 else f"Indeks handlowy: {code}; indeks handlowy: {product['code']}; EAN: {product['ean']}.",
             ],
         },
         {
@@ -1667,7 +1669,7 @@ def sensor_editorial(product: dict[str, Any]) -> dict[str, Any]:
             "label": "Identyfikacja i montaż",
             "heading": f"{'Instrukcja alarmu' if is_alarm else 'Ustawienie czujnika'} dla modelu {code}",
             "paragraphs": [
-                f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}.",
+                f"Indeks handlowy: {code}; indeks handlowy: {product['code']}; EAN: {product['ean']}.",
                 "Miejsce instalacji, odstępy, testy okresowe i wymianę zasilania wykonuj według instrukcji producenta konkretnego urządzenia." if is_alarm else "Położenie czujnika i nastawy dobierz tak, aby wymagany obszar mieścił się w polu detekcji podanym dla modelu.",
             ],
         },
@@ -1694,7 +1696,7 @@ def sensor_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 def technical_component_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:10]
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     leaf = product["category"].split("/")[-1]
     summaries = source_sentences(product, 2)
     base = attr(product, "Trzonek", "Gwint")
@@ -1726,7 +1728,7 @@ def technical_component_editorial(product: dict[str, Any]) -> dict[str, Any]:
     sections = [
         {"label": "Funkcja elementu", "heading": f"{leaf}: model {code}", "paragraphs": [role_text]},
         {"label": "Parametry zgodności", "heading": f"{base or lamp_family or load or power_range or voltage or code}: dane do porównania z oprawą", "paragraphs": [exact_spec_sentence(technical), "Dobór wymaga zgodności typu źródła, złącza i wartości elektrycznych podanych dla elementu."]},
-        {"label": "Montaż i identyfikacja", "heading": "Pełny kod przed wymianą lub kompletacją", "paragraphs": [f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}.", "Przed pracami odłącz zasilanie, a zamiennik dobierz po pełnym oznaczeniu oraz parametrach urządzenia współpracującego."]},
+        {"label": "Montaż i identyfikacja", "heading": "Pełny indeks przed wymianą lub kompletacją", "paragraphs": [f"Indeks handlowy: {code}; EAN: {product['ean']}.", "Przed pracami odłącz zasilanie, a zamiennik dobierz po pełnym oznaczeniu oraz parametrach urządzenia współpracującego."]},
     ]
     benefits = [f"{label}: {value}" for label, value in technical[:4]]
     if len(benefits) < 2:
@@ -1763,7 +1765,7 @@ def module_editorial(product: dict[str, Any]) -> dict[str, Any]:
     ip = attr(product, "Klasa szczelności") or name_value(product, r"\bIP\s*\d{2}\b")
     cct = name_value(product, r"\b\d{4,5}\s*K\b")
     angle = name_value(product, r"\b\d{2,3}\s*(?:ST\.?|°)\b")
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     derived = [(label, value) for label, value in [("Barwa światła", color), ("Temperatura barwowa", cct), ("Napięcie", voltage), ("Moc", power), ("Prąd", current), ("Typ diody", diode), ("Liczba diod", diode_count), ("Kąt świecenia", angle), ("Klasa szczelności", ip)] if value]
     existing = {label.casefold() for label, _ in specs}
     for label, value in derived:
@@ -1773,9 +1775,9 @@ def module_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
     if "nakładka" in lower:
         sections = [
-            {"label": "Funkcja akcesorium", "heading": f"Nakładka do szyb — model {code}", "paragraphs": [f"{name}. Kod producenta: {code}; EAN: {product['ean']}.", "Nazwa identyfikuje nakładkę do szyb w systemie FIBI LED; produkt jest elementem uzupełniającym, a nie modułem zasilającym diody."]},
-            {"label": "Zgodność", "heading": "Szyba, system oprawy i sposób osadzenia", "paragraphs": [exact_spec_sentence(specs[:4]) if specs else f"Kod produktu: {product['code']}; kod producenta: {code}; EAN: {product['ean'] or 'nie nadano'}.", "Przed zamówieniem porównaj kod systemu, grubość szyby i sposób mocowania z oprawą, w której nakładka ma zostać użyta."]},
-            {"label": "Identyfikacja", "heading": f"Pełny symbol {code} zamiast doboru ze zdjęcia", "paragraphs": [f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean'] or 'nie nadano'}.", "Podobny kształt nie potwierdza zgodności — właściwy wariant należy ustalić po oznaczeniu rodziny i wymiarach elementu współpracującego."]},
+            {"label": "Funkcja akcesorium", "heading": f"Nakładka do szyb — model {code}", "paragraphs": [f"{name}. Indeks handlowy: {code}; EAN: {product['ean']}.", "Nazwa identyfikuje nakładkę do szyb w systemie FIBI LED; produkt jest elementem uzupełniającym, a nie modułem zasilającym diody."]},
+            {"label": "Zgodność", "heading": "Szyba, system oprawy i sposób osadzenia", "paragraphs": [exact_spec_sentence(specs[:4]) if specs else f"Indeks handlowy: {code}; EAN: {product['ean'] or 'nie nadano'}.", "Przed zamówieniem porównaj oznaczenie systemu, grubość szyby i sposób mocowania z oprawą, w której nakładka ma zostać użyta."]},
+            {"label": "Identyfikacja", "heading": f"Pełny symbol {code} zamiast doboru ze zdjęcia", "paragraphs": [f"Indeks handlowy: {code}; indeks handlowy: {product['code']}; EAN: {product['ean'] or 'nie nadano'}.", "Podobny kształt nie potwierdza zgodności — właściwy wariant należy ustalić po oznaczeniu rodziny i wymiarach elementu współpracującego."]},
         ]
         return finish(product, sections, ["Nakładka do szyb systemu FIBI LED", f"Identyfikacja kodem {code}"], ["Kompletacja zgodnej oprawy lub systemu szybowego", "Wymiana nakładki po pełnym oznaczeniu"], [f"Kod systemowy: {code}", "Grubość szyby i sposób mocowania"], ["Przed montażem sprawdź zgodność wymiarową z szybą i oprawą"], specs or [("Typ", "Nakładka do szyb"), ("Kod", code)])
 
@@ -1804,7 +1806,7 @@ def kit_editorial(product: dict[str, Any]) -> dict[str, Any]:
     power = attr(product, "Moc")
     ip = attr(product, "Klasa szczelności")
     size = attr(product, "Wymiar")
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     name_lower = product["name"].casefold()
     system = "RGB+CCT" if "rgb" in name_lower and "cct" in name_lower else "RGB" if "rgb" in name_lower else "CCT" if "cct" in name_lower else "MONO"
     supplied_power = "zasilacz w zestawie" if "z zasilaczem" in name_lower or "plug & play" in name_lower else ""
@@ -1827,7 +1829,7 @@ def festive_editorial(product: dict[str, Any]) -> dict[str, Any]:
     name = product["name"]
     source = normalize(product.get("sourceDescription", ""))
     lower = f"{name} {source}".casefold()
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     led_match = re.search(r"(?i)\b\d+\s*LED\b", name)
     led_count = normalize(led_match.group(0)) if led_match else ""
     size = attr(product, "Wymiar")
@@ -1860,7 +1862,7 @@ def festive_editorial(product: dict[str, Any]) -> dict[str, Any]:
         sections = [
             {"label": "Efekt projekcyjny", "heading": f"Laser {colors or code} — model {code}", "paragraphs": [f"{name}. {exact_spec_sentence(known[:4])}", "Projektor tworzy ruchome punkty i wzory na skierowanej powierzchni; wariant identyfikuje zestaw kolorów zapisany przy tym kodzie."]},
             {"label": "Sterowanie i ustawienie", "heading": f"{sentence_case(control or 'Ustawienie projekcji')}{f' przy zasilaniu {voltage}' if voltage else ''}", "paragraphs": [source_sentences(product, 1)[0] if source_sentences(product, 1) else exact_spec_sentence(known), "Przed uruchomieniem zamocuj projektor w przewidziany sposób, dobierz powierzchnię projekcji i sprawdź funkcje pilota przypisane do konkretnego modelu."]},
-            {"label": "Zasady użycia", "heading": f"Klasa lasera {laser_class or 'podana w instrukcji'} i kierunek wiązki", "paragraphs": [f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}.", "Przestrzegaj ostrzeżeń dla klasy lasera, nie kieruj wiązki na ludzi, zwierzęta ani pojazdy i nie patrz bezpośrednio w źródło światła."]},
+            {"label": "Zasady użycia", "heading": f"Klasa lasera {laser_class or 'podana w instrukcji'} i kierunek wiązki", "paragraphs": [f"Indeks handlowy: {code}; indeks handlowy: {product['code']}; EAN: {product['ean']}.", "Przestrzegaj ostrzeżeń dla klasy lasera, nie kieruj wiązki na ludzi, zwierzęta ani pojazdy i nie patrz bezpośrednio w źródło światła."]},
         ]
         benefits = [f"Projekcja w kolorach: {colors}" if colors else "Projektor efektów laserowych", f"Sterowanie: {control}" if control else f"Kod modelu {code}", f"Zasilanie {voltage}" if voltage else ""]
         applications = ["Dekoracyjna projekcja na ścianie, elewacji lub innej przygotowanej powierzchni", "Aranżacje sezonowe w miejscu dopuszczonym przez instrukcję urządzenia"]
@@ -1876,7 +1878,7 @@ def festive_editorial(product: dict[str, Any]) -> dict[str, Any]:
         sections = [
             {"label": "Girlanda ogrodowa", "heading": f"{sockets} na długości {size or code}", "paragraphs": [f"{name}. {exact_spec_sentence(known[:5])}", "Źródła E27 dobiera się osobno, dzięki czemu można ustalić ich barwę, kształt i moc w granicach wskazanych dla pojedynczego gniazda."]},
             {"label": "Rozmieszczenie światła", "heading": f"Oprawki E27 i przewód {size or code}", "paragraphs": [source_sentences(product, 1)[0] if source_sentences(product, 1) else exact_spec_sentence(known), "Przed rozwieszeniem zaplanuj punkty mocowania i sprawdź, czy wszystkie zastosowane źródła mają gwint E27 oraz dopuszczalną moc."]},
-            {"label": "Łączenie i montaż", "heading": f"Klasa {ip or 'ochrony z instrukcji'} oraz obciążenie girlandy", "paragraphs": [f"Kod producenta: {code}; EAN: {product['ean']}; zasilanie: {voltage or 'według dokumentacji modelu'}.", "Liczbę łączonych odcinków dobierz według mocy zastosowanych źródeł i limitów podanych przez producenta dla tego wariantu."]},
+            {"label": "Łączenie i montaż", "heading": f"Klasa {ip or 'ochrony z instrukcji'} oraz obciążenie girlandy", "paragraphs": [f"Indeks handlowy: {code}; EAN: {product['ean']}; zasilanie: {voltage or 'według dokumentacji modelu'}.", "Liczbę łączonych odcinków dobierz według mocy zastosowanych źródeł i limitów podanych przez producenta dla tego wariantu."]},
         ]
         benefits = [f"Układ {sockets}", f"Długość {size}" if size else f"Kod modelu {code}", f"Klasa szczelności {ip}" if ip else "", f"Maksymalna moc {max_power}" if max_power else ""]
         applications = ["Oświetlenie tarasu, altany lub strefy ogrodowej", "Dekoracyjna linia światła z indywidualnie dobranymi źródłami E27"]
@@ -1897,7 +1899,7 @@ def festive_editorial(product: dict[str, Any]) -> dict[str, Any]:
     sections = [
         {"label": "Dekoracja świetlna", "heading": f"{sentence_case(kind)} — {join_polish([led_count, effect or cct]) or code}", "paragraphs": [f"{name}. {exact_spec_sentence(known[:6])}", f"Efekt wariantu: {effect or cct or 'dekoracyjny układ punktów świetlnych'}; format: {size or kind.casefold()}."]},
         {"label": "Format i zastosowanie", "heading": f"{size or led_count or code} — wariant {place}", "paragraphs": [arrangement, f"Rozmieszczenie przewodu oraz punktów świetlnych zaplanuj przed mocowaniem; ten wariant jest opisany jako {place}."]},
-        {"label": "Zasilanie i montaż", "heading": f"{voltage or f'Model {code}: przewód i zasilacz'}{f', klasa {ip}' if ip else ''}", "paragraphs": [f"Kod producenta: {code}; EAN: {product['ean']}.{f' {electrical_sentence}' if electrical_sentence else ''}", "Przed zawieszeniem rozwiń dekorację, sprawdź przewód oraz zasilacz i zastosuj wyłącznie sposób łączenia przewidziany dla tego modelu."]},
+        {"label": "Zasilanie i montaż", "heading": f"{voltage or f'Model {code}: przewód i zasilacz'}{f', klasa {ip}' if ip else ''}", "paragraphs": [f"Indeks handlowy: {code}; EAN: {product['ean']}.{f' {electrical_sentence}' if electrical_sentence else ''}", "Przed zawieszeniem rozwiń dekorację, sprawdź przewód oraz zasilacz i zastosuj wyłącznie sposób łączenia przewidziany dla tego modelu."]},
     ]
     benefits = [x for x in [sentence_case(kind), f"Układ {led_count}" if led_count else "", f"Efekt {effect or cct}" if effect or cct else "", f"Format {size}" if size else "", f"Klasa szczelności {ip}" if ip else ""] if x]
     applications = [f"Dekoracje świetlne {place}", "Aranżacje sezonowe dopasowane do formatu kurtyny, sopli lub łańcucha"]
@@ -1912,7 +1914,7 @@ def decorative_device_editorial(product: dict[str, Any]) -> dict[str, Any]:
     name = product["name"]
     source = normalize(product.get("sourceDescription", ""))
     lower = f"{name} {source}".casefold()
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     is_clock = "budzik" in name.casefold()
 
     def first_match(pattern: str) -> str:
@@ -2000,11 +2002,11 @@ def decorative_device_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 def fallback_editorial(product: dict[str, Any]) -> dict[str, Any]:
     specs = public_specs(product)[:10]
-    code = product["manufacturerCode"] or product["code"]
+    code = product["code"]
     first = specs[:4]
     second = specs[4:7] or specs[:3]
     sections = [
-        {"label": "Opis wariantu", "heading": f"{product['name']}", "paragraphs": [exact_spec_sentence(first), f"Kod producenta: {code}; kod produktu: {product['code']}; EAN: {product['ean']}."]},
+        {"label": "Opis wariantu", "heading": f"{product['name']}", "paragraphs": [exact_spec_sentence(first), f"Indeks handlowy: {code}; indeks handlowy: {product['code']}; EAN: {product['ean']}."]},
         {"label": "Dane użytkowe", "heading": "Parametry do porównania przed zakupem", "paragraphs": [exact_spec_sentence(second), "Dobór oprzyj na pełnej nazwie, kodzie i parametrach przypisanych do tego wariantu."]},
         {"label": "Kompletacja", "heading": "Zgodność z pozostałymi elementami", "paragraphs": ["Przed montażem porównaj wymiary, napięcie, sposób połączenia i warunki pracy — wyłącznie w zakresie pól dostępnych dla produktu.", f"Kod: {code}; EAN: {product['ean']}."]},
     ]

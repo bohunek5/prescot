@@ -73,6 +73,54 @@ function normalize(value) {
   return String(value ?? "").replace(/\s+/g, " ").trim();
 }
 
+function publicLabel(match) {
+  const value = String(match || "");
+  return value === value.toLocaleUpperCase("pl") || /^[A-ZĄĆĘŁŃÓŚŹŻ]/.test(value)
+    ? "Indeks handlowy"
+    : "indeks handlowy";
+}
+
+function replaceDescriptionIdentity(product, htmlValue) {
+  const tradeIndex = normalize(product?.code);
+  let value = String(htmlValue || "");
+  const manufacturerCode = normalize(product?.manufacturerCode);
+  if (tradeIndex && manufacturerCode && tradeIndex !== manufacturerCode) {
+    const escapedCode = manufacturerCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    value = value.replace(
+      new RegExp(`((?:kod|numer|nr)\\s+(?:katalogowy\\s+)?producenta(?:\\s|:|&nbsp;|<[^>]+>){1,8})${escapedCode}`, "gi"),
+      (match, prefix) => `${prefix.replace(/(?:kod|numer|nr)\s+(?:katalogowy\s+)?producenta/gi, publicLabel)}${tradeIndex}`,
+    );
+  }
+  return value
+    .replace(/\b(?:kod|numer|nr)\s+(?:katalogowy\s+)?producenta\b/gi, publicLabel)
+    .replace(/\b(?:numer|nr) katalogowy\b/gi, publicLabel)
+    .replace(/\bkod produktu\b/gi, publicLabel)
+    .replace(/\bkodu (?:producenta|produktu)\b/gi, "indeksu handlowego")
+    .replace(/\bkodem (?:producenta|produktu)\b/gi, "indeksem handlowym")
+    .replace(/\b(?:numeru|nr) katalogowego(?: producenta)?\b/gi, "indeksu handlowego");
+}
+
+export function normalizeDescriptionIdentity(product, htmlValue) {
+  const tradeIndex = normalize(product?.code);
+  let value = replaceDescriptionIdentity(product, htmlValue);
+  if (!tradeIndex) return value;
+  const text = value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ");
+  const hasNamedTradeIndex = /indeks handlowy/i.test(text) && text.includes(tradeIndex);
+  if (hasNamedTradeIndex) return value;
+  const identity = `<p>Indeks handlowy: ${escapeHtml(tradeIndex)}.</p>`;
+  if (/<\/section>/i.test(value)) return value.replace(/<\/section>/i, `${identity}</section>`);
+  return `${value}${identity}`;
+}
+
+function normalizeEditorialIdentity(product, value) {
+  if (typeof value === "string") return replaceDescriptionIdentity(product, value);
+  if (Array.isArray(value)) return value.map((item) => normalizeEditorialIdentity(product, item));
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, normalizeEditorialIdentity(product, item)]));
+  }
+  return value;
+}
+
 function attr(product, ...names) {
   const entries = Object.entries(product.attributes || {});
   for (const name of names) {
@@ -153,12 +201,11 @@ function identitySection(product, platform) {
   const heading = pick(product, platform, "identity-heading", [
     product.name,
     fallbackHeading,
-    `${leafCategory(product)} — ${product.manufacturerCode || product.code || product.name}`,
+    `${leafCategory(product)} — ${product.code || product.name}`,
   ]);
   const identifiers = [
     product.producer ? `producent: ${product.producer}` : "",
-    product.manufacturerCode ? `kod producenta: ${product.manufacturerCode}` : "",
-    product.code && product.code !== product.manufacturerCode ? `kod produktu: ${product.code}` : "",
+    product.code ? `indeks handlowy: ${product.code}` : "",
     product.ean ? `EAN: ${product.ean}` : "",
   ].filter(Boolean);
   const intro = pick(product, platform, "identity-copy", [
@@ -243,7 +290,7 @@ function profileNarrative(product, platform) {
       paragraph(purpose),
     ),
     section("Przed zakupem", "Seria i wymiary muszą się zgadzać", list([
-      escapeHtml("Porównaj kod producenta z oznaczeniem profilu lub akcesorium, które już masz."),
+      escapeHtml("Porównaj indeks handlowy z oznaczeniem profilu lub akcesorium, które już masz."),
       escapeHtml("Sprawdź długość, szerokość oraz wariant kolorystyczny."),
       escapeHtml("Osłony, zaślepki i uchwyty dobieraj w obrębie zgodnego systemu."),
     ])),
@@ -445,8 +492,7 @@ function technicalSection(product, platform) {
     items.push(important(label, value));
   }
   if (product.producer) items.unshift(important("Producent", product.producer));
-  if (product.manufacturerCode) items.push(important("Kod producenta", product.manufacturerCode));
-  if (product.code && product.code !== product.manufacturerCode) items.push(important("Kod produktu", product.code));
+  if (product.code) items.push(important("Indeks handlowy", product.code));
   if (product.ean) items.push(important("EAN", product.ean));
   return section(
     pick(product, platform, "technical-label", ["Dane techniczne", "Specyfikacja", "Parametry katalogowe"]),
@@ -533,15 +579,21 @@ function seoPillStyle(color) {
 function seoProductSpecs(product) {
   const seen = new Set();
   const specs = [];
+  const identityLabels = new Set(["producent", "kod produktu", "kod producenta", "ean"]);
   for (const [rawLabel, rawValue] of Object.entries(product.attributes || {})) {
     const label = normalize(rawLabel).replaceAll("_", " ");
     const value = normalize(rawValue);
     const identity = label.toLocaleLowerCase("pl");
-    if (!value || value === "-" || SEO_ADMIN_ATTRIBUTES.has(label) || seen.has(identity)) continue;
+    if (!value || value === "-" || SEO_ADMIN_ATTRIBUTES.has(label) || identityLabels.has(identity) || seen.has(identity)) continue;
     seen.add(identity);
     specs.push([label, value]);
   }
-  return specs;
+  return [
+    product.producer ? ["Producent", product.producer] : null,
+    product.code ? ["Indeks handlowy", product.code] : null,
+    product.ean ? ["EAN", product.ean] : null,
+    ...specs,
+  ].filter(Boolean);
 }
 
 function seoSection(data, { color = "#e94b25", label = "", heading = "" } = {}) {
@@ -560,7 +612,7 @@ function seoSpecs(product, color = "#475569") {
   const items = seoProductSpecs(product).map(([label, value]) => (
     `<div style="display:flex;flex-direction:column;min-width:0;word-break:break-word;"><span style="font-size:12px;color:#64748b;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">${escapeHtml(label)}</span><span style="font-size:15px;font-weight:700;color:inherit;">${escapeHtml(value)}</span></div>`
   )).join("");
-  const code = product.manufacturerCode || product.code;
+  const code = product.code;
   return `<section style="${STYLE.section}"><span style="${seoPillStyle(color)}"><font color="#ffffff">Parametry</font></span><h3 style="${STYLE.heading}">Dane wariantu ${escapeHtml(code)}</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:6px;">${items}</div></section>`;
 }
 
@@ -581,10 +633,10 @@ function seoGuides(product) {
 }
 
 function seoWapro(product, result) {
-  const identifierLabels = new Set(["producent", "kod produktu", "kod producenta", "ean"]);
+  const identifierLabels = new Set(["producent", "indeks handlowy", "ean"]);
   const specs = seoProductSpecs(product);
   const features = specs.filter(([label]) => !identifierLabels.has(label.toLocaleLowerCase("pl"))).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
-  const identifiers = specs.filter(([label]) => ["kod produktu", "kod producenta", "ean"].includes(label.toLocaleLowerCase("pl"))).map(([label, value]) => `${label}: ${value}`);
+  const identifiers = specs.filter(([label]) => ["indeks handlowy", "ean"].includes(label.toLocaleLowerCase("pl"))).map(([label, value]) => `${label}: ${value}`);
   const points = (values) => values.map((value) => `<p>- ${escapeHtml(normalize(value).replace(/\.$/, ""))}</p>`).join("");
   const intro = result.sections[0].paragraphs.map(normalize).join(" ");
   const featurePoints = features.length ? features : result.benefits;
@@ -593,39 +645,45 @@ function seoWapro(product, result) {
 }
 
 function seoTim(product, result) {
-  const code = product.manufacturerCode || product.code;
+  const code = product.code;
   const points = (values) => values.map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("");
+  const paragraphs = (values) => values.filter(Boolean).map((value) => `<p>${escapeHtml(normalize(value))}</p>`).join("");
   const specs = seoProductSpecs(product).map(([label, value]) => `${label}: ${value}`);
-  return `<section><h2>Opis dla TIM.pl: ${escapeHtml(product.name)}</h2><p>${escapeHtml(normalize(result.channel_leads.tim))}</p><h3>Dane techniczne modelu ${escapeHtml(code)}</h3><ul>${points(specs)}</ul><h3>Zastosowanie i dobór</h3><ul>${points([...result.applications, ...result.selection_checks])}</ul><h3>Uwagi dla instalatora</h3><ul>${points(result.installation_notes)}</ul></section>`;
+  const isTape = result.rule_family === "tape" || product.categoryRoot === "Taśmy LED";
+  const shoperUse = isTape
+    ? result.sections.slice(1, 3).flatMap((section) => section.paragraphs || [])
+    : result.sections[1]?.paragraphs || [];
+  const useHeading = isTape ? "Gdzie użyć tej taśmy LED i do czego służy ten wariant" : "Zastosowanie i dobór";
+  return `<section><h2>Opis dla TIM.pl: ${escapeHtml(product.name)}</h2><p>${escapeHtml(normalize(result.channel_leads.tim))}</p><h3>Dane techniczne — indeks handlowy ${escapeHtml(code)}</h3><ul>${points(specs)}</ul><h3>${useHeading}</h3>${paragraphs(shoperUse)}<ul>${points(result.applications)}</ul><h3>Wskazówki dla instalatora</h3><ul>${points([...result.selection_checks, ...result.installation_notes])}</ul></section>`;
 }
 
 export function renderSeoDescription(product, saved, platform = "shoper") {
-  const result = saved?.editorial || saved;
+  const result = normalizeEditorialIdentity(product, saved?.editorial || saved);
   if (!result?.sections?.length) return generateDescription(product, platform);
   const selected = PLATFORM_NAMES[platform] ? platform : "shoper";
-  if (selected === "wapro") return seoWapro(product, result);
+  if (selected === "wapro") return normalizeDescriptionIdentity(product, seoWapro(product, result));
   if (selected === "shoper") {
     const family = result.rule_family || "";
-    const identifier = product.ean || product.manufacturerCode || product.code;
+    const identifier = product.ean || product.code;
     const sourceSections = result.sections.map((item) => ({ ...item, paragraphs: [...(item.paragraphs || [])] }));
     const narration = normalize(sourceSections.flatMap((item) => [item.heading, ...item.paragraphs]).join(" "));
     if (identifier && !narration.includes(identifier)) {
-      sourceSections[0].paragraphs.push(`Identyfikacja wariantu: kod ${product.manufacturerCode || product.code}; EAN ${product.ean || "nie nadano"}.`);
+      sourceSections[0].paragraphs.push(`Identyfikacja wariantu: indeks handlowy ${product.code}; EAN ${product.ean || "nie nadano"}.`);
     }
     const sections = sourceSections.map((item) => seoSection(item));
     if (family === "power") {
-      return [sections[0], sections[1], seoSpecs(product), seoGuides(product)].filter(Boolean).join("\n");
+      return normalizeDescriptionIdentity(product, [sections[0], sections[1], seoSpecs(product), seoGuides(product)].filter(Boolean).join("\n"));
     }
-    return [...sections, seoGuides(product)].filter(Boolean).join("\n");
+    return normalizeDescriptionIdentity(product, [...sections, seoGuides(product)].filter(Boolean).join("\n"));
   }
-  if (selected === "tim") return seoTim(product, result);
-  return [
+  if (selected === "tim") return normalizeDescriptionIdentity(product, seoTim(product, result));
+  return normalizeDescriptionIdentity(product, [
     seoSection({ label: "Sprawdź przed zakupem", heading: result.seo_title, paragraphs: [result.channel_leads.allegro] }, { color: "#16a34a" }),
     seoBenefits(result.benefits),
     seoSection(result.sections[1], { color: "#16a34a", label: "Gdzie użyć" }),
     seoSpecs(product, "#16a34a"),
     seoPoints("Dobór bez pomyłki", "Co sprawdzić przed montażem", [...result.selection_checks, ...result.installation_notes], "#16a34a"),
-  ].join("\n");
+  ].join("\n"));
 }
 
 export function generateDescription(product, platform = "shoper") {
@@ -638,7 +696,7 @@ export function generateDescription(product, platform = "shoper") {
     technicalSection(product, selectedPlatform),
     blogSection(product, selectedPlatform, kind),
   ];
-  return parts.filter(Boolean).join("\n");
+  return normalizeDescriptionIdentity(product, parts.filter(Boolean).join("\n"));
 }
 
 export function plainTextFromHtml(htmlValue) {

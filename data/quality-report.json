@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-29T08:52:45.267Z",
+  "checkedAt": "2026-08-29T13:22:28.204Z",
   "activeProducts": 3410,
   "platforms": 4,
   "totalDescriptions": 13640,
@@ -10,12 +10,12 @@
   "productsWithEan": 3384,
   "productsWithoutEan": 26,
   "shortestDescription": {
-    "length": 431,
+    "length": 412,
     "product": "ean:5906555612918",
     "platform": "wapro"
   },
   "longestDescription": {
-    "length": 2313,
+    "length": 2341,
     "product": "ean:5905475364167",
     "platform": "shoper"
   },

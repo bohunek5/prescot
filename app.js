@@ -1,4 +1,4 @@
-import { generateDescription, renderSeoDescription, PLATFORM_NAMES, plainTextFromHtml } from "./description-engine.js";
+import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, PLATFORM_NAMES, plainTextFromHtml } from "./description-engine.js";
 
 const PAGE_SIZE = 30;
 
@@ -140,12 +140,14 @@ function hasLocalEdit(product, platform = state.platform) {
 
 function descriptionFor(product, platform = state.platform) {
   const key = editKey(product, platform);
-  if (Object.hasOwn(state.localEdits, key)) return state.localEdits[key];
+  let html = "";
+  if (Object.hasOwn(state.localEdits, key)) html = state.localEdits[key];
   const overrideId = manualOverrideId(product, platform);
-  if (overrideId && state.overrides.descriptions?.[overrideId]) return state.overrides.descriptions[overrideId];
+  if (!html && overrideId && state.overrides.descriptions?.[overrideId]) html = state.overrides.descriptions[overrideId];
   const saved = state.generated.products?.[product.key];
-  if (saved?.editorial) return renderSeoDescription(product, saved, platform);
-  return generateDescription(product, platform);
+  if (!html && saved?.editorial) html = renderSeoDescription(product, saved, platform);
+  if (!html) html = generateDescription(product, platform);
+  return normalizeDescriptionIdentity(product, html);
 }
 
 function descriptionOrigin(product) {
@@ -204,7 +206,7 @@ function renderFamilyTabs() {
 }
 
 function productIdentifier(product) {
-  return product.manufacturerCode || product.code || product.ean || `ID ${product.id}`;
+  return product.code || product.ean || `ID ${product.id}`;
 }
 
 function matchFromName(product, pattern) {
@@ -256,8 +258,7 @@ function parameterSection(product) {
   const params = parameterEntries(product);
   const identity = [
     ["Producent", product.producer],
-    ["Kod produktu", product.code],
-    ["Kod producenta", product.manufacturerCode],
+    ["Indeks handlowy", product.code],
     ["EAN", product.ean],
   ].filter(([, value]) => value);
   const entries = [...params, ...identity];
@@ -270,7 +271,7 @@ function productBody(product) {
   const [originLabel, originClass] = descriptionOrigin(product);
   return `<div class="product-body">
     <div class="description-preview" data-role="preview">${description}</div>
-    ${state.platform === "shoper" ? "" : parameterSection(product)}
+    ${["shoper", "tim"].includes(state.platform) ? "" : parameterSection(product)}
     <div class="edit-panel" data-role="editor" hidden>
       <textarea class="edit-textarea" spellcheck="false">${escapeHtml(description)}</textarea>
       <div class="edit-actions">
@@ -435,7 +436,14 @@ function exportEdits() {
   const edits = Object.entries(state.localEdits).map(([key, description]) => {
     const [productKey, platform] = key.split("::");
     const product = state.catalog.products.find((item) => item.key === productKey);
-    return { productKey, platform, ean: product?.ean || "", code: product?.code || "", manufacturerCode: product?.manufacturerCode || "", name: product?.name || "", description };
+    return {
+      productKey,
+      platform,
+      ean: product?.ean || "",
+      tradeIndex: product?.code || "",
+      name: product?.name || "",
+      description: product ? normalizeDescriptionIdentity(product, description) : description,
+    };
   });
   const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), edits }, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
