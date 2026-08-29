@@ -8,12 +8,14 @@ Statyczny panel GitHub Pages z aktywnymi produktami z feedu WAPRO. Katalog i aud
 - podstawowym identyfikatorem jest EAN;
 - przy braku albo powtórzeniu EAN-u używany jest kod produktu i ID oferty;
 - stare, ręcznie dopracowane opisy są zachowane w `data/manual-overrides.json`;
-- ręczny opis ma pierwszeństwo przed opisem audytowanym, o ile nie powiela tego samego tekstu w kilku kanałach;
+- ręczny opis ma pierwszeństwo przed opisem audytowanym, o ile nie powiela tego samego tekstu w kilku kanałach i nie zawiera uszkodzonego, podwójnego bloku blogowego;
 - pozostałe opisy powstają z nazwy, kodu, EAN-u, kategorii, parametrów i tekstu źródłowego, bez dopisywania niepotwierdzonych danych technicznych;
 - konflikty źródeł są rozstrzygane jawnie w `data/source-resolutions.json` i zawierają adresy stron użytych do weryfikacji;
 - opis jest dostępny w wariantach Shoper, WAPRO/MAG, TIM i Allegro;
-- Shoper otrzymuje rozbudowany układ i dopasowane tematycznie poradniki, WAPRO prosty HTML bez stylów inline, TIM dane do doboru i uwagi montażowe dla instalatora, a Allegro układ sprzedażowy;
+- WAPRO otrzymuje dawny rodzinny układ kart z poradnikami (dla zasilaczy także tabelę parametrów), Shoper prosty układ sklepu, TIM dane do doboru i uwagi montażowe dla instalatora, a Allegro układ sprzedażowy;
 - walidator wymaga unikalności pełnego tekstu każdego z 13 640 opisów, także ręcznych.
+
+Panel zachowuje dawny wygląd bazy: wyszukiwarkę, pływające logotypy platform, kafle rodzin oraz akordeony produktów. Liczby w kaflach są obliczane z aktualnego katalogu. Wyszukiwanie po EAN-ie, SKU i treści działa we wszystkich rodzinach, także w sekcji „Pozostałe aktywne”.
 
 ## Aktualizacja katalogu
 
@@ -28,6 +30,7 @@ python3 scripts/generate_seo_descriptions.py \
   --editorial-only \
   --force
 npm run validate -- --write
+node scripts/audit_reference_products.mjs
 ```
 
 Pierwszy skrypt pobiera `https://prescot.wapromag.pl/prescotcloud.xml`, aktualizuje `data/catalog.json` i zachowuje istniejące ręczne nadpisania. Kolejka researchu wskazuje rekordy skąpe lub sprzeczne. Generator buduje warstwę redakcyjną `data/seo-descriptions.json`, a układy HTML dla czterech kanałów są renderowane w przeglądarce przez `description-engine.js`.
@@ -44,4 +47,4 @@ python3 scripts/sync_cloud_catalog.py --source /tmp/prescotcloud.xml
 npm run serve
 ```
 
-Panel będzie dostępny pod `http://localhost:8080/`. Walidator sprawdza kompletność katalogu i cztery kanały dla każdego produktu: identyfikatory, zakres długości, strukturę sekcji HTML, duplikaty, obce liczby i jednostki, niepotwierdzone twierdzenia oraz sprzeczności z danymi produktu.
+Panel będzie dostępny pod `http://localhost:8080/`. Walidator sprawdza kompletność katalogu i cztery kanały dla każdego produktu: identyfikatory, zakres długości, strukturę sekcji HTML, duplikaty, obce liczby i jednostki, niepotwierdzone twierdzenia oraz sprzeczności z danymi produktu. Audyt referencyjny osobno kontroluje S-Shape, COB 48V, WCOB, Scharfer, PR-MAD, sterownik touch 12A oraz złączkę FC8.

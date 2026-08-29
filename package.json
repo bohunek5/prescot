@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "serve": "python3 -m http.server 8080",
-    "validate": "node scripts/validate_catalog.mjs"
+    "validate": "node scripts/validate_catalog.mjs",
+    "audit:refs": "node scripts/audit_reference_products.mjs",
+    "test:ui": "node scripts/visual_smoke.mjs"
   }
 }

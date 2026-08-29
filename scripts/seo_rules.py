@@ -556,83 +556,187 @@ def ingress_guidance(ip: str) -> str:
 
 
 def tape_editorial(product: dict[str, Any]) -> dict[str, Any]:
-    specs = preferred_specs(product, ["Barwa światła", "Napięcie wejściowe", "Moc", "Jasność", "CRI", "Ilość diod", "Moduł cięcia", "Klasa szczelności", "Szerokość taśmy", "Rolka", "Gwarancja"], 11)
     name = product["name"]
+    lower = name.casefold()
+    source = normalize(product.get("sourceDescription", ""))
     code = product["manufacturerCode"] or product["code"]
-    color_match = re.search(r"(?i)\b(?:biała?\s+(?:ciepła|ciepły|neutralna|neutralny|zimna|zimny)|niebieska|niebieski|zielona|zielony|czerwona|czerwony|żółta|żółty|różowa|różowy|RGB\+?CCT|RGBW?|CCT|\d{4,5}\s*K)\b", name)
-    voltage_match = re.search(r"(?i)\b\d+(?:[.,]\d+)?\s*V\b", name)
-    ip_match = re.search(r"(?i)\bIP\s*\d{2}\b", name)
-    diode_match = re.search(r"(?i)\b(?:SMD|COB)\s*\d{3,4}\b", name)
-    roll_match = re.search(r"(?i)\b\d+(?:[.,]\d+)?\s*m\b", name)
-    color = attr(product, "Barwa światła") or (normalize(color_match.group(0)) if color_match else "")
-    voltage = attr(product, "Napięcie wejściowe") or (normalize(voltage_match.group(0)).replace(" ", "") if voltage_match else "")
-    power = attr(product, "Moc")
-    brightness = attr(product, "Jasność")
-    cri = attr(product, "CRI")
-    leds = attr(product, "Ilość diod")
-    cut = attr(product, "Moduł cięcia")
-    ip = attr(product, "Klasa szczelności") or (normalize(ip_match.group(0)).replace(" ", "") if ip_match else "")
-    width = attr(product, "Szerokość taśmy")
-    roll = attr(product, "Rolka", "Wymiar") or (normalize(roll_match.group(0)).replace(" ", "") if roll_match else "")
-    diode = attr(product, "Typ diody") or (normalize(diode_match.group(0)).upper().replace(" ", "") if diode_match else "")
-    pcb = attr(product, "PCB")
-    derived = [("Barwa światła", color), ("Napięcie", voltage), ("Klasa szczelności", ip), ("Typ diody", diode), ("Rolka", roll)]
-    existing_labels = {label.casefold() for label, _ in specs}
-    for label, value in derived:
-        if value and label.casefold() not in existing_labels:
-            specs.append((label, value))
-            existing_labels.add(label.casefold())
 
-    optical = [("Barwa światła", color), ("Jasność", brightness), ("CRI", cri), ("Ilość diod", leds)]
-    optical = [(k, v) for k, v in optical if v]
-    electrical = [("Napięcie", voltage), ("Moc", power), ("Typ diody", diode), ("PCB", pcb)]
-    electrical = [(k, v) for k, v in electrical if v]
-    format_specs = [("Moduł cięcia", cut), ("Szerokość", width), ("Klasa szczelności", ip), ("Rolka", roll)]
-    format_specs = [(k, v) for k, v in format_specs if v]
+    def found(pattern: str, *values: str) -> str:
+        for value in values:
+            match = re.search(pattern, value or "", re.I)
+            if match:
+                return normalize(match.group(1) if match.lastindex else match.group(0))
+        return ""
+
+    color_name = found(
+        r"\b(biała\s+(?:ciepła|neutralna|zimna)|ciepła\s+biała|neutralna\s+biała|zimna\s+biała|dzienna\s+biała|czerwona|zielona|niebieska|żółta|pomarańczowa|różowa|RGB\+?CCT|RGBCCT|RGBW|RGB|CCT)\b",
+        name,
+    )
+    cct = found(r"\b(\d{4,5}(?:[–-]\d{4,5})?\s*K)\b", name, source).replace(" ", "")
+    color = attr(product, "Barwa światła") or " ".join(x for x in [color_name, cct] if x)
+    voltage = attr(product, "Napięcie wejściowe", "Napięcie") or found(r"\b(\d+(?:[.,]\d+)?\s*V)\b", name)
+    power = attr(product, "Moc") or found(r"\b(\d+(?:[.,]\d+)?\s*W/m)\b", name, source)
+    brightness = attr(product, "Jasność") or found(r"\b(\d+(?:[.,]\d+)?\s*lm/m)\b", name, source)
+    cri = attr(product, "CRI") or found(r"\b(CRI\s*>?\s*\d+)\b", name, source)
+    leds = attr(product, "Ilość diod") or found(r"\b(\d+\s*(?:led|diod)/m)\b", name, source)
+    if re.fullmatch(r"\d+\s*/m", leds, re.I):
+        leds = leds.replace("/m", " LED/m")
+    cut = attr(product, "Moduł cięcia") or found(r"(?:moduł(?:em)? cięcia|cięci[ae] co)\s*(\d+(?:[.,]\d+)?\s*mm)", source)
+    ip = attr(product, "Klasa szczelności") or found(r"\b(IP\s*\d{2})\b", name, source)
+    width = attr(product, "Szerokość taśmy") or found(r"\b(\d+(?:[.,]\d+)?mm)\b", name)
+    diode = attr(product, "Typ diody") or found(r"\b((?:SMD|COB)\s*\d{3,4})\b", name, source)
+    sold_by_meter = "taśma na metry" in lower or "cięta na metry" in lower
+    roll = attr(product, "Rolka", "Wymiar") or found(r"(?:rolka(?:\s+o\s+długości)?\s*)?(\d+(?:[.,]\d+)?\s*m)(?:\b|\s*$)", name, source)
+    format_label = "taśma cięta na metry" if sold_by_meter else f"rolka {roll}" if roll else "wariant długości wskazany w nazwie"
+
+    if "s-shape" in lower or "s shape" in lower:
+        family = "s_shape"
+        series_label = "Taśmy LED S-Shape"
+        first_heading = "Linia światła prowadzona po łukach i nieregularnych kształtach"
+        first_text = f"Model {code} ma elastyczny laminat S-Shape przeznaczony do łuków, liter, zaokrągleń i dekoracyjnych linii światła. Format produktu to {format_label}."
+    elif "wcob" in lower:
+        family = "wcob"
+        series_label = f"Seria WCOB{f' {ip}' if ip else ''}"
+        first_heading = "Biała powierzchnia taśmy i ciągła linia światła WCOB"
+        first_text = f"Model {code} wykorzystuje technologię White COB: po wyłączeniu widoczna jest biała powierzchnia zamiast intensywnie żółtego paska luminoforu. {f'Układ {leds} tworzy równą linię światła. ' if leds else ''}Format handlowy: {format_label}."
+    elif "cob" in lower:
+        family = "cob"
+        series_label = "Seria Premium COB" if "premium" in lower else "Taśmy LED COB"
+        first_heading = f"Ciągła linia światła w modelu {code}"
+        first_text = f"Taśma COB {code} tworzy jednolitą linię bez wyraźnych punktów świetlnych. {f'Zasilanie {voltage} ułatwia planowanie odcinków. ' if voltage else ''}Format produktu: {format_label}."
+    elif any(token in lower for token in ("rgb", "cct", "dual white")):
+        family = "multichannel"
+        series_label = "Taśmy LED wielokanałowe"
+        first_heading = f"Sterowana barwa światła w wariancie {code}"
+        first_text = f"Model {code} jest taśmą {color_name or cct or 'wielokanałową'} i wymaga sterownika zgodnego z układem kanałów. Napięcie zasilania to {voltage or 'wartość wskazana dla modelu'}, a format produktu to {format_label}."
+    else:
+        family = "smd"
+        series = next((value for value in ("Delux Pro", "Delux", "Premium+", "Premium", "Economic") if value.casefold() in lower), "LED")
+        series_label = f"Seria {series}"
+        first_heading = f"Taśma {series} w wariancie {code}"
+        first_text = f"Model {code} to taśma {diode or 'LED'} o zasilaniu {voltage or 'określonym dla wariantu'}. {f'Gęstość {leds} wpływa na rozstaw punktów światła. ' if leds else ''}Format produktu: {format_label}."
+
+    brightness_heading = (
+        f"{brightness}: wyraźne światło liniowe do zadań użytkowych" if brightness and (first_number(brightness) or 0) >= 1000
+        else f"{brightness}: światło pomocnicze i akcentowe" if brightness
+        else f"Moc {power} i przeznaczenie wariantu {code}" if power
+        else f"Przeznaczenie modelu {code}"
+    )
+    brightness_text = (
+        f"Strumień {brightness}{f' przy mocy {power}' if power else ''} pozwala dobrać model do roli światła, a nie tylko do wyglądu taśmy. "
+        f"{light_guidance('', brightness).split('.', 1)[-1].strip()}"
+        if brightness
+        else f"Dobierając model {code}, porównaj moc na metr, gęstość diod oraz rolę planowanego oświetlenia. Parametry tego wariantu identyfikuje pełna nazwa produktu."
+    )
+    color_heading = (
+        f"{color}: barwa dobrana do konkretnego wnętrza" if color
+        else f"Miejsce użycia i format {format_label}"
+    )
+    color_text = light_guidance(color) if color else f"Model {code} stosuj w oświetleniu liniowym po dobraniu zasilacza, profilu i warunków pracy do danych tego wariantu."
+    format_text = (
+        "Wariant cięty na metry pozwala zamówić długość dopasowaną do projektu; liczbę odcinków i punktów zasilania trzeba rozplanować przed montażem."
+        if sold_by_meter
+        else f"{sentence_case(format_label)} określa ilość materiału w opakowaniu. Odcinki dziel wyłącznie w oznaczonych miejscach{f' co {cut}' if cut else ''}."
+    )
+
+    if family == "s_shape":
+        second = {"label": color_name or cct or "Barwa światła", "heading": color_heading, "paragraphs": [color_text]}
+        third = {"label": brightness or "Zastosowanie", "heading": brightness_heading, "paragraphs": [brightness_text, format_text]}
+    elif family == "wcob":
+        second = {"label": "Gdzie sprawdzi się najlepiej", "heading": color_heading, "paragraphs": [color_text, f"{ingress_guidance(ip)} {format_text}" if ip else format_text]}
+        third = {
+            "label": "Parametry i montaż",
+            "heading": "Zasilanie, cięcie i odprowadzanie ciepła",
+            "paragraphs": [
+                f"Napięcie {voltage or 'dobierz według modelu'}{f', moc {power}' if power else ''}{f', szerokość {width}' if width else ''}{f' i moduł cięcia {cut}' if cut else ''} wyznaczają sposób kompletacji instalacji.",
+                f"Profil oraz zasilacz dobierz do mocy i długości planowanego odcinka. {format_text}",
+            ],
+        }
+    elif family == "cob" and voltage == "48V":
+        second = {"label": "Barwa światła", "heading": color_heading, "paragraphs": [color_text]}
+        third = {"label": "Zastosowanie", "heading": f"{sentence_case(format_label)} w systemie 48V", "paragraphs": [brightness_text, format_text]}
+    else:
+        second = {"label": brightness or "Przeznaczenie modelu", "heading": brightness_heading, "paragraphs": [brightness_text]}
+        third = {"label": "Barwa i miejsce użycia", "heading": color_heading, "paragraphs": [color_text, f"{format_text} {ingress_guidance(ip)}" if ip else format_text]}
 
     sections = [
-        {
-            "label": "Światło i barwa",
-            "heading": f"{brightness or color or product['manufacturerCode'] or product['code']}: parametry światła tego wariantu",
-            "paragraphs": [f"Pełna nazwa wariantu: {product['name']}. Kod: {product['manufacturerCode'] or product['code']}. {exact_spec_sentence(optical)} {exact_spec_sentence(electrical)}", light_guidance(color, brightness) if color else f"Parametry optyczne i elektryczne należy porównywać dla pełnego kodu {product['manufacturerCode'] or product['code']}, ponieważ podobne taśmy mogą różnić się barwą i układem diod."],
-        },
-        {
-            "label": "Format taśmy",
-            "heading": f"{roll or width or cut or ip or product['manufacturerCode'] or product['code']}: dane potrzebne do rozplanowania odcinka",
-            "paragraphs": [
-                exact_spec_sentence(format_specs),
-                f"{f'Rolka {roll} pozwala rozplanować długość odcinków i liczbę połączeń. ' if roll else ''}{f'Punkty podziału wyznacza moduł {cut}. ' if cut else ''}{ingress_guidance(ip)}",
-            ],
-        },
-        {
-            "label": "Dobór do instalacji",
-            "heading": f"{f'Zasilanie {voltage}' if voltage else f'Model {code}'} i {f'szerokość {width}' if width else 'dobór osprzętu'}",
-            "paragraphs": [
-                "Przed montażem porównaj napięcie taśmy z zasilaczem" + (f", a szerokość {width} z profilem i osprzętem połączeniowym." if width else "."),
-                f"Dziel taśmę wyłącznie według modułu cięcia {cut}; warunki pracy dobierz do podanej klasy szczelności." if cut else "Warunki pracy dobierz do podanej klasy szczelności.",
-            ],
-        },
+        {"label": series_label, "heading": first_heading, "paragraphs": [first_text]},
+        second,
+        third,
     ]
-    benefits = []
-    if brightness and power:
-        benefits.append(f"Jasność {brightness} przy mocy {power}")
-    if leds and diode:
-        benefits.append(f"Układ {leds} z diodami {diode}")
-    if cut:
-        benefits.append(f"Miejsca podziału taśmy wyznacza moduł {cut}")
-    if cri:
-        benefits.append(f"Współczynnik oddawania barw {cri}")
-    if len(benefits) < 2 and color:
-        benefits.append(f"Barwa światła określona jako {color}")
-    if len(benefits) < 2 and diode:
-        benefits.append(f"Zastosowany typ diody {diode}")
-    if len(benefits) < 2 and ip:
-        benefits.append(f"Oznaczenie szczelności {ip}")
-    applications = ["Oświetlenie liniowe montowane w profilu LED", light_application(color) if color else f"Instalacje liniowe dobierane po kodzie {product['manufacturerCode'] or product['code']}"]
-    if ip and re.search(r"IP(?:4[4-9]|[5-9]\d)", ip, re.I):
-        applications.append(f"Miejsca wymagające klasy szczelności {ip}")
-    checks = [x for x in [f"Napięcie zasilania: {voltage}" if voltage else "", f"Moc na metr: {power}" if power else "", f"Szerokość taśmy: {width}" if width else "", f"Klasa szczelności: {ip}" if ip else ""] if x]
-    notes = [x for x in [f"Stosuj zasilacz zgodny z napięciem {voltage}" if voltage else "", f"Dziel taśmę zgodnie z modułem cięcia {cut}" if cut else "", f"Profil i złączki dobierz do szerokości {width}" if width else ""] if x]
+    specs = [(label, value) for label, value in [
+        ("Barwa światła", color), ("Napięcie", voltage), ("Moc", power), ("Jasność", brightness),
+        ("CRI", cri), ("Ilość diod", leds), ("Moduł cięcia", cut), ("Klasa szczelności", ip),
+        ("Szerokość taśmy", width), ("Typ diody", diode), ("Format", format_label),
+    ] if value]
+    benefits = [value for value in [
+        f"Strumień {brightness}{f' przy mocy {power}' if power else ''}" if brightness else "",
+        f"Zasilanie {voltage}" if voltage else "",
+        f"Szerokość taśmy {width}" if width else "",
+        f"Moduł cięcia {cut}" if cut else "",
+    ] if value]
+    applications = [
+        light_application(color) if color else "Oświetlenie liniowe dobrane do parametrów wariantu",
+        "Łuki, litery i nieregularne linie" if family == "s_shape" else "Montaż w profilu aluminiowym dobranym do szerokości taśmy",
+    ]
+    checks = [value for value in [
+        f"Napięcie zasilania: {voltage}" if voltage else "",
+        f"Moc na metr: {power}" if power else "",
+        f"Szerokość taśmy: {width}" if width else "",
+        f"Format handlowy: {format_label}",
+    ] if value]
+    notes = [
+        f"Stosuj zasilacz zgodny z napięciem {voltage}" if voltage else "Sprawdź napięcie przed podłączeniem",
+        f"Dziel taśmę zgodnie z modułem cięcia {cut}" if cut else "Dziel taśmę wyłącznie w oznaczonych miejscach",
+        f"Profil i złączki dobierz do szerokości {width}" if width else "Profil dobierz do szerokości i mocy taśmy",
+    ]
+    return finish(product, sections, benefits, applications, checks, notes, specs)
+
+
+def manufacturer_source_editorial(product: dict[str, Any], family_label: str) -> dict[str, Any]:
+    """Preserve manufacturer copy for external brands while adding only catalog identity and checks."""
+    code = product["manufacturerCode"] or product["code"]
+    specs = public_specs(product)[:10]
+    source = source_sentences(product, 4)
+    raw_source = normalize(product.get("sourceDescription", ""))
+    if not source and len(raw_source) >= 45:
+        source = [raw_source]
+
+    # Producent bywa autorem wartościowej treści, ale część kart zawiera stare,
+    # czysto reklamowe sformułowania odrzucane przez bramkę jakości. Zachowujemy
+    # sens i dane, wygładzając wyłącznie te zwroty — bez dopisywania nowych cech.
+    def clean_source(value: str) -> str:
+        value = re.sub(r"(?i)\bidealn\w*\s+rozwiązani\w*\b", "dobry wybór", value)
+        value = re.sub(r"(?i)\bidealn\w*\b", "dobrze", value)
+        value = re.sub(r"(?i)\bnowoczesn\w*\s+design\w*\b", "współczesna forma", value)
+        value = value.replace("!", ".")
+        return normalize(value)
+
+    source = [clean_source(value) for value in source if clean_source(value)]
+    identity = f"Pełna nazwa wariantu: {product['name']}. Kod producenta: {code}."
+    first = source[0] if source else identity
+    second = source[1] if len(source) > 1 else f"Produkt należy do grupy {product['category'].split('/')[-1]} i zachowuje oznaczenie modelu {code} nadane przez producenta."
+    third = source[2] if len(source) > 2 else f"Przeznaczenie i zgodność wariantu należy potwierdzić po symbolu {code}, a nie wyłącznie po wyglądzie elementu."
+    fourth = source[3] if len(source) > 3 else "Elementy współpracujące oraz sposób montażu dobiera się według oznaczeń podanych dla tej samej rodziny producenta."
+    spec_sentence = exact_spec_sentence(specs[:6])
+    if not spec_sentence or spec_sentence in {first, second, third}:
+        spec_sentence = f"Identyfikatory katalogowe tego wariantu to kod {code} oraz EAN {product['ean']}."
+    first_paragraphs = [first]
+    if first != identity:
+        first_paragraphs.append(identity)
+    sections = [
+        {"label": f"Opis {family_label}", "heading": f"{product['name']} — model {code}", "paragraphs": first_paragraphs},
+        {"label": "Zastosowanie producenta", "heading": f"Przeznaczenie wariantu {code}", "paragraphs": [second, third]},
+        {"label": "Dobór i kompletacja", "heading": "Kod, wymiary i zgodne elementy systemu", "paragraphs": [spec_sentence, fourth]},
+    ]
+    benefits = [f"Parametr {label.casefold()}: {value}" for label, value in specs[:4]] or [f"Oznaczenie producenta {code}", f"Numer EAN {product['ean']}"]
+    applications = [
+        f"Zastosowanie przewidziane dla grupy {product['category'].split('/')[-1]}",
+        f"Kompletacja systemu {family_label} po potwierdzeniu symbolu modelu",
+    ]
+    checks = [f"Sprawdź kod producenta {code}", f"Porównaj EAN {product['ean']}"]
+    checks.extend(f"Zweryfikuj {label.casefold()}: {value}" for label, value in specs[:2])
+    notes = ["Przed montażem porównaj kod elementu i zgodność z pozostałymi częściami systemu producenta"]
     return finish(product, sections, benefits, applications, checks, notes, specs)
 
 
@@ -689,6 +793,8 @@ def battery_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 
 def profile_cover_editorial(product: dict[str, Any]) -> dict[str, Any]:
+    if "KLUŚ" in product.get("producer", "").upper():
+        return manufacturer_source_editorial(product, "KLUŚ")
     specs = preferred_specs(
         product,
         [
@@ -796,6 +902,8 @@ def profile_cover_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 
 def profile_accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
+    if "KLUŚ" in product.get("producer", "").upper():
+        return manufacturer_source_editorial(product, "KLUŚ")
     specs = preferred_specs(
         product,
         ["Wykonanie (materiał)", "Kolor", "Długość", "Wymiar", "Montaż", "Przeznaczenie produktu", "Gwarancja"],
@@ -878,6 +986,8 @@ def profile_accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 
 def profile_editorial(product: dict[str, Any]) -> dict[str, Any]:
+    if "KLUŚ" in product.get("producer", "").upper():
+        return manufacturer_source_editorial(product, "KLUŚ")
     specs = preferred_specs(product, ["Wykonanie (materiał)", "Kolor profilu", "Kolor", "Wykończenie", "Długość", "Szerokość profilu", "Szerokość świecenia", "Montaż", "Kolor osłony", "Przeznaczenie produktu", "Gwarancja"], 11)
     code = product["manufacturerCode"] or product["code"]
     material = attr(product, "Wykonanie (materiał)") or ("aluminium" if "alumini" in f"{product['category']} {product['name']}".casefold() else "")
@@ -907,6 +1017,9 @@ def profile_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 
 def power_editorial(product: dict[str, Any]) -> dict[str, Any]:
+    producer = product.get("producer", "")
+    if producer and not producer.casefold().startswith("prescot") and "scharfer" not in producer.casefold():
+        return manufacturer_source_editorial(product, producer)
     specs = preferred_specs(product, ["Napięcie Wejściowe", "Napięcie wejściowe", "Napięcie Wyjściowe", "Napięcie wyjściowe", "Moc", "Prąd", "Prąd maksymalny", "Klasa szczelności", "Typ", "Wymiar", "Długość przewodu", "Gwarancja"], 11)
     vin = attr(product, "Napięcie Wejściowe", "Napięcie wejściowe")
     vout = attr(product, "Napięcie Wyjściowe", "Napięcie wyjściowe")
@@ -962,6 +1075,9 @@ def power_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 
 def controller_editorial(product: dict[str, Any]) -> dict[str, Any]:
+    producer = product.get("producer", "")
+    if producer and not producer.casefold().startswith("prescot"):
+        return manufacturer_source_editorial(product, producer)
     specs = preferred_specs(product, ["Napięcie Wejściowe", "Napięcie Wyjściowe", "Moc", "Prąd maksymalny", "Prąd na 1 kanał", "Ilość stref", "Komunikacja", "Zasięg", "Ilość programów", "Zasilanie pilota", "Wymiar", "Kolor", "Gwarancja"], 12)
     code = product["manufacturerCode"] or product["code"]
     voltage = attr(product, "Napięcie Wejściowe", "Napięcie Wyjściowe") or name_value(product, r"\b\d+(?:[.,]\d+)?\s*[-–]\s*\d+(?:[.,]\d+)?\s*V(?:DC)?\b") or name_value(product, r"\b(?:5|12|24|36|48|230)\s*V(?:DC)?\b")
@@ -1056,6 +1172,9 @@ def control_accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 
 def accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
+    producer = product.get("producer", "")
+    if producer and not producer.casefold().startswith("prescot"):
+        return manufacturer_source_editorial(product, producer)
     specs = preferred_specs(product, ["Długość przewodu", "Przekrój przewodu", "Szerokość taśmy", "Zakończenie przewodu 1", "Zakończenie przewodu 2", "Napięcie Wyjściowe", "Wykonanie (materiał)", "Wymiar", "Kolor", "Gwarancja"], 10)
     leaf = product["category"].split("/")[-1]
     length = attr(product, "Długość przewodu")
@@ -1094,6 +1213,17 @@ def accessory_editorial(product: dict[str, Any]) -> dict[str, Any]:
 
 
 def luminaire_editorial(product: dict[str, Any]) -> dict[str, Any]:
+    producer = normalize(product.get("producer", ""))
+    producer_key = producer.casefold()
+    source_for_brand = normalize(product.get("sourceDescription", ""))
+    source_key = source_for_brand.casefold()
+    name_key = product["name"].casefold()
+    source_conflicts_with_name = (
+        (any(term in name_key for term in ("bez led", "bez źródła")) and re.search(r"zawiera\s+źródło\s+światła|ze\s+źródłem\s+światła", source_key))
+        or ("bez zasilacza" in name_key and re.search(r"zawiera\s+zasilacz|zasilacz\s+w\s+zestawie", source_key))
+    )
+    if any(brand in producer_key for brand in ("milight", "mi-light", "kluś", "klus")) and len(source_for_brand) >= 120 and not source_conflicts_with_name:
+        return manufacturer_source_editorial(product, producer)
     specs = preferred_specs(product, ["Źródło światła", "Gwint", "Moc", "Napięcie Wejściowe", "Barwa światła", "Jasność", "CRI", "Kąt świecenia", "Klasa szczelności", "Wymiar", "Kolor", "Wykonanie (materiał)", "Gwarancja"], 12)
     name = product["name"]
     source_text = normalize(product.get("sourceDescription", ""))

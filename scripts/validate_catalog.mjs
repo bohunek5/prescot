@@ -39,12 +39,9 @@ for (const product of products) {
   for (const platform of platforms) {
     const assignment = overrides.products?.[product.key];
     let overrideId = "";
-    if (platform === "shoper") overrideId = assignment?.wapro || "";
-    else if (platform === "wapro") overrideId = assignment?.shoper || "";
-    else {
-      overrideId = assignment?.[platform] || "";
-      if (overrideId && overrideId === assignment?.wapro) overrideId = "";
-    }
+    overrideId = assignment?.[platform] || "";
+    if (platform === "wapro" && overrideId && overrides.descriptions?.[overrideId]?.includes('class="blog-grid"')) overrideId = "";
+    if (["tim", "allegro"].includes(platform) && overrideId === assignment?.wapro) overrideId = "";
     const manualHtml = overrideId ? overrides.descriptions?.[overrideId] : "";
     const savedSeo = generated.products?.[product.key];
     const html = manualHtml || (savedSeo ? renderSeoDescription(product, savedSeo, platform) : generateDescription(product, platform));
@@ -55,9 +52,7 @@ for (const product of products) {
     assert(text.length >= 180, `Zbyt krótki opis: ${product.key} / ${platform} (${text.length} znaków).`);
     assert(!/\b(?:undefined|null|nan)\b/i.test(text), `Niedozwolona wartość w opisie: ${product.key} / ${platform}.`);
     assert(occurrences(html, /<section\b/gi) === occurrences(html, /<\/section>/gi), `Niezbilansowane sekcje: ${product.key} / ${platform}.`);
-    if (platform === "wapro") {
-      assert(!/\sstyle\s*=/i.test(html), `WAPRO zawiera niedozwolone style inline: ${product.key}.`);
-    }
+    if (platform === "wapro") assert(occurrences(html, /<section\b/gi) >= 3, `WAPRO nie ma rodzinnego układu sekcji: ${product.key}.`);
 
     const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
     const existing = descriptionFingerprints.get(fingerprint);

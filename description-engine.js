@@ -575,29 +575,19 @@ function seoGuides(product) {
   const guide = SEO_BLOG_GUIDES[product.categoryRoot];
   if (!guide) return "";
   const cards = guide.items.map(([title, description, url]) => (
-    `<div style="font-family:inherit;min-height:190px;padding:18px;margin:0;background:none!important;background-color:transparent!important;border:1px solid currentColor;border-radius:12px;box-shadow:none!important;color:inherit;display:flex;flex-direction:column;"><strong style="font-family:inherit;display:block;color:inherit!important;font-size:15px;line-height:1.35;margin-bottom:6px;">${escapeHtml(title)}</strong><small style="font-family:inherit;display:block;color:inherit!important;opacity:.78;font-size:13px;line-height:1.45;margin-bottom:14px;">${escapeHtml(description)}</small><a href="${escapeHtml(url)}" style="font-family:inherit;margin-top:auto;color:inherit!important;font-size:13px;font-weight:700;text-decoration:underline;">Czytaj poradnik</a></div>`
+    `<div style="font-family:inherit;min-height:190px;padding:18px;margin:0;background:none!important;background-color:transparent!important;border:1px solid currentColor;border-radius:12px;box-shadow:none!important;color:inherit;display:flex;flex-direction:column;"><strong style="font-family:inherit;display:block;color:inherit!important;font-size:15px;line-height:1.35;margin-bottom:6px;">${escapeHtml(title)}</strong><small style="font-family:inherit;display:block;color:inherit!important;opacity:.78;font-size:13px;line-height:1.45;margin-bottom:14px;">${escapeHtml(description)}</small><a href="${escapeHtml(url)}" style="font-family:inherit;display:inline-block;min-width:142px;margin-top:auto;padding:10px 17px;border-radius:999px;background:#e94b25!important;background-color:#e94b25!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-size:14px;font-weight:700;text-decoration:none!important;text-align:center;line-height:1.2;border:0!important;align-self:flex-start;">Czytaj poradnik</a></div>`
   )).join("");
   return `<section style="${STYLE.section}"><div style="font-family:inherit;margin-bottom:18px;background:none!important;background-color:transparent!important;color:inherit;"><span style="${seoPillStyle("#e94b25")}"><font color="#ffffff">Praktyczne poradniki</font></span><h3 style="${STYLE.heading}">${escapeHtml(guide.heading)}</h3><p style="${STYLE.paragraph}">${escapeHtml(guide.description)}</p></div><div style="font-family:inherit;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;background:none!important;background-color:transparent!important;color:inherit;align-items:stretch;">${cards}</div></section>`;
 }
 
-function seoWapro(product, result) {
+function seoShoper(product, result) {
   const identifierLabels = new Set(["producent", "kod produktu", "kod producenta", "ean"]);
   const specs = seoProductSpecs(product);
   const features = specs.filter(([label]) => !identifierLabels.has(label.toLocaleLowerCase("pl"))).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
   const identifiers = specs.filter(([label]) => ["kod produktu", "kod producenta", "ean"].includes(label.toLocaleLowerCase("pl"))).map(([label, value]) => `${label}: ${value}`);
-  const points = (values) => `<ul>${values.map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("")}</ul>`;
-  return `<div><h2>${escapeHtml(product.name)}</h2><p>${escapeHtml(normalize(result.channel_leads.wapro))}</p><h3>Najważniejsze dane</h3>${points(features)}<h3>Zastosowanie</h3>${points(result.applications)}<h3>Dobór wariantu</h3>${points([...result.selection_checks, ...identifiers])}</div>`;
-}
-
-function seoShoper(product, result) {
-  return [
-    seoSection(result.sections[0], { label: "Opis produktu" }),
-    seoBenefits(result.benefits),
-    seoSection(result.sections[1], { label: "Zastosowanie i dobór" }),
-    seoSpecs(product),
-    seoPoints("Dobór bez pomyłki", "Co sprawdzić przed montażem", [...result.selection_checks, ...result.installation_notes]),
-    seoGuides(product),
-  ].filter(Boolean).join("\n");
+  const points = (values) => values.map((value) => `<p>- ${escapeHtml(normalize(value).replace(/\.$/, ""))}</p>`).join("");
+  const intro = result.sections[0].paragraphs.map(normalize).join(" ");
+  return `<section><h2>${escapeHtml(product.name)}</h2><p>${escapeHtml(intro)}</p><h3>Najważniejsze cechy:</h3>${points(features)}<h3>Dlaczego warto:</h3>${points(result.benefits)}<h3>Gdzie użyć:</h3>${points(result.applications)}<h3>Dobór bez pomyłki:</h3>${points([...result.selection_checks, ...identifiers])}</section>`;
 }
 
 export function renderSeoDescription(product, saved, platform = "shoper") {
@@ -606,7 +596,20 @@ export function renderSeoDescription(product, saved, platform = "shoper") {
   const selected = PLATFORM_NAMES[platform] ? platform : "shoper";
   const code = product.manufacturerCode || product.code;
   if (selected === "shoper") return seoShoper(product, result);
-  if (selected === "wapro") return seoWapro(product, result);
+  if (selected === "wapro") {
+    const family = result.rule_family || "";
+    const identifier = product.ean || product.manufacturerCode || product.code;
+    const sourceSections = result.sections.map((item) => ({ ...item, paragraphs: [...(item.paragraphs || [])] }));
+    const narration = normalize(sourceSections.flatMap((item) => [item.heading, ...item.paragraphs]).join(" "));
+    if (identifier && !narration.includes(identifier)) {
+      sourceSections[0].paragraphs.push(`Identyfikacja wariantu: kod ${product.manufacturerCode || product.code}; EAN ${product.ean || "nie nadano"}.`);
+    }
+    const sections = sourceSections.map((item) => seoSection(item));
+    if (family === "power") {
+      return [sections[0], sections[1], seoSpecs(product), seoGuides(product)].filter(Boolean).join("\n");
+    }
+    return [...sections, seoGuides(product)].filter(Boolean).join("\n");
+  }
   if (selected === "tim") return [
     seoSection({ label: "Opis techniczny", heading: `${code} — dane do doboru`, paragraphs: [result.channel_leads.tim] }),
     seoSection(result.sections[1], { label: "Zastosowanie i dobór" }),

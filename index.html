@@ -3,90 +3,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Baza opisów aktywnych produktów Prescot z kodami EAN, parametrami i wersjami dla kanałów sprzedaży.">
-  <title>Prescot LED — baza opisów produktów</title>
+  <meta name="description" content="Baza opisów aktywnych produktów Prescot dla WAPRO, TIM, Allegro i Shoper.">
+  <title>Prescot LED – Baza Opisów Produktów</title>
   <link rel="icon" href="./prescot_logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="./" aria-label="Prescot — baza opisów">
-        <img src="./prescot_logo.svg" alt="Prescot">
-        <span><strong>Baza opisów</strong><small>aktywny katalog z chmury</small></span>
-      </a>
-      <div class="header-actions">
-        <a href="https://prescot.wapromag.pl/prescotcloud.xml" target="_blank" rel="noopener">Źródłowy XML ↗</a>
-        <button id="export-edits" type="button">Eksportuj edycje</button>
-        <button id="clear-edits" type="button">Wyczyść edycje</button>
-      </div>
-    </div>
-  </header>
+  <main class="wrap">
+    <header class="page-header">
+      <img class="prescot-logo" src="./prescot_logo.svg" alt="Prescot LED">
+      <h1>Baza Opisów</h1>
+      <p>Wygodna baza dla systemów WAPRO ERP, TIM.pl, Allegro oraz Shoper (podgląd i edycja unikalności)</p>
+      <div class="cloud-state" id="cloud-state">Ładowanie aktywnych produktów z chmury…</div>
+    </header>
 
-  <main>
-    <section class="hero">
-      <div class="hero-copy">
-        <span class="eyebrow">PRESCOT • OPISY PRODUKTOWE</span>
-        <h1>Jedna baza. Wszystkie aktywne produkty.</h1>
-        <p>Wyszukuj po EAN-ie, kodzie lub nazwie. Każda pozycja ma opis oparty na danych z aktualnego feedu oraz wersje dopasowane do kanału sprzedaży.</p>
-      </div>
-      <div class="stats" aria-label="Statystyki katalogu">
-        <div><strong id="stat-products">—</strong><span>aktywnych produktów</span></div>
-        <div><strong id="stat-ean">—</strong><span>produktów z EAN</span></div>
-        <div><strong id="stat-overrides">—</strong><span>opisów ręcznie dopracowanych</span></div>
-        <div><strong id="stat-updated">—</strong><span>aktualizacja danych</span></div>
-      </div>
-    </section>
-
-    <div id="loading" class="loading-state" role="status">
-      <span class="spinner" aria-hidden="true"></span>
-      <strong>Ładuję aktywny katalog Prescot…</strong>
-      <small>Produkty, EAN-y, parametry i zachowane opisy ręczne.</small>
+    <div class="search-container">
+      <label class="sr-only" for="search-input">Wyszukaj produkt</label>
+      <input id="search-input" type="search" placeholder="Wyszukaj model, sku, EAN lub fragment opisu..." autocomplete="off">
     </div>
 
-    <div id="error" class="error-state" hidden>
+    <div id="loading" class="notice" role="status">Ładuję produkty, EAN-y, parametry i zachowane opisy…</div>
+    <div id="error" class="notice notice-error" hidden>
       <strong>Nie udało się otworzyć bazy.</strong>
-      <p>Odśwież stronę albo spróbuj ponownie za chwilę.</p>
+      <span>Odśwież stronę albo spróbuj ponownie za chwilę.</span>
     </div>
 
     <div id="app" hidden>
-      <nav id="platform-tabs" class="platform-tabs" aria-label="Kanał sprzedaży"></nav>
+      <nav id="platform-tabs" class="main-tabs" aria-label="Kanał sprzedaży"></nav>
+      <nav id="family-tabs" class="sub-tabs" aria-label="Rodzina produktów"></nav>
 
-      <section class="catalog-shell">
-        <div class="filters">
-          <label class="search-field">
-            <span>Znajdź produkt</span>
-            <input id="search" type="search" placeholder="EAN, kod, nazwa, producent lub parametr…" autocomplete="off">
-          </label>
-          <label>
-            <span>Kategoria</span>
-            <select id="category-filter"></select>
-          </label>
-          <label>
-            <span>Rodzaj opisu</span>
-            <select id="description-filter">
-              <option value="all">Wszystkie opisy</option>
-              <option value="manual">Ręcznie dopracowane</option>
-              <option value="generated">Wygenerowane z danych</option>
-              <option value="edited">Edytowane lokalnie</option>
-              <option value="missing-ean">Produkty bez EAN</option>
-            </select>
-          </label>
+      <div class="catalog-meta">
+        <p id="result-summary"></p>
+        <div class="utils-bar">
+          <button id="expand-all" class="utils-btn" type="button">Rozwiń wszystkie</button>
+          <button id="collapse-all" class="utils-btn" type="button">Zwiń wszystkie</button>
+          <button id="export-edits" class="utils-btn" type="button">Eksportuj edycje</button>
+          <button id="clear-edits" class="utils-btn" type="button">Wyczyść edycje</button>
         </div>
+      </div>
 
-        <div class="results-head">
-          <p id="result-summary"></p>
-          <p><span class="legend-dot manual"></span> ręczny <span class="legend-dot generated"></span> z danych</p>
-        </div>
-        <div id="product-list" class="product-list"></div>
-        <nav id="pagination" class="pagination" aria-label="Strony wyników"></nav>
-      </section>
+      <section id="product-list" class="product-list" aria-live="polite"></section>
+      <nav id="pagination" class="pagination" aria-label="Strony wyników"></nav>
     </div>
   </main>
-
-  <footer>
-    <p>Prescot LED — baza opisów oparta na aktywnych pozycjach z feedu WAPRO.</p>
-  </footer>
 
   <script type="module" src="./app.js"></script>
 </body>
