@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<offers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+  <responsibleProducers>
+    <p id="producer_1">
+      <name>Prescot Sp. z o.o.</name>
+      <address>
+        <countryCode>PL</countryCode>
+        <street>ul. Wileńska 1</street>
+        <postalCode>11-500</postalCode>
+        <city>Giżycko</city>
+      </address>
+      <contact>
+        <email>komponenty@prescot.pl</email>
+        <phoneNumber>877776482</phoneNumber>
+      </contact>
+    </p>
+    <p id="producer_10">
+      <name>Novo Digital Kft.</name>
+      <address>
+        <countryCode>HU</countryCode>
+        <street>Egressy út 113/JK A. ép. 4.em 6.,1141 Budapest</street>
+        <postalCode>1141</postalCode>
+        <city>Budapest</city>
+      </address>
+      <contact>
+        <email>info@mwtapegyseg.hu</email>
+        <phoneNumber>+36204594509</phoneNumber>
+      </contact>
+    </p>
+  </responsibleProducers>
+  <responsiblePersons>
+    <p id="responsible_1">
+      <name>Prescot</name>
+      <address>
+        <countryCode>PL</countryCode>
+        <street>ul. Wileńska 1, 11-500 Giżycko</street>
+        <postalCode>11-500</postalCode>
+        <city>Giżycko</city>
+      </address>
+      <contact>
+        <email>komponenty@prescot.pl</email>
+        <phoneNumber>+48 87 777 64 82</phoneNumber>
+      </contact>
+    </p>
+  </responsiblePersons>
+  <o id="19408" url="https://prescot.com.pl/pl/p/Zlaczka-do-tasmy-LED-Hippo-M-Max-SMDCOB-mono-8mm-tasma-przewod-15cm-5A/19408" price="1.3000" avail="1" set="0" stock="1000" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Złączki do zasilaczy i taśm LED]]></cat>
+    <name><![CDATA[Złączka do taśmy LED Hippo-M Max SMD/COB mono 8mm taśma-przewód 15cm 5A FC8-COB-MONO-TP]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69615.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69616.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69617.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Złączka do taśmy LED Hippo-M Max SMD/COB mono 8mm taśma-przewód 15cm 5A</h2><p>Złączka służy do połączenia zgodnych elementów instalacji; przed zakupem trzeba porównać liczbę styków, przekrój i wymiary.</p><h3>Zastosowanie i dobór</h3><p>Przed zakupem porównaj typ złącza, liczbę styków, szerokość taśmy i zakończenia przewodu tylko w zakresie podanym dla tego modelu.</p><p>Identyfikatory pozwalają odróżnić ten element od podobnych wtyków, gniazd, przewodów i złączek w tej samej grupie.</p><ul><li>Kompletacja instalacji w grupie: Złączki do zasilaczy i taśm LED</li><li>Połączenie elementów zgodnych z typem i parametrami tego wariantu</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: FC8-COB-MONO-TP</li><li>Indeks katalogowy Prescot: Taś000758</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem porównaj typ złącza po obu stronach instalacji</li><li>Nie opieraj doboru wyłącznie na wyglądzie elementu; sprawdź kod i wymiary</li><li>Przewody przygotuj bez uszkadzania żył i wykonaj próbę połączenia przed zabudową</li><li>Po montażu sprawdź pewność styku oraz zabezpiecz połączenie przed wyrwaniem</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000758]]></a>
+      <a name="EAN"><![CDATA[5905475368394]]></a>
+      <a name="Kod producenta"><![CDATA[FC8-COB-MONO-TP]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19409" url="https://prescot.com.pl/pl/p/Zlaczka-do-tasmy-LED-Hippo-M-Max-SMDCOB-mono-8mm-tasma-tasma-4A/19409" price="0.8500" avail="1" set="0" stock="1000" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Złączki do zasilaczy i taśm LED]]></cat>
+    <name><![CDATA[Złączka do taśmy LED Hippo-M Max SMD/COB mono 8mm taśma-taśma 4A FC8-COB-MONO-TT]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69611.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69612.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69613.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69614.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Złączka do taśmy LED Hippo-M Max SMD/COB mono 8mm taśma-taśma 4A</h2><p>Złączka służy do połączenia zgodnych elementów instalacji; przed zakupem trzeba porównać liczbę styków, przekrój i wymiary.</p><h3>Zastosowanie i dobór</h3><p>Przed zakupem porównaj typ złącza, liczbę styków, szerokość taśmy i zakończenia przewodu tylko w zakresie podanym dla tego modelu.</p><p>Identyfikatory pozwalają odróżnić ten element od podobnych wtyków, gniazd, przewodów i złączek w tej samej grupie.</p><ul><li>Kompletacja instalacji w grupie: Złączki do zasilaczy i taśm LED</li><li>Połączenie elementów zgodnych z typem i parametrami tego wariantu</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: FC8-COB-MONO-TT</li><li>Indeks katalogowy Prescot: Taś000759</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem porównaj typ złącza po obu stronach instalacji</li><li>Nie opieraj doboru wyłącznie na wyglądzie elementu; sprawdź kod i wymiary</li><li>Przewody przygotuj bez uszkadzania żył i wykonaj próbę połączenia przed zabudową</li><li>Po montażu sprawdź pewność styku oraz zabezpiecz połączenie przed wyrwaniem</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000759]]></a>
+      <a name="EAN"><![CDATA[5905475368400]]></a>
+      <a name="Kod producenta"><![CDATA[FC8-COB-MONO-TT]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19411" url="https://prescot.com.pl/pl/p/Zlaczka-do-tasmy-LED-Hippo-M-Max-SMDCOB-mono-8mm-tasma-przewod-4A/19411" price="0.8500" avail="1" set="0" stock="1000" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Złączki do zasilaczy i taśm LED]]></cat>
+    <name><![CDATA[Złączka do taśmy LED Hippo-M Max SMD/COB mono 8mm taśma-przewód 4A FC8-COB-MONO-TP-NW]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69603.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69604.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69605.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69606.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Złączka do taśmy LED Hippo-M Max SMD/COB mono 8mm taśma-przewód 4A</h2><p>Złączka służy do połączenia zgodnych elementów instalacji; przed zakupem trzeba porównać liczbę styków, przekrój i wymiary.</p><h3>Zastosowanie i dobór</h3><p>Przed zakupem porównaj typ złącza, liczbę styków, szerokość taśmy i zakończenia przewodu tylko w zakresie podanym dla tego modelu.</p><p>Identyfikatory pozwalają odróżnić ten element od podobnych wtyków, gniazd, przewodów i złączek w tej samej grupie.</p><ul><li>Kompletacja instalacji w grupie: Złączki do zasilaczy i taśm LED</li><li>Połączenie elementów zgodnych z typem i parametrami tego wariantu</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: FC8-COB-MONO-TP-NW</li><li>Indeks katalogowy Prescot: Taś000762</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem porównaj typ złącza po obu stronach instalacji</li><li>Nie opieraj doboru wyłącznie na wyglądzie elementu; sprawdź kod i wymiary</li><li>Przewody przygotuj bez uszkadzania żył i wykonaj próbę połączenia przed zabudową</li><li>Po montażu sprawdź pewność styku oraz zabezpiecz połączenie przed wyrwaniem</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000762]]></a>
+      <a name="EAN"><![CDATA[5905475368424]]></a>
+      <a name="Kod producenta"><![CDATA[FC8-COB-MONO-TP-NW]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="9437" url="https://prescot.com.pl/pl/p/Zasilacz-led-hermetyczny-12V-18W-Scharfer-7Y/9437" price="20.0000" avail="1" set="0" stock="666" basket="1">
+    <cat><![CDATA[Zasilacze LED/Zasilacze LED hermetyczne wodoodporne]]></cat>
+    <name><![CDATA[Zasilacz led hermetyczny 12V 18W Scharfer 7Y SCH-18-12]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69137.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69138.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69139.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69140.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69141.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69142.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69143.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Zasilacz led hermetyczny 12V 18W Scharfer 7Y</h2><p>Napięcie wyjściowe musi odpowiadać odbiornikom LED, a ich łączne obciążenie powinno mieścić się w mocy znamionowej zasilacza.</p><h3>Zastosowanie i dobór</h3><p>Przed podłączeniem sprawdź zgodność parametrów wyjściowych z odbiornikiem oraz nie przekraczaj wartości znamionowych przypisanych do modelu.</p><ul><li>Zasilanie odbiorników LED dobranych do parametrów wyjściowych zasilacza</li><li>Montaż typu: hermetyczny; obciążenie do mocy znamionowej</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: SCH-18-12</li><li>Indeks katalogowy Prescot: Zas000062</li><li>Napięcie Wejściowe: 230V</li><li>Moc: 18W</li><li>Klasa szczelności: IP67</li><li>Wymiar: 162x28x20mm</li><li>Wykonanie (materiał): Metal</li><li>Typ: Stałonapięciowy</li><li>Gwarancja: 84 miesiące</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem odłącz zasilanie i porównaj parametry wejścia oraz wyjścia</li><li>Nie przekraczaj mocy znamionowej podanej dla modelu</li><li>Zsumuj pobór wszystkich odbiorników i pozostaw bezpieczny zapas mocy</li><li>Przed podłączeniem potwierdź zgodność strony wejściowej, wyjściowej i sposobu sterowania</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Scharfer]]></a>
+      <a name="Kod_produktu"><![CDATA[Zas000062]]></a>
+      <a name="EAN"><![CDATA[5999863091001]]></a>
+      <a name="Kod producenta"><![CDATA[SCH-18-12]]></a>
+      <a name="Napięcie Wejściowe"><![CDATA[230V]]></a>
+      <a name="Moc"><![CDATA[18W]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP67]]></a>
+      <a name="Wymiar"><![CDATA[162x28x20mm]]></a>
+      <a name="Wykonanie (materiał)"><![CDATA[Metal]]></a>
+      <a name="Typ"><![CDATA[Stałonapięciowy]]></a>
+      <a name="Gwarancja"><![CDATA[84 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_10]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="9443" url="https://prescot.com.pl/pl/p/Zasilacz-led-hermetyczny-24V-45W-Scharfer-7Y/9443" price="32.5000" avail="1" set="0" stock="586" basket="1">
+    <cat><![CDATA[Zasilacze LED/Zasilacze LED hermetyczne wodoodporne]]></cat>
+    <name><![CDATA[Zasilacz led hermetyczny 24V 45W Scharfer 7Y SCH-45-24]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69102.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69103.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69104.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69105.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69106.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69107.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Zasilacz led hermetyczny 24V 45W Scharfer 7Y</h2><p>Napięcie wyjściowe musi odpowiadać odbiornikom LED, a ich łączne obciążenie powinno mieścić się w mocy znamionowej zasilacza.</p><h3>Zastosowanie i dobór</h3><p>Przed podłączeniem sprawdź zgodność parametrów wyjściowych z odbiornikiem oraz nie przekraczaj wartości znamionowych przypisanych do modelu.</p><ul><li>Zasilanie odbiorników LED dobranych do parametrów wyjściowych zasilacza</li><li>Montaż typu: hermetyczny; obciążenie do mocy znamionowej</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: SCH-45-24</li><li>Indeks katalogowy Prescot: Zas000068</li><li>Napięcie Wejściowe: 230V</li><li>Moc: 45W</li><li>Klasa szczelności: IP67</li><li>Wymiar: 190x29x21mm</li><li>Wykonanie (materiał): Metal</li><li>Typ: Stałonapięciowy</li><li>Gwarancja: 84 miesiące</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem odłącz zasilanie i porównaj parametry wejścia oraz wyjścia</li><li>Nie przekraczaj mocy znamionowej podanej dla modelu</li><li>Zsumuj pobór wszystkich odbiorników i pozostaw bezpieczny zapas mocy</li><li>Przed podłączeniem potwierdź zgodność strony wejściowej, wyjściowej i sposobu sterowania</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Scharfer]]></a>
+      <a name="Kod_produktu"><![CDATA[Zas000068]]></a>
+      <a name="EAN"><![CDATA[5999863091070]]></a>
+      <a name="Kod producenta"><![CDATA[SCH-45-24]]></a>
+      <a name="Napięcie Wejściowe"><![CDATA[230V]]></a>
+      <a name="Moc"><![CDATA[45W]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP67]]></a>
+      <a name="Wymiar"><![CDATA[190x29x21mm]]></a>
+      <a name="Wykonanie (materiał)"><![CDATA[Metal]]></a>
+      <a name="Typ"><![CDATA[Stałonapięciowy]]></a>
+      <a name="Gwarancja"><![CDATA[84 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_10]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19379" url="https://prescot.com.pl/pl/p/Tasma-LED-Premium-24V-320ledm-WCOB-10Wm-6000K-IP62-1350lmm-8mm-CRI90-5Y-5m/19379" price="100.0000" avail="1" set="0" stock="500" basket="1">
+    <cat><![CDATA[Taśmy LED/Taśmy LED średnia jasność]]></cat>
+    <name><![CDATA[Taśma LED Premium 24V 320led/m WCOB 10W/m 6000K IP62 1350lm/m 8mm CRI90 5Y 5m 24WCOB320W5IP62]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69598.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69599.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69600.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69601.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69602.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Taśma LED Premium 24V 320led/m WCOB 10W/m 6000K IP62 1350lm/m 8mm CRI90 5Y 5m</h2><p>Chłodna biel sprawdza się w oświetleniu technicznym, roboczym i ekspozycyjnym, gdy ważny jest wyraźny, chłodny efekt.</p><h3>Zastosowanie i dobór</h3><p>Chłodna biel sprawdza się w oświetleniu technicznym, roboczym i ekspozycyjnym, gdy ważny jest wyraźny, chłodny efekt.</p><ul><li>Dekoracyjne akcenty w barwie</li><li>Montaż w profilu aluminiowym dobranym do szerokości taśmy</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: 24WCOB320W5IP62</li><li>Indeks katalogowy Prescot: Taś000755</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem potwierdź zgodność napięcia taśmy i zasilacza</li><li>Dziel taśmę wyłącznie w oznaczonych miejscach cięcia</li><li>Profil i złączki dobierz do szerokości 8mm</li><li>Przed montażem oczyść i odtłuść podłoże albo profil</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000755]]></a>
+      <a name="EAN"><![CDATA[5905475368363]]></a>
+      <a name="Kod producenta"><![CDATA[24WCOB320W5IP62]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt]]></a>
+    </attrs>
+  </o>
+  <o id="19410" url="https://prescot.com.pl/pl/p/Zlaczka-do-tasmy-LED-Hippo-M-Max-SMDCOB-mono-8mm-tasma-tasma-narozna-LT-4A/19410" price="0.8500" avail="1" set="0" stock="500" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Złączki do zasilaczy i taśm LED]]></cat>
+    <name><![CDATA[Złączka do taśmy LED Hippo-M Max SMD/COB mono 8mm taśma-taśma narożna (L/T) 4A FC8-COB-MONO-TT-L]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69607.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69608.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69609.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69610.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Złączka do taśmy LED Hippo-M Max SMD/COB mono 8mm taśma-taśma narożna (L/T) 4A</h2><p>Złączka służy do połączenia zgodnych elementów instalacji; przed zakupem trzeba porównać liczbę styków, przekrój i wymiary.</p><h3>Zastosowanie i dobór</h3><p>Przed zakupem porównaj typ złącza, liczbę styków, szerokość taśmy i zakończenia przewodu tylko w zakresie podanym dla tego modelu.</p><p>Identyfikatory pozwalają odróżnić ten element od podobnych wtyków, gniazd, przewodów i złączek w tej samej grupie.</p><ul><li>Kompletacja instalacji w grupie: Złączki do zasilaczy i taśm LED</li><li>Połączenie elementów zgodnych z typem i parametrami tego wariantu</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: FC8-COB-MONO-TT-L</li><li>Indeks katalogowy Prescot: Taś000760</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem porównaj typ złącza po obu stronach instalacji</li><li>Nie opieraj doboru wyłącznie na wyglądzie elementu; sprawdź kod i wymiary</li><li>Przewody przygotuj bez uszkadzania żył i wykonaj próbę połączenia przed zabudową</li><li>Po montażu sprawdź pewność styku oraz zabezpiecz połączenie przed wyrwaniem</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000760]]></a>
+      <a name="EAN"><![CDATA[5905475368417]]></a>
+      <a name="Kod producenta"><![CDATA[FC8-COB-MONO-TT-L]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="9442" url="https://prescot.com.pl/pl/p/Zasilacz-led-hermetyczny-24V-30W-Scharfer-7Y/9442" price="27.1000" avail="1" set="0" stock="488" basket="1">
+    <cat><![CDATA[Zasilacze LED/Zasilacze LED hermetyczne wodoodporne]]></cat>
+    <name><![CDATA[Zasilacz led hermetyczny 24V 30W Scharfer 7Y SCH-30-24]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69108.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Zasilacz led hermetyczny 24V 30W Scharfer 7Y</h2><p>Napięcie wyjściowe musi odpowiadać odbiornikom LED, a ich łączne obciążenie powinno mieścić się w mocy znamionowej zasilacza.</p><h3>Zastosowanie i dobór</h3><p>Przed podłączeniem sprawdź zgodność parametrów wyjściowych z odbiornikiem oraz nie przekraczaj wartości znamionowych przypisanych do modelu.</p><ul><li>Zasilanie odbiorników LED dobranych do parametrów wyjściowych zasilacza</li><li>Montaż typu: hermetyczny; obciążenie do mocy znamionowej</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: SCH-30-24</li><li>Indeks katalogowy Prescot: Zas000067</li><li>Napięcie Wejściowe: 230V</li><li>Moc: 30W</li><li>Klasa szczelności: IP67</li><li>Wymiar: 162x29x21mm</li><li>Wykonanie (materiał): Metal</li><li>Typ: Stałonapięciowy</li><li>Gwarancja: 84 miesiące</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem odłącz zasilanie i porównaj parametry wejścia oraz wyjścia</li><li>Nie przekraczaj mocy znamionowej podanej dla modelu</li><li>Zsumuj pobór wszystkich odbiorników i pozostaw bezpieczny zapas mocy</li><li>Przed podłączeniem potwierdź zgodność strony wejściowej, wyjściowej i sposobu sterowania</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Scharfer]]></a>
+      <a name="Kod_produktu"><![CDATA[Zas000067]]></a>
+      <a name="EAN"><![CDATA[5999863091063]]></a>
+      <a name="Kod producenta"><![CDATA[SCH-30-24]]></a>
+      <a name="Napięcie Wejściowe"><![CDATA[230V]]></a>
+      <a name="Moc"><![CDATA[30W]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP67]]></a>
+      <a name="Wymiar"><![CDATA[162x29x21mm]]></a>
+      <a name="Wykonanie (materiał)"><![CDATA[Metal]]></a>
+      <a name="Typ"><![CDATA[Stałonapięciowy]]></a>
+      <a name="Gwarancja"><![CDATA[84 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_10]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="9441" url="https://prescot.com.pl/pl/p/Zasilacz-led-hermetyczny-12V-30W-Scharfer-7Y/9441" price="27.1000" avail="1" set="0" stock="486" basket="1">
+    <cat><![CDATA[Zasilacze LED/Zasilacze LED hermetyczne wodoodporne]]></cat>
+    <name><![CDATA[Zasilacz led hermetyczny 12V 30W Scharfer 7Y SCH-30-12]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69109.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69110.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69111.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69112.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69113.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69114.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69115.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Zasilacz led hermetyczny 12V 30W Scharfer 7Y</h2><p>Napięcie wyjściowe musi odpowiadać odbiornikom LED, a ich łączne obciążenie powinno mieścić się w mocy znamionowej zasilacza.</p><h3>Zastosowanie i dobór</h3><p>Przed podłączeniem sprawdź zgodność parametrów wyjściowych z odbiornikiem oraz nie przekraczaj wartości znamionowych przypisanych do modelu.</p><ul><li>Zasilanie odbiorników LED dobranych do parametrów wyjściowych zasilacza</li><li>Montaż typu: hermetyczny; obciążenie do mocy znamionowej</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: SCH-30-12</li><li>Indeks katalogowy Prescot: Zas000066</li><li>Napięcie Wejściowe: 230V</li><li>Moc: 30W</li><li>Klasa szczelności: IP67</li><li>Wymiar: 162x29x21mm</li><li>Wykonanie (materiał): Metal</li><li>Typ: Stałonapięciowy</li><li>Gwarancja: 84 miesiące</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem odłącz zasilanie i porównaj parametry wejścia oraz wyjścia</li><li>Nie przekraczaj mocy znamionowej podanej dla modelu</li><li>Zsumuj pobór wszystkich odbiorników i pozostaw bezpieczny zapas mocy</li><li>Przed podłączeniem potwierdź zgodność strony wejściowej, wyjściowej i sposobu sterowania</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Scharfer]]></a>
+      <a name="Kod_produktu"><![CDATA[Zas000066]]></a>
+      <a name="EAN"><![CDATA[5999863091049]]></a>
+      <a name="Kod producenta"><![CDATA[SCH-30-12]]></a>
+      <a name="Napięcie Wejściowe"><![CDATA[230V]]></a>
+      <a name="Moc"><![CDATA[30W]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP67]]></a>
+      <a name="Wymiar"><![CDATA[162x29x21mm]]></a>
+      <a name="Wykonanie (materiał)"><![CDATA[Metal]]></a>
+      <a name="Typ"><![CDATA[Stałonapięciowy]]></a>
+      <a name="Gwarancja"><![CDATA[84 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_10]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19377" url="https://prescot.com.pl/pl/p/Tasma-LED-Premium-24V-320ledm-WCOB-10Wm-3000K-IP62-1400lmm-8mm-CRI90-5Y-5m/19377" price="100.0000" avail="1" set="0" stock="485" basket="1">
+    <cat><![CDATA[Taśmy LED/Taśmy LED średnia jasność]]></cat>
+    <name><![CDATA[Taśma LED Premium 24V 320led/m WCOB 10W/m 3000K IP62 1400lm/m 8mm CRI90 5Y 5m 24WCOB320WW5IP62]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69594.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69595.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69596.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69597.jpg" />
+    </imgs>
+    <desc><![CDATA[<h2>Co to jest: Taśma LED Premium 24V 320led/m WCOB 10W/m 3000K IP62 1400lm/m 8mm CRI90 5Y 5m</h2><p>Ciepła barwa wspiera spokojny charakter salonu, restauracji, hotelu oraz aranżacji z drewnem i tkaninami.</p><h3>Zastosowanie i dobór</h3><p>Ciepła barwa wspiera spokojny charakter salonu, restauracji, hotelu oraz aranżacji z drewnem i tkaninami.</p><ul><li>Dekoracyjne akcenty w barwie</li><li>Montaż w profilu aluminiowym dobranym do szerokości taśmy</li></ul><h3>Parametry produktu</h3><ul><li>Kod producenta: 24WCOB320WW5IP62</li><li>Indeks katalogowy Prescot: Taś000753</li></ul><h3>Wskazówki instalacyjne</h3><ul><li>Przed podłączeniem potwierdź zgodność napięcia taśmy i zasilacza</li><li>Dziel taśmę wyłącznie w oznaczonych miejscach cięcia</li><li>Profil i złączki dobierz do szerokości 8mm</li><li>Przed montażem oczyść i odtłuść podłoże albo profil</li></ul>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000753]]></a>
+      <a name="EAN"><![CDATA[5905475368349]]></a>
+      <a name="Kod producenta"><![CDATA[24WCOB320WW5IP62]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt]]></a>
+    </attrs>
+  </o>
+</offers>
