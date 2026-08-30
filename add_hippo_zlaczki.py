@@ -324,8 +324,6 @@ def wapro_description(product: dict[str, object]) -> str:
             ),
             features_section,
             styled_section("Zastosowanie", str(product["type"]), str(product["use"])),
-            styled_section("Dobór", "8mm, MONO, 2-pin", str(product["selection"])),
-            parameter_grid(product),
             blog_section(),
         )
     )

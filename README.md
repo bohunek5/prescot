@@ -1,26 +1,47 @@
-# Prescot — baza opisów produktów
+# Prescot - baza opisów i kontrola kanału TIM
 
-Statyczny panel GitHub Pages z aktywnymi produktami z feedu WAPRO. Katalog i audytowane opisy są ładowane z JSON-u, dlatego 3410 produktów nie powiększa DOM-u ani nie blokuje przeglądarki przy starcie.
+Statyczny panel opisów produktów z feedu WAPRO dla WAPRO ERP, TIM, Allegro i Shopera. Projekt oddziela dane handlowe od treści: `prescotcloud.xml` zasila katalog opisów i cenę sklepową, a `prescot.xml` jest źródłem ceny oraz jednostki dla kanału TIM. Żaden z feedów nie nadpisuje opisów.
 
-## Zasady danych
+Aktualny audyt oraz instrukcja pracy:
 
-- eksportowane są wyłącznie oferty z `avail="1"` i `basket="1"`;
-- podstawowym identyfikatorem jest EAN;
-- przy braku albo powtórzeniu EAN-u używany jest kod produktu i ID oferty;
-- stare, ręcznie dopracowane opisy są zachowane w `data/manual-overrides.json`;
-- ręczny opis ma pierwszeństwo przed opisem audytowanym, o ile nie powiela tego samego tekstu w kilku kanałach i nie zawiera uszkodzonego, podwójnego bloku blogowego;
-- pozostałe opisy powstają z nazwy, kodu, EAN-u, kategorii, parametrów i tekstu źródłowego, bez dopisywania niepotwierdzonych danych technicznych;
-- konflikty źródeł są rozstrzygane jawnie w `data/source-resolutions.json` i zawierają adresy stron użytych do weryfikacji;
-- opis jest dostępny w wariantach Shoper, WAPRO/MAG, TIM i Allegro;
-- Shoper otrzymuje dawny pomarańczowy układ kart z poradnikami (dla zasilaczy także tabelę parametrów) i nie dokleja pod opisem osobnego bloku atrybutów;
-- WAPRO otrzymuje klasyczny, lekki HTML bez stylów prezentacyjnych, generowany z aktualnych danych zamiast starych ręcznych liczb; TIM dostaje czysty opis zastosowania i montażu bez osobnej tabeli atrybutów, a Allegro osobny układ sprzedażowy;
-- w treściach WAPRO, Shoper i Allegro oraz w eksporcie publicznym własny kod WAPRO występuje jako „Indeks handlowy”; kod producenta pozostaje wyłącznie wewnętrzną daną importu i nie jest publikowany jako identyfikator produktu;
-- TIM zawiera tylko zastosowanie oraz wskazówki dla instalatora, a dla taśm korzysta z potwierdzonych sekcji Shopera; pierwszy nagłówek zawiera nazwę artykułu, a drugi własny indeks handlowy, bez producenta, osobnego EAN-u, tabeli ani bloku danych technicznych;
-- walidator wymaga unikalności pełnego tekstu każdego z 13 640 opisów, także ręcznych.
+- [Audyt TIM z 30 sierpnia 2026](docs/TIM-AUDYT-2026-08-30.md)
+- [Audyt live Panelu Dostawcy TIM z 30 sierpnia 2026](docs/TIM-LIVE-AUDYT-2026-08-30.md)
+- [Poradnik obsługi oferty TIM](docs/TIM-PORADNIK.md)
 
-Panel zachowuje dawny wygląd bazy: wyszukiwarkę, pływające logotypy platform, kafle rodzin oraz akordeony produktów. Liczby w kaflach są obliczane z aktualnego katalogu. Wyszukiwanie po EAN-ie, SKU i treści działa we wszystkich rodzinach, także w sekcji „Pozostałe aktywne”.
+## Najważniejsze zabezpieczenia
 
-## Aktualizacja katalogu
+- kanał TIM ma jawny zakres zapisany w `config/tim-scope.json`;
+- Kaja i Light Prestige są wykluczane po producencie, nazwie oraz kategorii;
+- brak EAN, powtórzony EAN, niedodatnia cena źródłowa i wadliwy opis zatrzymują produkt;
+- stan 0, otwarty research i problem EPREL kierują produkt do weryfikacji;
+- karta EPREL jest eksportowana tylko po dokładnym dopasowaniu identyfikatora modelu z oficjalnym PDF-em;
+- pliki `tim-content-*.csv` są paczką treści, a nie szablonem MarketTIM;
+- strona publiczna jest budowana z allowlisty, więc stare pliki testowe, logi i skrypty nie trafiają do GitHub Pages.
+
+## Dane i opisy
+
+Katalog obejmuje wyłącznie oferty z `avail="1"` i `basket="1"`. Podstawowym identyfikatorem jest EAN; przy braku lub duplikacie używany jest kod produktu i ID oferty.
+
+Opisy są renderowane z warstwy redakcyjnej `data/seo-descriptions.json`. WAPRO otrzymuje prosty HTML, Shoper rozbudowaną kartę, Allegro osobny układ sprzedażowy, a TIM jedną sekcję z definicją produktu, zastosowaniem, parametrami i wskazówkami instalacyjnymi. Opis TIM nie zawiera tabel, stylów inline ani EAN-u; rozróżnia kod producenta od wewnętrznego indeksu Prescot. Ręczne zmiany w przeglądarce trafiają do lokalnego bufora, który można eksportować i importować jako JSON.
+
+## Podstawowe polecenia
+
+```bash
+npm run validate
+npm run audit:refs
+npm run test:scope
+npm run export:tim
+npm run validate:tim
+npm run build:site
+```
+
+Pełna kontrola i czysty build:
+
+```bash
+npm run check
+```
+
+Aktualizacja danych z chmury:
 
 ```bash
 python3 scripts/sync_cloud_catalog.py
@@ -33,10 +54,7 @@ python3 scripts/generate_seo_descriptions.py \
   --editorial-only \
   --force
 npm run validate -- --write
-node scripts/audit_reference_products.mjs
 ```
-
-Pierwszy skrypt pobiera `https://prescot.wapromag.pl/prescotcloud.xml`, aktualizuje `data/catalog.json` i zachowuje istniejące ręczne nadpisania. Kolejka researchu wskazuje rekordy skąpe lub sprzeczne. Generator buduje warstwę redakcyjną `data/seo-descriptions.json`, a układy HTML dla czterech kanałów są renderowane w przeglądarce przez `description-engine.js`.
 
 Można też wskazać wcześniej pobrany feed:
 
@@ -50,4 +68,8 @@ python3 scripts/sync_cloud_catalog.py --source /tmp/prescotcloud.xml
 npm run serve
 ```
 
-Panel będzie dostępny pod `http://localhost:8080/`. Walidator sprawdza kompletność katalogu i cztery kanały dla każdego produktu: identyfikatory, zakres długości, strukturę sekcji HTML, duplikaty, obce liczby i jednostki, niepotwierdzone twierdzenia oraz sprzeczności z danymi produktu. Audyt referencyjny osobno kontroluje S-Shape, COB 48V, WCOB, Scharfer, PR-MAD, sterownik touch 12A oraz złączkę FC8.
+Panel jest dostępny pod `http://localhost:8080/`. Test przeglądarkowy korzysta z portu 8765 i sprawdza cztery kanały, wyszukiwanie po EAN, wykluczenie Kaja w TIM, status produktu, bufor edycji oraz błędy konsoli.
+
+## Automatyzacja
+
+Workflow Pages waliduje katalog, buduje wyłącznie katalog `dist` i dopiero wtedy publikuje stronę. Osobny codzienny audyt pobiera feed WAPRO do katalogu tymczasowego i zgłasza różnice; nie zmienia danych w repozytorium ani nie wysyła niczego do TIM.

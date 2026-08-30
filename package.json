@@ -6,6 +6,11 @@
     "serve": "python3 -m http.server 8080",
     "validate": "node scripts/validate_catalog.mjs",
     "audit:refs": "node scripts/audit_reference_products.mjs",
-    "test:ui": "node scripts/visual_smoke.mjs"
+    "test:scope": "node scripts/test_tim_scope.mjs",
+    "export:tim": "node scripts/export_tim_catalog.mjs",
+    "validate:tim": "node scripts/validate_tim_export.mjs",
+    "build:site": "node scripts/build_site.mjs",
+    "test:ui": "node scripts/visual_smoke.mjs",
+    "check": "npm run validate && npm run audit:refs && npm run test:scope && npm run export:tim && npm run validate:tim && npm run build:site"
   }
 }

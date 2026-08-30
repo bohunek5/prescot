@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "channel": "TIM",
+  "allowedProducers": [
+    "Prescot",
+    "Prescot LED",
+    "KLUŚ SP. Z O.O.",
+    "Milight",
+    "Scharfer"
+  ],
+  "includedCategoryRoots": [
+    "Profile do taśm LED"
+  ],
+  "deniedProducers": [
+    "Kaja",
+    "KAJA Alfred Olszewski",
+    "Light Prestige",
+    "LIGHT"
+  ],
+  "deniedPatterns": [
+    "\\bkaja\\b",
+    "light\\s*prestige"
+  ],
+  "hardBlockRules": [
+    "missing_or_invalid_ean",
+    "duplicate_ean",
+    "nonpositive_price",
+    "invalid_tim_description"
+  ],
+  "reviewRules": [
+    "zero_stock",
+    "source_research_pending",
+    "source_description_empty",
+    "eprel_variant_requires_evidence",
+    "eprel_candidate_model_mismatch",
+    "eprel_official_pdf_missing"
+  ],
+  "notes": [
+    "Profile LED są włączane po kategorii, nawet jeśli producent w XML jest błędny.",
+    "Kaja i Light Prestige są wykluczane po producencie, nazwie oraz kategorii.",
+    "Stan zerowy nie usuwa produktu z bazy, ale zatrzymuje go w kolejce do decyzji.",
+    "Powiązanie EPREL jest używane tylko przy dokładnej zgodności identyfikatora modelu z oficjalną kartą PDF."
+  ]
+}

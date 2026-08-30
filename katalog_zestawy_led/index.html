@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Katalog Zestawów LED Prescot 2026 | Systemy Plug & Play</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        brand: { 50:'#f0f9ff', 500:'#0ea5e9', 600:'#0284c7', 700:'#0369a1', 900:'#0c4a6e' }
+      }
+    }
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f8fafc; }
+.glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.6); }
+.glass-card:hover { border-color: rgba(14, 165, 233, 0.5); transform: translateY(-3px); box-shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.15); }
+.badge-tech { background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(59, 130, 246, 0.3); }
+</style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+<!-- Header Navigation -->
+<header class="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl px-6 py-4">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center font-extrabold text-white text-lg shadow-lg shadow-brand-500/25">P</div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-white">PRESCOT <span class="text-brand-500 font-light">LED KITS 2026</span></h1>
+        <p class="text-xs text-slate-400">Kompletne Systemy Oświetleniowe Plug & Play</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="../KATALOG_WSZYSTKIE_ZESTAWY_PRESCOT_2026.pdf" download class="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition-all shadow-lg shadow-brand-600/30">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Pobierz Master Katalog PDF (34 str.)
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="relative py-16 px-6 overflow-hidden border-b border-slate-800/60">
+  <div class="absolute inset-0 bg-gradient-to-b from-brand-900/10 via-transparent to-transparent pointer-events-none"></div>
+  <div class="max-w-7xl mx-auto text-center relative z-10">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-900/40 border border-brand-500/30 text-brand-400 text-xs font-semibold uppercase tracking-wider mb-4">
+      ⚡ Nowa Generacja 2026 • 16 Gotowych Zestawów
+    </div>
+    <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white max-w-3xl mx-auto leading-tight">
+      Wszystkie Elementy w Komplecie. <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-indigo-400">Gotowe w 2 Minuty.</span>
+    </h2>
+    <p class="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
+      Eliminujemy błędy doboru zasilaczy i stratę czasu na lutowanie. Fabryczne szybkozłączki DC, zasilacze impulsowe 12V oraz gwarancja niezawodności do 5 lat.
+    </p>
+
+    <!-- Filters -->
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+      <button onclick="filterCards('all')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-brand-600 text-white transition-all" data-filter="all">Wszystkie (16)</button>
+      <button onclick="filterCards('cob')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition-all" data-filter="cob">COB Liniowe</button>
+      <button onclick="filterCards('mono')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition-all" data-filter="mono">MONO 4000K</button>
+      <button onclick="filterCards('rgb')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition-all" data-filter="rgb">RGB & RGBW</button>
+      <button onclick="filterCards('magic')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition-all" data-filter="magic">Magic Cyfrowe IC</button>
+      <button onclick="filterCards('ip65')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition-all" data-filter="ip65">Wodoodporne IP65</button>
+    </div>
+  </div>
+</section>
+
+<!-- Product Grid -->
+<main class="max-w-7xl mx-auto px-6 py-12 flex-1">
+  <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="cob ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-brand-500/20 text-brand-400 border border-brand-500/30">
+          12V • 40W (8W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 5 Lat
+        </span>
+        <img src="../PRZ-COB320-40W-NW/miniaturka_1_packshot.png" alt="Zestaw LED COB 40W 5m (Neutralna Biel 4000K)" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-COB320-40W-NW | EAN: 5905475360411</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED COB 40W 5m (Neutralna Biel 4000K)</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Jednolita linia światła COB • Brak punktów świetlnych • Zasilacz Plug & Play</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20 (Wnętrza suche)</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">COB 320 LED/m (</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">CRI > 90</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-COB320-40W-NW/Karta_Katalogowa_PRZ-COB320-40W-NW.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-COB320-40W-NW/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="mono ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-brand-500/20 text-brand-400 border border-brand-500/30">
+          12V • 24W (4.8W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-MONO-24W-NW/miniaturka_1_packshot.png" alt="Zestaw LED MONO 24W 5m (Neutralna Biel 4000K)" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-MONO-24W-NW | EAN: 5903684854974</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED MONO 24W 5m (Neutralna Biel 4000K)</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Klasyczny zestaw oświetleniowy • Wydajne diody SMD2835 • Zasilacz w zestawie</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 2835 (60 LE</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">CRI > 85</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-MONO-24W-NW/Karta_Katalogowa_PRZ-MONO-24W-NW.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-MONO-24W-NW/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="mono ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-brand-500/20 text-brand-400 border border-brand-500/30">
+          12V • 24W (4.8W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-MONO-IP24W-NW/miniaturka_1_packshot.png" alt="Zestaw LED MONO Hermetyczny IP65 5m (4000K)" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-MONO-IP24W-NW | EAN: 5903684854981</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED MONO Hermetyczny IP65 5m (4000K)</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Wodoodporna powłoka silikonowa IP65 • Do kuchni, łazienek i stref wilgotnych</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP65 (Silikonowa ochrona)</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 2835 (60 LE</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">CRI > 85</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-MONO-IP24W-NW/Karta_Katalogowa_PRZ-MONO-IP24W-NW.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-MONO-IP24W-NW/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="mono ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-brand-500/20 text-brand-400 border border-brand-500/30">
+          12V • 24W całkowita
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-MONO-24W-NW10K/miniaturka_1_packshot.png" alt="Zestaw LED MONO 24W 10m + Pilot RF 10-Klawiszowy" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-MONO-24W-NW10K | EAN: 5903684854998</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED MONO 24W 10m + Pilot RF 10-Klawiszowy</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Długi odcinek 10m • Bezprzewodowe ściemnianie radiowe • 4000K Neutralna</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">10m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 2835</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">CRI > 85</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-MONO-24W-NW10K/Karta_Katalogowa_PRZ-MONO-24W-NW10K.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-MONO-24W-NW10K/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="mono ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-brand-500/20 text-brand-400 border border-brand-500/30">
+          12V • 24W całkowita
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-MONO-IP24W-NW10K/miniaturka_1_packshot.png" alt="Zestaw LED MONO Hermetyczny IP65 10m + Pilot RF 10K" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-MONO-IP24W-NW10K | EAN: 5903684855001</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED MONO Hermetyczny IP65 10m + Pilot RF 10K</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Długi odcinek 10m IP65 • Ściemnianie radiowe • Odporność na wilgoć</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">10m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP65 (Silikonowa powłoka)</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 2835 IP65</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">CRI > 85</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-MONO-IP24W-NW10K/Karta_Katalogowa_PRZ-MONO-IP24W-NW10K.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-MONO-IP24W-NW10K/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 24W (4.8W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-RGB-24W-D/miniaturka_1_packshot.png" alt="Zestaw LED RGB 24W 5m + Pilot Dotykowy RF" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-RGB-24W-D | EAN: 5905475365928</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB 24W 5m + Pilot Dotykowy RF</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Miliony kolorów • Dotykowy pierścień wyboru barwy • Zasilacz + Kontroler</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB (3</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-RGB-24W-D/Karta_Katalogowa_PRZ-RGB-24W-D.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-RGB-24W-D/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 24W (4.8W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-RGB-IP24W-D/miniaturka_1_packshot.png" alt="Zestaw LED RGB Hermetyczny IP65 24W 5m + Pilot Dotykowy" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-RGB-IP24W-D | EAN: 5905475365911</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB Hermetyczny IP65 24W 5m + Pilot Dotykowy</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Wodoodporny RGB IP65 • Sterowanie dotykowe Touch Ring • Pełne spektrum barw</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP65 (Silikonowa ochrona)</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB IP</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-RGB-IP24W-D/Karta_Katalogowa_PRZ-RGB-IP24W-D.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-RGB-IP24W-D/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="magic ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 36W (7.2W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-RGBM-36W-14K/miniaturka_1_packshot.png" alt="Zestaw LED RGB Magic Cyfrowy 36W 5m + Pilot 14K" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-RGBM-36W-14K | EAN: 5905475360428</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB Magic Cyfrowy 36W 5m + Pilot 14K</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Taśma adresowalna cyfrowo IC • Płynące efekty tęczy • Pilot 14-klawiszowy</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB + </b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-RGBM-36W-14K/Karta_Katalogowa_PRZ-RGBM-36W-14K.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-RGBM-36W-14K/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="magic ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 36W (7.2W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-RGBM-IP36W-14K/miniaturka_1_packshot.png" alt="Zestaw LED RGB Magic Cyfrowy Hermetyczny IP65 36W" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-RGBM-IP36W-14K | EAN: 5905475360435</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB Magic Cyfrowy Hermetyczny IP65 36W</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Cyfrowa taśma adresowalna IP65 • Dynamiczne animacje świetlne • Pilot 14K</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP65</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB + </b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-RGBM-IP36W-14K/Karta_Katalogowa_PRZ-RGBM-IP36W-14K.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-RGBM-IP36W-14K/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 36W (7.2W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../RGB36-IP20-RFRW/miniaturka_1_packshot.png" alt="Zestaw LED RGB 36W 5m + Pilot RF Biały (Touch Ring)" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">RGB36-IP20-RFRW | EAN: 5901885267968</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB 36W 5m + Pilot RF Biały (Touch Ring)</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Luksusowy biały pilot dotykowy • Pełna paleta RGB • Komplet Plug & Play</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../RGB36-IP20-RFRW/Karta_Katalogowa_RGB36-IP20-RFRW.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../RGB36-IP20-RFRW/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 36W (7.2W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../RGB36-IP20-RFRB/miniaturka_1_packshot.png" alt="Zestaw LED RGB 36W 5m + Pilot RF Czarny (Touch Ring)" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">RGB36-IP20-RFRB | EAN: 5901885267975</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB 36W 5m + Pilot RF Czarny (Touch Ring)</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Elegancki czarny pilot dotykowy • 36W mocy • Kompletny zestaw zasilający</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../RGB36-IP20-RFRB/Karta_Katalogowa_RGB36-IP20-RFRB.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../RGB36-IP20-RFRB/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 36W (7.2W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../RGB36-IP20-RF10/miniaturka_1_packshot.png" alt="Zestaw LED RGB 36W 5m + Pilot RF 10-Przyciskowy" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">RGB36-IP20-RF10 | EAN: 5901885267944</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB 36W 5m + Pilot RF 10-Przyciskowy</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Smukły pilot radiowy • Szybkie programy kolorystyczne • 36W RGB</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../RGB36-IP20-RF10/Karta_Katalogowa_RGB36-IP20-RF10.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../RGB36-IP20-RF10/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 36W (7.2W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-RGB-36W-24K/miniaturka_1_packshot.png" alt="Zestaw LED RGB 36W 5m + Pilot 24-Klawiszowy" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-RGB-36W-24K | EAN: 5901885266084</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB 36W 5m + Pilot 24-Klawiszowy</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">16 predefiniowanych odcieni kolorów • 4 tryby dynamiczne • Zasilacz w zestawie</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB (3</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-RGB-36W-24K/Karta_Katalogowa_PRZ-RGB-36W-24K.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-RGB-36W-24K/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 36W (7.2W/m)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-RGB-IP36W-24K/miniaturka_1_packshot.png" alt="Zestaw LED RGB Hermetyczny IP65 36W + Pilot 24K" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-RGB-IP36W-24K | EAN: 5901885266091</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB Hermetyczny IP65 36W + Pilot 24K</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Wodoodporny RGB IP65 • 36W mocy • Pilot 24-klawiszowy • Gotowy do montażu</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">5m</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP65 (Silikonowa ochrona)</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB IP</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-RGB-IP36W-24K/Karta_Katalogowa_PRZ-RGB-IP36W-24K.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-RGB-IP36W-24K/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 72W całkowita (Mocny zestaw)
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-RGB-72W-24K/miniaturka_1_packshot.png" alt="Zestaw LED RGB 72W 10m (2x5m) + Zasilacz 72W + Pilot 24K" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-RGB-72W-24K | EAN: 5901885267500</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB 72W 10m (2x5m) + Zasilacz 72W + Pilot 24K</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Duża moc 72W • 10 metrów w zestawie (2 rolki + rozdzielacz) • Zasilacz desktop</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">10m (2 rolki po 5m z rozdzielaczem)</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP20</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB (6</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-RGB-72W-24K/Karta_Katalogowa_PRZ-RGB-72W-24K.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-RGB-72W-24K/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-card glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300" data-category="rgb ip65">
+      <div class="relative bg-slate-900/60 p-6 flex items-center justify-center min-h-[260px] border-b border-slate-800">
+        <span class="absolute top-4 left-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-pink-500/20 text-pink-400 border border-pink-500/30">
+          12V • 72W całkowita
+        </span>
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          ★ 3 Lata
+        </span>
+        <img src="../PRZ-RGB-IP72W-24K/miniaturka_1_packshot.png" alt="Zestaw LED RGB Hermetyczny IP65 72W 10m (2x5m) + Pilot 24K" class="max-h-[220px] object-contain drop-shadow-2xl" loading="lazy"/>
+      </div>
+      <div class="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div class="text-xs text-slate-400 font-mono mb-1">PRZ-RGB-IP72W-24K | EAN: 5901885267517</div>
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Zestaw LED RGB Hermetyczny IP65 72W 10m (2x5m) + Pilot 24K</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">10m wodoodpornego RGB IP65 • Zasilacz 72W • 2 rolki + rozdzielacz</p>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-slate-800 mb-4">
+            <div><span class="text-slate-400">Długość:</span> <b class="text-slate-200">10m (2 rolki po 5m IP65)</b></div>
+            <div><span class="text-slate-400">Szczelność:</span> <b class="text-slate-200">IP65 (Silikonowa ochrona)</b></div>
+            <div><span class="text-slate-400">Diody:</span> <b class="text-slate-200">SMD 5050 RGB IP</b></div>
+            <div><span class="text-slate-400">CRI:</span> <b class="text-slate-200">Ra > 80</b></div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 pt-2">
+          <a href="../PRZ-RGB-IP72W-24K/Karta_Katalogowa_PRZ-RGB-IP72W-24K.pdf" download class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Karta PDF (2 str.)
+          </a>
+          <a href="../PRZ-RGB-IP72W-24K/01_reklama_dark_luxury.png" target="_blank" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors" title="Podgląd banera reklamowego">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-800 bg-slate-950 py-10 px-6 mt-16 text-center text-xs text-slate-400">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div>© 2026 Prescot Lighting Sp. z o.o. • Wszelkie prawa zastrzeżone.</div>
+    <div class="flex items-center gap-6">
+      <a href="../KATALOG_WSZYSTKIE_ZESTAWY_PRESCOT_2026.pdf" class="hover:text-white transition-colors">Katalog PDF 2026</a>
+      <a href="../KAMPANIA_MAILINGOWA_ZESTAWY_LED_2026/01_STRATEGIA_I_KONCEPCJA_KAMPANII.md" class="hover:text-white transition-colors">Dokumentacja B2B</a>
+      <a href="mailto:b2b@prescot.pl" class="hover:text-white transition-colors">Kontakt Handlowy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function filterCards(cat) {
+  const cards = document.querySelectorAll('.product-card');
+  const btns = document.querySelectorAll('.filter-btn');
+  
+  btns.forEach(b => {
+    if(b.dataset.filter === cat) {
+      b.classList.add('bg-brand-600', 'text-white');
+      b.classList.remove('bg-slate-900', 'text-slate-300');
+    } else {
+      b.classList.remove('bg-brand-600', 'text-white');
+      b.classList.add('bg-slate-900', 'text-slate-300');
+    }
+  });
+
+  cards.forEach(card => {
+    if(cat === 'all' || card.dataset.category.includes(cat)) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>

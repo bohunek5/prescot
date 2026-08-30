@@ -1038,69 +1038,91 @@ def render_blog_guides(product: dict[str, Any]) -> str:
 
 
 def render_shoper(product: dict[str, Any], result: dict[str, Any]) -> str:
+    family = result.get("rule_family", "")
+    sections = [render_section(s) for s in result.get("sections", [])]
+    if family == "power":
+        specs = product_specs(product)
+        grid_cards = "".join(
+            '<div style="font-family:inherit;padding:16px;margin:0;background:none!important;background-color:transparent!important;border:1px solid currentColor;border-radius:12px;box-shadow:none!important;color:inherit;">'
+            f'<strong style="font-family:inherit;display:block;color:inherit!important;font-size:15px;line-height:1.35;margin-bottom:6px;font-weight:bold;">{html.escape(label)}</strong>'
+            f'<small style="font-family:inherit;display:block;color:inherit!important;opacity:.78;font-size:13px;line-height:1.45;">{html.escape(value)}</small>'
+            "</div>"
+            for label, value in specs[:6]
+        )
+        grid_html = f'<div style="font-family:inherit;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;background:none!important;background-color:transparent!important;color:inherit;">\n{grid_cards}\n</div>'
+        note = result.get("sections", [{}])[2].get("paragraphs", [""])[0] if len(result.get("sections", [])) > 2 else "Najważniejsze cechy serii: stabilne napięcie wyjściowe, wysoka sprawność oraz zabezpieczenie przed przeciążeniem i zwarciem."
+        power_sec = (
+            f'<section style="{STYLE["section"]}">'
+            f'<span style="{pill_style("#e94b25")}"><font color="#ffffff">Parametry modelu</font></span>\n'
+            f'{grid_html}\n'
+            f'<p style="{STYLE["paragraph"]};margin-top:16px;">{html.escape(normalize(note))}</p>\n'
+            '</section>'
+        )
+        parts = [sections[0] if sections else "", sections[1] if len(sections) > 1 else "", power_sec]
+    else:
+        parts = sections[:3]
+    
+    guides = render_blog_guides(product)
+    if guides:
+        parts.append(guides)
+    return "\n".join(p for p in parts if p)
+
+
+def render_wapro(product: dict[str, Any], result: dict[str, Any]) -> str:
     identifier_labels = {"producent", "indeks handlowy", "ean"}
     feature_specs = [item for item in product_specs(product) if item[0].lower() not in identifier_labels][:7]
-    identifiers = [item for item in product_specs(product) if item[0].lower() in {"indeks handlowy", "ean"}]
-
+    
     def paragraph_points(points: list[str]) -> str:
         return "".join(f'<p>- {html.escape(normalize(point).removesuffix("."))}</p>' for point in points)
 
-    intro = " ".join(normalize(value) for value in result["sections"][0]["paragraphs"])
+    intro = " ".join(normalize(value) for value in result.get("sections", [{}])[0].get("paragraphs", []))
     features = [f"{label}: {value}" for label, value in feature_specs]
-    checks = list(result["selection_checks"]) + [f"{label}: {value}" for label, value in identifiers]
+    benefit_block = f'<h3>Dlaczego warto:</h3>\n{paragraph_points(result.get("benefits", []))}' if result.get("benefits") else ""
     return (
-        "<section>"
-        f'<h2>{html.escape(product["name"])}</h2>'
-        f'<p>{html.escape(intro)}</p>'
-        "<h3>Najważniejsze cechy:</h3>"
-        f'{paragraph_points(features)}'
-        "<h3>Dlaczego warto:</h3>"
-        f'{paragraph_points(result["benefits"])}'
-        "<h3>Gdzie użyć:</h3>"
-        f'{paragraph_points(result["applications"])}'
-        "<h3>Dobór bez pomyłki:</h3>"
-        f'{paragraph_points(checks)}'
+        "<section>\n"
+        f'<h2>{html.escape(product["name"])}</h2>\n'
+        f'<p>{html.escape(intro)}</p>\n'
+        "<h3>Najważniejsze cechy:</h3>\n"
+        f'{paragraph_points(features if features else result.get("benefits", []))}\n'
+        f'{benefit_block}\n'
+        "<h3>Gdzie użyć:</h3>\n"
+        f'{paragraph_points(result.get("applications", []))}\n'
         "</section>"
     )
 
 
 def render_channels(product: dict[str, Any], result: dict[str, Any]) -> dict[str, str]:
-    leads = result["channel_leads"]
-    model_code = product["code"]
-    wapro_parts = [render_section(section) for section in result["sections"]]
-    guides = render_blog_guides(product)
-    if guides:
-        wapro_parts.append(guides)
+    leads = result.get("channel_leads", {})
+    model_code = product.get("code", "")
     return {
         "shoper": render_shoper(product, result),
-        "wapro": "\n".join(wapro_parts),
+        "wapro": render_wapro(product, result),
         "tim": "\n".join(
             [
-                render_lead("Opis techniczny", f"{model_code} — dane do doboru", leads["tim"]),
-                render_section(result["sections"][1], label="Zastosowanie i dobór"),
+                render_lead("Opis techniczny", f"{model_code} — dane do doboru", leads.get("tim", "")),
+                render_section(result.get("sections", [{}, {}])[1], label="Zastosowanie i dobór") if len(result.get("sections", [])) > 1 else "",
                 render_points_section(
                     "Parametry do zamówienia",
                     f"Co sprawdzić przed zakupem modelu {model_code}",
-                    result["selection_checks"],
+                    result.get("selection_checks", []),
                 ),
                 render_specs(product),
                 render_points_section(
                     "Uwagi instalacyjne",
                     "Przed podłączeniem i montażem",
-                    result["installation_notes"],
+                    result.get("installation_notes", []),
                 ),
             ]
         ),
         "allegro": "\n".join(
             [
-                render_lead("Sprawdź przed zakupem", result["seo_title"], leads["allegro"], color="#16a34a"),
-                render_benefits_grid(result["benefits"]),
-                render_section(result["sections"][1], color="#16a34a", label="Gdzie użyć"),
-                render_specs(product, color="#16a34a"),
+                render_lead("Sprawdź przed zakupem", result.get("seo_title", product.get("name", "")), leads.get("allegro", ""), color="#16a34a"),
+                render_benefits_grid(result.get("benefits", [])),
+                render_section(result.get("sections", [{}, {}])[1], color="#16a34a", label="Gdzie użyć") if len(result.get("sections", [])) > 1 else "",
                 render_points_section(
-                    "Dobór bez pomyłki",
-                    "Co sprawdzić przed montażem",
-                    result["selection_checks"] + result["installation_notes"],
+                    "Wskazówki montażowe",
+                    "Co warto wiedzieć przed montażem",
+                    result.get("installation_notes", []),
                     color="#16a34a",
                 ),
             ]

@@ -2,6 +2,7 @@
 
 import { readFile, writeFile } from "node:fs/promises";
 import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, plainTextFromHtml, PLATFORM_NAMES } from "../description-engine.js";
+import { timBodyFingerprint, validateTimDescription } from "./tim_description_quality.mjs";
 
 const catalog = JSON.parse(await readFile(new URL("../data/catalog.json", import.meta.url), "utf8"));
 const overrides = JSON.parse(await readFile(new URL("../data/manual-overrides.json", import.meta.url), "utf8"));
@@ -43,6 +44,7 @@ let generatedCount = 0;
 let manualCount = 0;
 let shortestDescription = { length: Number.POSITIVE_INFINITY, product: null, platform: "" };
 let longestDescription = { length: 0, product: null, platform: "" };
+const timBodyFingerprints = new Map();
 
 for (const product of products) {
   for (const platform of platforms) {
@@ -57,7 +59,7 @@ for (const product of products) {
     const html = normalizeDescriptionIdentity(
       product,
       manualHtml || (savedSeo ? renderSeoDescription(product, savedSeo, platform) : generateDescription(product, platform)),
-      { ensureTradeIndex: platform !== "tim" },
+      { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim" },
     );
     const text = plainTextFromHtml(html);
     if (manualHtml) manualCount += 1;
@@ -65,7 +67,7 @@ for (const product of products) {
 
     assert(text.length >= 180, `Zbyt krótki opis: ${product.key} / ${platform} (${text.length} znaków).`);
     assert(!/\b(?:undefined|null|nan)\b/i.test(text), `Niedozwolona wartość w opisie: ${product.key} / ${platform}.`);
-    assert(!/\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i.test(text), `Niedozwolona nazwa identyfikatora: ${product.key} / ${platform}.`);
+    if (platform !== "tim") assert(!/\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i.test(text), `Niedozwolona nazwa identyfikatora: ${product.key} / ${platform}.`);
     if (platform !== "tim") assert(new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i").test(text), `Brak indeksu handlowego: ${product.key} / ${platform}.`);
     assert(occurrences(html, /<section\b/gi) === occurrences(html, /<\/section>/gi), `Niezbilansowane sekcje: ${product.key} / ${platform}.`);
     if (platform === "shoper") {
@@ -77,18 +79,10 @@ for (const product of products) {
       assert(!/\sstyle=/i.test(html), `${platform.toUpperCase()} zawiera zbędne style prezentacyjne: ${product.key}.`);
     }
     if (platform === "tim") {
-      assert(!/Opis dla TIM\.pl|Dane techniczne|Indeks handlowy|Producent\s*:|EAN\s*:|Dane służą do porównania wariantu/i.test(text), `TIM powtarza dane karty produktu: ${product.key}.`);
-      assert(!/\b(?:napięcie|moc(?: wyjściowa)?|prąd|wymiar(?:y)?|klasa szczelności|kod(?: produktu| producenta| elementu| modułu)?)\s*:/i.test(text), `TIM zawiera blok parametrów zamiast porady: ${product.key}.`);
-      assert(!/<table\b/i.test(html), `TIM zawiera tabelę parametrów: ${product.key}.`);
-      assert(!product.ean || product.ean === product.code || !text.includes(product.ean), `TIM powtarza EAN poza indeksem handlowym: ${product.key}.`);
-      assert(html.includes(`<h2>Do czego służy i gdzie użyć: ${escapeHtml(product.name)}</h2>`), `TIM nie ma nazwy artykułu w nagłówku: ${product.key}.`);
-      assert(html.includes(`<h3>Wskazówki przy instalacji modelu: ${escapeHtml(product.code)}</h3>`), `TIM nie ma indeksu handlowego w nagłówku porad: ${product.key}.`);
-      assert(/Do czego służy i gdzie użyć\s*:/i.test(text), `TIM nie ma nagłówka zastosowania: ${product.key}.`);
-      assert(/Wskazówki przy instalacji modelu\s*:/i.test(text), `TIM nie ma nagłówka porad instalacyjnych: ${product.key}.`);
-      assert(occurrences(html, /<h2\b/gi) === 1 && occurrences(html, /<h3\b/gi) === 1, `TIM ma więcej niż dwa bloki treści: ${product.key}.`);
-      const timLists = [...html.matchAll(/<ul>(.*?)<\/ul>/gis)].map((match) => occurrences(match[1], /<li\b/gi));
-      assert(timLists.length === 2 && timLists[0] >= 2, `TIM nie ma dwóch konkretnych zastosowań: ${product.key}.`);
-      assert(timLists[1] >= 3, `TIM nie ma co najmniej trzech porad montażowych: ${product.key}.`);
+      const timErrors = validateTimDescription(product, html);
+      assert(!timErrors.length, `TIM ma wadliwy opis: ${product.key} — ${timErrors.join(" | ")}.`);
+      const bodyFingerprint = timBodyFingerprint(html);
+      timBodyFingerprints.set(bodyFingerprint, (timBodyFingerprints.get(bodyFingerprint) || 0) + 1);
     }
 
     const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
@@ -135,6 +129,9 @@ const report = {
   productsWithoutEan: products.filter((product) => !product.ean).length,
   shortestDescription,
   longestDescription,
+  timUniqueBodiesIgnoringHeadings: timBodyFingerprints.size,
+  timProductsSharingBody: [...timBodyFingerprints.values()].filter((count) => count > 1).reduce((sum, count) => sum + count, 0),
+  timLargestSharedBodyGroup: Math.max(...timBodyFingerprints.values()),
   warnings,
   errors,
 };

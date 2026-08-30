@@ -1,0 +1,38 @@
+name: Daily WAPRO cloud audit
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Build a temporary catalogue from the live WAPRO feed
+        run: >-
+          python3 scripts/sync_cloud_catalog.py
+          --legacy /tmp/prescot-no-legacy.html
+          --existing-overrides data/manual-overrides.json
+          --output-dir /tmp/prescot-fresh-catalog
+      - name: Compare cloud data with the repository
+        run: >-
+          node scripts/compare_cloud_catalog.mjs
+          --fresh /tmp/prescot-fresh-catalog/catalog.json
+          --report /tmp/prescot-cloud-audit.json
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prescot-cloud-audit
+          path: /tmp/prescot-cloud-audit.json
+          if-no-files-found: error

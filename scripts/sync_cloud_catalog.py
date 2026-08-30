@@ -79,7 +79,7 @@ def product_key(product_id: str, ean: str, code: str, duplicate_eans: set[str]) 
     return f"id:{product_id}"
 
 
-def build_catalog(xml_bytes: bytes) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def build_catalog(xml_bytes: bytes, source: str = DEFAULT_FEED) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     root = ET.fromstring(xml_bytes.decode("utf-8-sig"))
     all_offers = root.findall("o")
     active = [
@@ -129,7 +129,7 @@ def build_catalog(xml_bytes: bytes) -> tuple[list[dict[str, Any]], dict[str, Any
                 "categoryRoot": category.split("/", 1)[0].strip(),
                 "producer": attrs.get("Producent", ""),
                 "code": code,
-                "manufacturerCode": attrs.get("Kod_producenta", ""),
+                "manufacturerCode": attrs.get("Kod_producenta", "") or attrs.get("Kod producenta", ""),
                 "ean": ean,
                 "url": offer.get("url", ""),
                 "price": offer.get("price", ""),
@@ -154,7 +154,7 @@ def build_catalog(xml_bytes: bytes) -> tuple[list[dict[str, Any]], dict[str, Any
     categories = Counter(product["categoryRoot"] for product in products)
     metadata = {
         "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "source": DEFAULT_FEED,
+        "source": source,
         "allOffers": len(all_offers),
         "activeProducts": len(products),
         "withEan": len(products) - missing_ean,
@@ -327,7 +327,7 @@ def main() -> None:
     args = parser.parse_args()
 
     xml_bytes = read_source(args.source)
-    products, metadata = build_catalog(xml_bytes)
+    products, metadata = build_catalog(xml_bytes, args.source)
     output_dir = Path(args.output_dir)
     legacy_html = load_legacy_html(Path(args.legacy), args.legacy_git_ref)
     overrides, migration = load_legacy_overrides(legacy_html, products)

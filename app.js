@@ -1,4 +1,4 @@
-import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, PLATFORM_NAMES, plainTextFromHtml } from "./description-engine.js";
+import { generateDescription, normalizeDescriptionIdentity, PLATFORM_NAMES, plainTextFromHtml } from "./description-engine.js";
 
 const PAGE_SIZE = 30;
 
@@ -31,6 +31,7 @@ const state = {
   catalog: null,
   overrides: null,
   generated: null,
+  timStatus: null,
   platform: "wapro",
   family: "tapes",
   query: "",
@@ -53,7 +54,29 @@ const elements = {
   expandAll: document.querySelector("#expand-all"),
   collapseAll: document.querySelector("#collapse-all"),
   exportEdits: document.querySelector("#export-edits"),
+  importEdits: document.querySelector("#import-edits"),
+  importEditsFile: document.querySelector("#import-edits-file"),
   clearEdits: document.querySelector("#clear-edits"),
+  bufferState: document.querySelector("#buffer-state"),
+};
+
+const TIM_STATUS_LABELS = {
+  ready: "opis gotowy do mapowania",
+  review: "do weryfikacji",
+  blocked: "zablokowany",
+  out_of_scope: "poza zakresem TIM",
+};
+
+const TIM_REASON_LABELS = {
+  missing_or_invalid_ean: "brak prawidłowego 13-cyfrowego EAN",
+  duplicate_ean: "EAN powtarza się w katalogu",
+  nonpositive_price: "cena źródłowa wynosi 0 lub mniej",
+  zero_stock: "stan źródłowy wynosi 0",
+  source_research_pending: "research danych źródłowych nie jest zakończony",
+  source_description_empty: "opis źródłowy jest pusty",
+  eprel_variant_requires_evidence: "EPREL: wariant wymaga dokumentu producenta",
+  eprel_candidate_model_mismatch: "EPREL: identyfikator modelu nie zgadza się z kartą",
+  eprel_official_pdf_missing: "EPREL: brak oficjalnego PDF",
 };
 
 function loadLocalEdits() {
@@ -100,9 +123,18 @@ function familyFor(product) {
   return match?.key || "other";
 }
 
+function timStateFor(product) {
+  return state.timStatus?.products?.[product.key] || { status: "out_of_scope", hardBlocks: [], reviewFlags: [], nameWarnings: [], eprelStatus: "not_assigned" };
+}
+
+function platformProducts() {
+  if (state.platform !== "tim") return state.catalog.products;
+  return state.catalog.products.filter((product) => timStateFor(product).status !== "out_of_scope");
+}
+
 function familyCounts() {
   const counts = Object.fromEntries(FAMILIES.map((family) => [family.key, 0]));
-  for (const product of state.catalog.products) counts[familyFor(product)] += 1;
+  for (const product of platformProducts()) counts[familyFor(product)] += 1;
   return counts;
 }
 
@@ -145,15 +177,14 @@ function descriptionFor(product, platform = state.platform) {
   const overrideId = manualOverrideId(product, platform);
   if (!html && overrideId && state.overrides.descriptions?.[overrideId]) html = state.overrides.descriptions[overrideId];
   const saved = state.generated.products?.[product.key];
-  if (!html && saved?.editorial) html = renderSeoDescription(product, saved, platform);
-  if (!html) html = generateDescription(product, platform);
-  return normalizeDescriptionIdentity(product, html, { ensureTradeIndex: platform !== "tim" });
+  if (!html) html = generateDescription(product, platform, saved?.editorial || saved);
+  return normalizeDescriptionIdentity(product, html, { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim" });
 }
 
 function descriptionOrigin(product) {
-  if (hasLocalEdit(product)) return ["edycja lokalna", "edited"];
-  if (hasManualOverride(product)) return ["opis ręczny", "manual"];
-  return ["opis według klucza", "generated"];
+  if (hasLocalEdit(product)) return ["edycja robocza", "edited"];
+  if (hasManualOverride(product)) return ["wariant autorski", "manual"];
+  return ["standard handlowy", "generated"];
 }
 
 function productSearchText(product) {
@@ -176,7 +207,7 @@ function productSearchText(product) {
 
 function filteredProducts() {
   const terms = normalize(state.query).split(" ").filter(Boolean);
-  return state.catalog.products.filter((product) => {
+  return platformProducts().filter((product) => {
     if (terms.length) {
       const searchable = productSearchText(product);
       return terms.every((term) => searchable.includes(term));
@@ -264,6 +295,47 @@ function parameterSection(product) {
   const entries = [...params, ...identity];
   if (!entries.length) return "";
   return `<section class="parameter-section"><span class="parameter-label">Atrybuty</span><div class="parameter-grid">${entries.map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join("")}</div></section>`;
+}
+
+function sourceNumber(value, suffix = "") {
+  const number = Number(String(value ?? "").replace(",", "."));
+  if (!Number.isFinite(number)) return display(value) || "brak";
+  return `${new Intl.NumberFormat("pl-PL", { maximumFractionDigits: 4 }).format(number)}${suffix}`;
+}
+
+function timReasonLabel(reason) {
+  if (reason.startsWith("invalid_tim_description:")) return `opis TIM: ${reason.split(":").slice(1).join(":")}`;
+  return TIM_REASON_LABELS[reason] || reason.replaceAll("_", " ");
+}
+
+function timOperationalSection(product) {
+  if (state.platform !== "tim") return "";
+  const status = timStateFor(product);
+  const reasons = [...(status.hardBlocks || []), ...(status.reviewFlags || [])];
+  const reasonList = reasons.length
+    ? `<ul>${reasons.map((reason) => `<li>${escapeHtml(timReasonLabel(reason))}</li>`).join("")}</ul>`
+    : "<p>Brak blokad treści. Przed importem nadal wymagane jest mapowanie w aktualnym szablonie MarketTIM.</p>";
+  const eprelLabels = {
+    verified_exact_model: "zweryfikowany dokładny model",
+    review_variant_model: "wariant do potwierdzenia",
+    blocked_model_mismatch: "niedopasowany - zablokowany",
+    blocked_missing_official_pdf: "brak oficjalnego PDF",
+    not_assigned: "brak powiązania",
+  };
+  const eprelValue = status.verifiedEprelUrl
+    ? `<a href="${escapeHtml(status.verifiedEprelUrl)}" target="_blank" rel="noopener">${escapeHtml(eprelLabels[status.eprelStatus] || status.eprelStatus)} ↗</a>`
+    : escapeHtml(eprelLabels[status.eprelStatus] || status.eprelStatus || "brak");
+  return `<section class="tim-operational tim-status-${escapeHtml(status.status)}">
+    <div class="tim-operational-head"><strong>Kontrola TIM</strong><span>${escapeHtml(TIM_STATUS_LABELS[status.status] || status.status)}</span></div>
+    <div class="tim-operational-grid">
+      <div><span>EAN</span><strong>${escapeHtml(product.ean || "brak")}</strong></div>
+      <div><span>Producent XML</span><strong>${escapeHtml(product.producer || "brak")}</strong></div>
+      <div><span>Cena źródłowa WAPRO</span><strong>${escapeHtml(sourceNumber(product.price, " zł"))}</strong></div>
+      <div><span>Stan źródłowy WAPRO</span><strong>${escapeHtml(sourceNumber(product.stock))}</strong></div>
+      <div><span>EPREL</span><strong>${eprelValue}</strong></div>
+    </div>
+    <div class="tim-reasons">${reasonList}</div>
+  </section>`;
 }
 
 function productBody(product) {
@@ -388,6 +460,34 @@ async function copyDescription(product, button, status) {
   window.setTimeout(() => { button.textContent = previous; status.textContent = ""; }, 2200);
 }
 
+function validateTimDraft(product, html) {
+  const documentNode = new DOMParser().parseFromString(String(html || ""), "text/html");
+  const textValue = display(documentNode.body.textContent);
+  const lists = [...documentNode.querySelectorAll("ul")];
+  const errors = [];
+  if (textValue.length < 180) errors.push("opis ma mniej niż 180 znaków");
+  if (documentNode.querySelectorAll("section").length !== 1) errors.push("opis musi mieć dokładnie jedną sekcję");
+  if (documentNode.querySelectorAll("h2").length !== 1 || documentNode.querySelectorAll("h3").length !== 3) errors.push("opis musi mieć jeden nagłówek H2 i trzy nagłówki H3");
+  if (lists.length !== 3 || lists[0]?.querySelectorAll("li").length < 2 || lists[1]?.querySelectorAll("li").length < 1 || lists[2]?.querySelectorAll("li").length < 3) errors.push("opis musi mieć kompletne listy zastosowań, parametrów i porad");
+  if (documentNode.querySelector("[style], table")) errors.push("style inline i tabele są niedozwolone");
+  const headings = [...documentNode.querySelectorAll("h2, h3")].map((node) => normalize(node.textContent));
+  if (!headings.some((heading) => heading.includes("co to jest"))) errors.push("brak wyjaśnienia, co to jest");
+  if (!headings.some((heading) => heading.includes("zastosowanie i dobór"))) errors.push("brak zastosowania");
+  if (!headings.some((heading) => heading.includes("parametry produktu"))) errors.push("brak parametrów");
+  if (!headings.some((heading) => heading.includes("wskazówki instalacyjne"))) errors.push("brak wskazówek instalacyjnych");
+  if (/Opis wyjaśnia funkcję produktu/i.test(textValue)) errors.push("opis zawiera ogólny tekst zastępczy zamiast definicji produktu");
+  if (product.manufacturerCode && !textValue.includes(product.manufacturerCode)) errors.push("brak kodu producenta");
+  if (product.ean && product.ean !== product.code && product.ean !== product.manufacturerCode && textValue.includes(product.ean)) errors.push("opis powtarza EAN z karty produktu");
+  return errors;
+}
+
+function renderBufferState() {
+  const count = Object.keys(state.localEdits).length;
+  elements.bufferState.textContent = `Bufor lokalny: ${count.toLocaleString("pl-PL")} ${count === 1 ? "zmiana" : "zmian"}`;
+  elements.exportEdits.disabled = count === 0;
+  elements.clearEdits.disabled = count === 0;
+}
+
 function handleProductAction(event) {
   const target = event.target.closest("[data-action]");
   if (!target) return;
@@ -422,12 +522,21 @@ function handleProductAction(event) {
       window.alert("Opis jest pusty albo zbyt krótki.");
       return;
     }
+    if (state.platform === "tim") {
+      const errors = validateTimDraft(product, value);
+      if (errors.length) {
+        window.alert(`Opis TIM nie przeszedł kontroli:\n- ${errors.join("\n- ")}`);
+        return;
+      }
+    }
     state.localEdits[editKey(product)] = value;
     persistLocalEdits();
+    renderBufferState();
     renderProducts();
   } else if (action === "reset-edit") {
     delete state.localEdits[editKey(product)];
     persistLocalEdits();
+    renderBufferState();
     renderProducts();
   }
 }
@@ -442,7 +551,7 @@ function exportEdits() {
       ean: product?.ean || "",
       tradeIndex: product?.code || "",
       name: product?.name || "",
-      description: product ? normalizeDescriptionIdentity(product, description, { ensureTradeIndex: platform !== "tim" }) : description,
+      description: product ? normalizeDescriptionIdentity(product, description, { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim" }) : description,
     };
   });
   const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), edits }, null, 2)], { type: "application/json" });
@@ -452,6 +561,39 @@ function exportEdits() {
   link.download = `prescot-opisy-${new Date().toISOString().slice(0, 10)}.json`;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+async function importEdits(file) {
+  let payload;
+  try {
+    payload = JSON.parse(await file.text());
+  } catch {
+    window.alert("Nie udało się odczytać pliku JSON bufora.");
+    return;
+  }
+  const availablePlatforms = new Set(PLATFORM_TABS.map(([key]) => key));
+  const products = new Map(state.catalog.products.map((product) => [product.key, product]));
+  let imported = 0;
+  let rejected = 0;
+  for (const edit of payload?.edits || []) {
+    const product = products.get(edit?.productKey);
+    const platform = String(edit?.platform || "");
+    const description = String(edit?.description || "").trim();
+    if (!product || !availablePlatforms.has(platform) || plainTextFromHtml(description).length < 20) {
+      rejected += 1;
+      continue;
+    }
+    if (platform === "tim" && validateTimDraft(product, description).length) {
+      rejected += 1;
+      continue;
+    }
+    state.localEdits[editKey(product, platform)] = normalizeDescriptionIdentity(product, description, { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim" });
+    imported += 1;
+  }
+  persistLocalEdits();
+  renderBufferState();
+  renderProducts();
+  window.alert(`Bufor: zaimportowano ${imported} zmian${rejected ? `, odrzucono ${rejected}` : ""}.`);
 }
 
 function bindEvents() {
@@ -503,11 +645,18 @@ function bindEvents() {
     renderProducts();
   });
   elements.exportEdits.addEventListener("click", exportEdits);
+  elements.importEdits.addEventListener("click", () => elements.importEditsFile.click());
+  elements.importEditsFile.addEventListener("change", async () => {
+    const [file] = elements.importEditsFile.files;
+    if (file) await importEdits(file);
+    elements.importEditsFile.value = "";
+  });
   elements.clearEdits.addEventListener("click", () => {
     if (!Object.keys(state.localEdits).length) return;
     if (!window.confirm("Usunąć wszystkie lokalne edycje opisów z tej przeglądarki?")) return;
     state.localEdits = {};
     persistLocalEdits();
+    renderBufferState();
     renderProducts();
   });
 }
@@ -519,16 +668,19 @@ async function initialize() {
       fetch("./data/catalog.json", { cache: "no-cache" }),
       fetch("./data/manual-overrides.json", { cache: "no-cache" }),
       fetch("./data/seo-descriptions.json", { cache: "no-cache" }),
+      fetch("./data/tim-status.json", { cache: "no-cache" }),
     ]);
     if (responses.some((response) => !response.ok)) throw new Error("Nie udało się pobrać danych katalogu.");
-    [state.catalog, state.overrides, state.generated] = await Promise.all(responses.map((response) => response.json()));
+    [state.catalog, state.overrides, state.generated, state.timStatus] = await Promise.all(responses.map((response) => response.json()));
     elements.search.value = state.query;
     const date = new Date(state.catalog.meta.generatedAt);
     const updated = Number.isNaN(date.getTime()) ? state.catalog.meta.generatedAt : new Intl.DateTimeFormat("pl-PL", { dateStyle: "medium", timeStyle: "short" }).format(date);
-    elements.cloudState.textContent = `${state.catalog.meta.activeProducts.toLocaleString("pl-PL")} aktywnych produktów · ${state.catalog.meta.withEan.toLocaleString("pl-PL")} z EAN · dane ${updated}`;
+    const timCounts = state.timStatus.meta.counts;
+    elements.cloudState.textContent = `${state.catalog.meta.activeProducts.toLocaleString("pl-PL")} aktywnych produktów · TIM: ${timCounts.ready.toLocaleString("pl-PL")} opisów gotowych, ${timCounts.review.toLocaleString("pl-PL")} do kontroli, ${timCounts.blocked.toLocaleString("pl-PL")} zablokowanych · dane ${updated}`;
     renderPlatformTabs();
     renderFamilyTabs();
     bindEvents();
+    renderBufferState();
     renderProducts();
     elements.loading.hidden = true;
     elements.app.hidden = false;

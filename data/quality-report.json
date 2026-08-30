@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-29T15:27:38.424Z",
+  "checkedAt": "2026-08-30T10:55:53.470Z",
   "activeProducts": 3410,
   "platforms": 4,
   "totalDescriptions": 13640,
@@ -10,15 +10,18 @@
   "productsWithEan": 3384,
   "productsWithoutEan": 26,
   "shortestDescription": {
-    "length": 411,
-    "product": "ean:8009935004550",
-    "platform": "tim"
+    "length": 412,
+    "product": "ean:5906555612918",
+    "platform": "wapro"
   },
   "longestDescription": {
     "length": 2341,
     "product": "ean:5905475364167",
     "platform": "shoper"
   },
+  "timUniqueBodiesIgnoringHeadings": 716,
+  "timProductsSharingBody": 3060,
+  "timLargestSharedBodyGroup": 183,
   "warnings": [],
   "errors": []
 }

@@ -1,0 +1,2780 @@
+{
+  "meta": {
+    "generatedAt": "2026-08-30T10:38:07.335Z",
+    "status": "official_pdf_model_check_completed",
+    "sourceFile": "PRESCOT_TIM_MASTER_BULK_IMPORT_2026.xml",
+    "assignmentsInSource": 281,
+    "uniqueSourceCodes": 278,
+    "matchedProducts": 217,
+    "uniqueLinks": 19,
+    "conflicts": 0,
+    "unmatchedSourceCodes": 61,
+    "note": "Do automatycznego użycia dopuszczone są tylko wpisy verified_exact_model. Warianty wymagają dokumentu producenta, a niedopasowania są zablokowane.",
+    "verifiedAt": "2026-08-30T12:40:33+02:00",
+    "officialPdfsChecked": 19,
+    "modelStatusCounts": {
+      "verified_exact_model": 12,
+      "review_variant_model": 8,
+      "blocked_model_mismatch": 197,
+      "blocked_missing_official_pdf": 0
+    }
+  },
+  "products": {
+    "ean:5902479641638": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EHP024-050-10-RGB+WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684856077": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EHP024-050-10-RGB+NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364075": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "PR017-100-10-RGB+W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364181": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E033-050-10-RGBWW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684850808": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E020-050-10-RGB+WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360190": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E020-100-10-RGB+WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364167": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E033-050-10-RGBNW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859818": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E020-050-10-RGBNW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684855360": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D029-166-10-RGBNW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859832": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E020-050-10-RGBWW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364112": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E033-050-10-RGBWW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364129": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E033-050-10-RGBNW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361166": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E020-100-RGBWW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364082": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E033-100-10-RGBWW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885265421": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "PR007-050-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475365850": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D160-3-2797-810",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475365843": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D160-3-3097-810",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360251": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D002-050-8-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475365829": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D160-3-4097-810",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360268": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D002-050-8-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360275": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24D002-050-8-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364761": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D002-050-8-WW27",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360879": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D001-050-10-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360909": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D001-050-10-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360886": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24D001-050-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360916": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24D001-050-10-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366864": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24DP126-2-3080-1010",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366871": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24DP126-2-4080-1010",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364242": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24DS002-050-4-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5902596558802": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EH024-050-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261393": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EH007-025-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885265445": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EH007-050-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885268514": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D002-050-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885265483": {
+      "status": "verified_exact_model",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D002-050-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885268538": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D002-050-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364235": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24DS002-050-4-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364259": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24DS002-050-4-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364266": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24DS002-050-4-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364273": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24DS002-050-4-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885268248": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D009-250-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261065": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D009-166-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261119": {
+      "status": "verified_exact_model",
+      "eprelId": "1043243",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1043243_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D009-100-10-NW",
+      "catalogManufacturerCode": "24D009-100-10-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261089": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24D009-166-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362538": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "EHP008-050-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361784": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E008-050-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361821": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E008-050-8-NW100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261478": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E007-050-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885260891": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24E009-250-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261010": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "E007-050-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361432": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "E007-050-8-W100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362521": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EHP008-050-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361968": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E008-050-8-WW100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362125": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "E008-050-8-W100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362118": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "E008-050-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261584": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E007-050-8-WW-B",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261317": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "PR007-025-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261348": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EH007-050-8-WW25",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885264660": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "EH020-050-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261294": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "PR007-050-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261447": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "PR007-100-8-W40",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366826": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24DP180-11-3080-1010",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267166": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24D009-063-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475365782": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D160-10-4097-810",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364495": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D004-050-8-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364488": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D004-050-8-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361180": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D010-050-10-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859221": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D010-050-10-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361173": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D010-050-10-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859245": {
+      "status": "verified_exact_model",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24D010-050-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361715": {
+      "status": "review_variant_model",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24D010-050-10-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859856": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D013-050-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361623": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D013-050-10-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361630": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D013-050-10-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859252": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24D013-050-10-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859849": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24D013-050-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366833": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24DP180-11-4080-1010",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364280": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24DS004-050-4-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364990": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24DS004-050-4-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364419": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24DS004-050-4-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364426": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24DS004-050-4-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267067": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12D022-050-10-3-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885265346": {
+      "status": "verified_exact_model",
+      "eprelId": "1107801",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1107801_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D023-100-10-WW",
+      "catalogManufacturerCode": "24D023-100-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267074": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "12D022-050-10-3-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885265353": {
+      "status": "verified_exact_model",
+      "eprelId": "1101860",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1101860_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D023-100-10-NW",
+      "catalogManufacturerCode": "24D023-100-10-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267081": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "12D022-050-10-3-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267302": {
+      "status": "verified_exact_model",
+      "eprelId": "1076644",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1076644_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24E007-025-10-NW",
+      "catalogManufacturerCode": "24E007-025-10-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267319": {
+      "status": "verified_exact_model",
+      "eprelId": "1081352",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1081352_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24E007-025-10-W",
+      "catalogManufacturerCode": "24E007-025-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360350": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E009-025-8-NW100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885268507": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24ES009-031-5-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684855384": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "ES016-050-6-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360336": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E009-025-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267326": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E005-025-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362552": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EHP008-025-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362569": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "EHP008-025-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362149": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "E008-025-8-W100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361814": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E008-025-8-NW100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361791": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E008-025-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360329": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E009-025-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362156": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E008-025-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360381": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "E009-025-8-W100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360367": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "E009-025-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684852369": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EC528-045-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361449": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EC528-045-10-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684852376": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EC528-045-10-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684852383": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "EC528-045-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364457": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E009-050-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364631": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E009-050-8-NW100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364464": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E009-050-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364624": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24E009-050-8-W100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360961": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E010-050-10-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360978": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E010-050-10-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360985": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24E010-050-10-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366437": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E140-14-2790-1010",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885260488": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E010-050-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361203": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E006-033-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361210": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E006-033-10-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361234": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E006-033-10-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361005": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E010-033-10-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361012": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E010-033-10-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364358": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E003-033-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364365": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E003-033-10-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364334": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E003-033-10-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364341": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E003-033-10-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364402": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24E003-033-10-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859122": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24EC384-042-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361524": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24EC384-042-8-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859139": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24EC384-042-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684852345": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC528-045-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361555": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24EC528-045-10-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684852352": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24EC528-045-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364563": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC784-071-12-RGBWW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361456": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EC528-045-10-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267296": {
+      "status": "verified_exact_model",
+      "eprelId": "1081297",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1081297_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24E007-025-10-WW",
+      "catalogManufacturerCode": "24E007-025-10-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361531": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC528-045-10-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361517": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24EC384-042-8-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366475": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC360-083-WWIC",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366482": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24EC360-083-NWIC",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366499": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24EC360-083-WIC",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366505": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24EC576-042-CCTIC",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364600": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC784-071-RGBWWIC",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475364587": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24EC784-071-RGBNWIC",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475363740": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24EC528-002-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361081": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12D018-010-10-WWL50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859207": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12D018-010-10-WWL",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885265537": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "12D018-010-10-NWL",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859184": {
+      "status": "verified_exact_model",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12D018-010-10-WWH",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885265544": {
+      "status": "verified_exact_model",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "12D018-010-10-NWH",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361104": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "12D018-010-10-WL50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361067": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "12D018-010-10-NWL50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361050": {
+      "status": "review_variant_model",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "12D018-010-10-NWH50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885264875": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "EF018-050-6-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684852420": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "ES007-025-4-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366857": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24DP126-7-4080-1010",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475365812": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24D160-10-2797-810",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366840": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24DP126-7-3080-1010",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885267340": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24ES004-031-5-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684852406": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "ES007-050-5-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859870": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E009-050-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885260464": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E010-100-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366413": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12E120-10-2790-85",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859696": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "E009-025-8-CCT100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475367175": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12EC320WW5",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475367199": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "12EC320NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475367205": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "12EC320NW5",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366635": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EC320-025-8-WW27",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361777": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EC320-025-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362309": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EC320-025-8-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684851201": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EC320-025-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362705": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "EC320-025-8-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475367236": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12EC480WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475367243": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12EC480WW5",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475367212": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "12EC480NW5",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859863": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E009-050-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859764": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "E009-050-8-NW100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366406": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "12E60-5-2790-85",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366642": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC384-042-8-WW27",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859115": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC384-042-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366079": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC384-042-8-WWL",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366369": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24EC384-042-8-NWL50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366420": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E70-7-2790-810",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885260457": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E010-100-8-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360930": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24E010-100-8-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360947": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24E010-100-8-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885260471": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24E010-100-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475360954": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1525057",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D010-050-10-W",
+      "catalogManufacturerCode": "24E010-100-8-W50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361500": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC384-042-8-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361760": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "EC320-025-8-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475363733": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EC528-002-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366659": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC384-042-8-WWL27",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366376": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1074622",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24D002-050-10-WW",
+      "catalogManufacturerCode": "24EC384-042-8-WWL50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684859214": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "12D018-010-10-WL",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885264851": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EF018-050-6-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885264868": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EF018-050-6-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362071": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "ES009-025-4-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362095": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "ES009-025-4-NW100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361753": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "ES009-025-4-W100",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684850754": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EC384-021-3-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362064": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "ES009-050-4-WW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362033": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "ES009-050-4-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362248": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "EC384-021-3-WW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684850761": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EC384-021-3-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475362507": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1068744",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-NWH",
+      "catalogManufacturerCode": "EC384-021-3-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475361579": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "EC384-021-3-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261287": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1473759",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WH",
+      "catalogManufacturerCode": "PR020-050-10-W",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366031": {
+      "status": "verified_exact_model",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24COB384-031-8-NW",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366048": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "2276055",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "24COB384-031-8-NW",
+      "catalogManufacturerCode": "24COB528-023-8-NW50",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366734": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1395530",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "12D018-010-10-WWH",
+      "catalogManufacturerCode": "E009-050-8-WW1",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:4099854037498": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1003859",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003859_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR15-G13-90-W",
+      "catalogManufacturerCode": "4099854037498",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475363146": {
+      "status": "review_variant_model",
+      "eprelId": "1003379",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003379_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR18-G13-120-NW",
+      "catalogManufacturerCode": "PR18-G13-120-NWPv1",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5903684851157": {
+      "status": "review_variant_model",
+      "eprelId": "1003379",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003379_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR18-G13-120-NW",
+      "catalogManufacturerCode": "PR18-G13-120-NWP",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475363153": {
+      "status": "review_variant_model",
+      "eprelId": "1003296",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003296_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR18-G13-120-W",
+      "catalogManufacturerCode": "PR18-G13-120-WPv1",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475363122": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1003871",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003871_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR10-G13-60-NW",
+      "catalogManufacturerCode": "PR9-G13-60-NWPv1",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475363139": {
+      "status": "blocked_model_mismatch",
+      "eprelId": "1003869",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003869_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR10-G13-60-W",
+      "catalogManufacturerCode": "PR9-G13-60-WPv1",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366109": {
+      "status": "review_variant_model",
+      "eprelId": "1003424",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003424_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR15-G13-90-WW",
+      "catalogManufacturerCode": "PR15-G13-90-WWPv1",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366116": {
+      "status": "review_variant_model",
+      "eprelId": "1003854",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003854_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR15-G13-90-NW",
+      "catalogManufacturerCode": "PR15-G13-90-NWPv1",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5905475366123": {
+      "status": "review_variant_model",
+      "eprelId": "1003859",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003859_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR15-G13-90-W",
+      "catalogManufacturerCode": "PR15-G13-90-WPv1",
+      "verifiedFromOfficialPdf": true
+    },
+    "ean:5901885261638": {
+      "status": "verified_exact_model",
+      "eprelId": "1003871",
+      "productInformationSheetPl": "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1003871_PL.pdf",
+      "matchedBy": "manufacturer_code",
+      "source": "tim-master-xml",
+      "officialSupplier": "PRESCOT SP. z O.O.",
+      "officialModelIdentifier": "PR10-G13-60-NW",
+      "catalogManufacturerCode": "PR10-G13-60-NW",
+      "verifiedFromOfficialPdf": true
+    }
+  },
+  "conflicts": [],
+  "unmatchedAssignments": [
+    {
+      "manufacturerCode": "taś000206",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000755",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000756",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000753",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000754",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000225",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000230",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000397",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000734",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000717",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2674048_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000224",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "pre-pre-24-00008",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1451770_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000648",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000705",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2633449_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000655",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000651",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000636",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000624",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000736",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2724765_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000638",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000704",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2633451_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000738",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2724841_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000317",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000639",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000652",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2276055_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000633",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000692",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2629755_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000737",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2724835_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000691",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2629732_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000632",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2522214_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000640",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "pre-pre-24-00003",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1103002_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000654",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000701",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2673860_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000718",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2674027_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000649",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000452",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000733",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1074622_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000617",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000634",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000240",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2022419_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000623",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000659",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000180",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000693",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2629761_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000583",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000696",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2629764_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000703",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000735",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1525057_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000622",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1068744_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "24d009-100-10-w5",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1043949_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "24e010-050-10-7-",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1076561_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000269",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2440043_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000621",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1395530_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000695",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2629765_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000581",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2369519_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "pre-pre-24-00005",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1076617_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "pre-pre-24-00004",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1105632_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "pre-pre-24-00006",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1103733_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000698",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_2674012_PL.pdf"
+      ]
+    },
+    {
+      "manufacturerCode": "taś000637",
+      "urls": [
+        "https://eprel.ec.europa.eu/fiches/lightsources/Fiche_1473759_PL.pdf"
+      ]
+    }
+  ]
+}

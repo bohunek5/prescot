@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, plainTextFromHtml } from "../description-engine.js";
+import { validateTimDescription } from "./tim_description_quality.mjs";
 
 const catalog = JSON.parse(await readFile(new URL("../data/catalog.json", import.meta.url), "utf8"));
 const overrides = JSON.parse(await readFile(new URL("../data/manual-overrides.json", import.meta.url), "utf8"));
@@ -30,7 +31,7 @@ function resolve(product, platform) {
   return normalizeDescriptionIdentity(
     product,
     (id && overrides.descriptions?.[id]) || renderSeoDescription(product, generated.products?.[product.key], platform) || generateDescription(product, platform),
-    { ensureTradeIndex: platform !== "tim" },
+    { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim" },
   );
 }
 
@@ -61,14 +62,12 @@ for (const [ean, label, markers] of references) {
   for (const platform of platforms) {
     const text = plainTextFromHtml(descriptions[platform]);
     if (platform !== "tim") assert.match(text, new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i"), `${label}: brak indeksu handlowego w ${platform}`);
-    assert.doesNotMatch(text, /\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i, `${label}: niedozwolona nazwa identyfikatora w ${platform}`);
+    if (platform !== "tim") assert.doesNotMatch(text, /\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i, `${label}: niedozwolona nazwa identyfikatora w ${platform}`);
   }
   const timText = plainTextFromHtml(descriptions.tim);
-  assert.match(timText, /Do czego służy i gdzie użyć\s*:/i, `${label}: TIM nie ma nagłówka zastosowania`);
-  assert.ok(descriptions.tim.includes(`<h2>Do czego służy i gdzie użyć: ${escapeHtml(product.name)}</h2>`), `${label}: TIM nie ma nazwy artykułu w nagłówku`);
-  assert.ok(descriptions.tim.includes(`<h3>Wskazówki przy instalacji modelu: ${escapeHtml(product.code)}</h3>`), `${label}: TIM nie ma indeksu handlowego w nagłówku porad`);
-  assert.doesNotMatch(timText, /Opis dla TIM\.pl|Dane techniczne|Indeks handlowy|Producent\s*:|EAN\s*:|Dane służą do porównania wariantu/i, `${label}: TIM powtarza dane karty produktu`);
-  assert.match(timText, /Wskazówki przy instalacji modelu\s*:/i, `${label}: TIM nie ma porad instalacyjnych`);
+  assert.deepEqual(validateTimDescription(product, descriptions.tim), [], `${label}: wadliwy opis TIM`);
+  assert.match(timText, new RegExp(`Indeks handlowy\\s*:\\s*${product.manufacturerCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "iu"), `${label}: TIM nie ma indeksu handlowego`);
+  assert.doesNotMatch(timText, /\bEAN\b|\bKod produktu\b|\bKod producenta\b|\bIndeks katalogowy\b/i, `${label}: TIM zawiera niedozwolony identyfikator`);
   console.log(`${label}: Shoper ${countSections(descriptions.shoper)} karty; WAPRO ${countSections(descriptions.wapro)} sekcja; TIM ${countSections(descriptions.tim)} sekcja; 4 unikatowe kanały.`);
 }
 
