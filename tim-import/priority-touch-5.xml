@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<offers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+  <responsibleProducers>
+    <p id="producer_1">
+      <name>Prescot Sp. z o.o.</name>
+      <address>
+        <countryCode>PL</countryCode>
+        <street>ul. Wileńska 1</street>
+        <postalCode>11-500</postalCode>
+        <city>Giżycko</city>
+      </address>
+      <contact>
+        <email>komponenty@prescot.pl</email>
+        <phoneNumber>877776482</phoneNumber>
+      </contact>
+    </p>
+  </responsibleProducers>
+  <o id="18999" url="https://prescot.com.pl/pl/p/Sterownik-LED-MONO-12A-touch-RF-komplet-z-pilotem-czarnym-5-24V-Prescot/18999" price="45.00" avail="1" set="0" stock="220" basket="1">
+    <cat><![CDATA[Sterowniki LED/Sterowniki LED zestawy]]></cat>
+    <name><![CDATA[Sterownik LED MONO 12A touch RF komplet z pilotem czarnym 5-24V Prescot PR-MONO-12A]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/63602.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63603.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63604.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63605.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63606.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/68983.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/68984.jpg" />
+    </imgs>
+    <desc><![CDATA[
+<h2>Co to jest: Sterownik LED MONO 12A touch RF komplet z pilotem czarnym 5-24V Prescot</h2>
+<p>Opis dotyczy produktu Sterownik LED MONO 12A touch RF komplet z pilotem czarnym 5-24V Prescot. Jest to element systemu sterowania oświetleniem LED.</p>
+<h3>Zastosowanie i dobór</h3>
+<ul><li>Do sterowania zgodnym systemem LED w zakresie funkcji przewidzianych dla tego wariantu</li><li>Przy doborze porównaj napięcie pracy, typ sygnału, liczbę kanałów, obciążalność oraz zgodne akcesoria</li></ul>
+<h3>Parametry produktu</h3>
+<ul><li>Indeks handlowy: PR-MONO-12A</li><li>Napięcie: 24V</li><li>Prąd znamionowy: 12A</li></ul>
+<h3>Dobór i bezpieczeństwo</h3>
+<ul><li>Przed zakupem porównaj indeks handlowy i parametry techniczne z dokumentacją producenta</li><li>Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach przewidzianych przez producenta</li><li>Montaż, podłączenie i uruchomienie elementów instalacji elektrycznej powinny być wykonane przez osobę z odpowiednimi kwalifikacjami</li></ul>
+]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[STR000005]]></a>
+      <a name="EAN"><![CDATA[5905475368011]]></a>
+      <a name="Kod producenta"><![CDATA[PR-MONO-12A]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP20]]></a>
+      <a name="Prąd na 1 kanał"><![CDATA[6A]]></a>
+      <a name="Prąd maksymalny"><![CDATA[12A]]></a>
+      <a name="Wymiar"><![CDATA[140,5x37,5x15mm pilot, 74,5x35,6x16,5mm sterownik]]></a>
+      <a name="Kolor"><![CDATA[Czarny]]></a>
+      <a name="Zasilanie pilota"><![CDATA[DC 3V (AAA*2szt)]]></a>
+      <a name="Zasięg"><![CDATA[30m]]></a>
+      <a name="Sterowanie"><![CDATA[RF]]></a>
+      <a name="Zestaw zawiera"><![CDATA[Pilot, sterownik, uchwyt magnetyczny]]></a>
+      <a name="Gwarancja"><![CDATA[24 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19000" url="https://prescot.com.pl/pl/p/Sterownik-LED-CCT-12A-touch-RF-komplet-z-pilotem-czarnym-5-24V-Prescot/19000" price="48.00" avail="1" set="0" stock="98" basket="1">
+    <cat><![CDATA[Sterowniki LED/Sterowniki LED zestawy]]></cat>
+    <name><![CDATA[Sterownik LED CCT 12A touch RF komplet z pilotem czarnym 5-24V Prescot PR-CCT-12A]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/63597.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63598.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63599.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63600.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63601.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/68985.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/68986.jpg" />
+    </imgs>
+    <desc><![CDATA[
+<h2>Co to jest: Sterownik LED CCT 12A touch RF komplet z pilotem czarnym 5-24V Prescot</h2>
+<p>Opis dotyczy produktu Sterownik LED CCT 12A touch RF komplet z pilotem czarnym 5-24V Prescot. Jest to element systemu sterowania oświetleniem LED.</p>
+<h3>Zastosowanie i dobór</h3>
+<ul><li>Do sterowania zgodnym systemem LED w zakresie funkcji przewidzianych dla tego wariantu</li><li>Przy doborze porównaj napięcie pracy, typ sygnału, liczbę kanałów, obciążalność oraz zgodne akcesoria</li></ul>
+<h3>Parametry produktu</h3>
+<ul><li>Indeks handlowy: PR-CCT-12A</li><li>Napięcie: 24V</li><li>Prąd znamionowy: 12A</li></ul>
+<h3>Dobór i bezpieczeństwo</h3>
+<ul><li>Przed zakupem porównaj indeks handlowy i parametry techniczne z dokumentacją producenta</li><li>Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach przewidzianych przez producenta</li><li>Montaż, podłączenie i uruchomienie elementów instalacji elektrycznej powinny być wykonane przez osobę z odpowiednimi kwalifikacjami</li></ul>
+]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[STR000006]]></a>
+      <a name="EAN"><![CDATA[5905475368004]]></a>
+      <a name="Kod producenta"><![CDATA[PR-CCT-12A]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP20]]></a>
+      <a name="Prąd na 1 kanał"><![CDATA[6A]]></a>
+      <a name="Prąd maksymalny"><![CDATA[12A]]></a>
+      <a name="Wymiar"><![CDATA[140,5x37,5x15mm pilot, 74,5x35,6x16,5mm sterownik]]></a>
+      <a name="Kolor"><![CDATA[Czarny]]></a>
+      <a name="Zasilanie pilota"><![CDATA[DC 3V (AAA*2szt)]]></a>
+      <a name="Zasięg"><![CDATA[30m]]></a>
+      <a name="Sterowanie"><![CDATA[RF]]></a>
+      <a name="Zestaw zawiera"><![CDATA[Pilot, sterownik, uchwyt magnetyczny]]></a>
+      <a name="Gwarancja"><![CDATA[24 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19010" url="https://prescot.com.pl/pl/p/Sterownik-LED-RGB-12A-touch-RF-komplet-z-pilotem-czarnym-5-24V-Prescot/19010" price="48.00" avail="1" set="0" stock="96" basket="1">
+    <cat><![CDATA[Sterowniki LED/Sterowniki LED zestawy]]></cat>
+    <name><![CDATA[Sterownik LED RGB 12A touch RF komplet z pilotem czarnym 5-24V Prescot PR-RGB-12A]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/63607.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63608.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63609.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63610.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63611.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63612.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/68987.jpg" />
+    </imgs>
+    <desc><![CDATA[
+<h2>Co to jest: Sterownik LED RGB 12A touch RF komplet z pilotem czarnym 5-24V Prescot</h2>
+<p>Opis dotyczy produktu Sterownik LED RGB 12A touch RF komplet z pilotem czarnym 5-24V Prescot. Jest to element systemu sterowania oświetleniem LED.</p>
+<h3>Zastosowanie i dobór</h3>
+<ul><li>Do sterowania zgodnym systemem LED w zakresie funkcji przewidzianych dla tego wariantu</li><li>Przy doborze porównaj napięcie pracy, typ sygnału, liczbę kanałów, obciążalność oraz zgodne akcesoria</li></ul>
+<h3>Parametry produktu</h3>
+<ul><li>Indeks handlowy: PR-RGB-12A</li><li>Napięcie: 24V</li><li>Prąd znamionowy: 12A</li></ul>
+<h3>Dobór i bezpieczeństwo</h3>
+<ul><li>Przed zakupem porównaj indeks handlowy i parametry techniczne z dokumentacją producenta</li><li>Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach przewidzianych przez producenta</li><li>Montaż, podłączenie i uruchomienie elementów instalacji elektrycznej powinny być wykonane przez osobę z odpowiednimi kwalifikacjami</li></ul>
+]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[STR000007]]></a>
+      <a name="EAN"><![CDATA[5905475368028]]></a>
+      <a name="Kod producenta"><![CDATA[PR-RGB-12A]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP20]]></a>
+      <a name="Prąd na 1 kanał"><![CDATA[6A]]></a>
+      <a name="Prąd maksymalny"><![CDATA[12A]]></a>
+      <a name="Wymiar"><![CDATA[140,5x37,5x15mm pilot, 74,5x35,6x16,5mm sterownik]]></a>
+      <a name="Kolor"><![CDATA[Czarny]]></a>
+      <a name="Zasilanie pilota"><![CDATA[DC 3V (AAA*2szt)]]></a>
+      <a name="Zasięg"><![CDATA[30m]]></a>
+      <a name="Sterowanie"><![CDATA[RF]]></a>
+      <a name="Zestaw zawiera"><![CDATA[Pilot, sterownik, uchwyt magnetyczny]]></a>
+      <a name="Gwarancja"><![CDATA[24 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19002" url="https://prescot.com.pl/pl/p/Sterownik-LED-RGBW-12A-touch-RF-komplet-z-pilotem-czarnym-5-24V-Prescot/19002" price="48.00" avail="1" set="0" stock="82" basket="1">
+    <cat><![CDATA[Sterowniki LED/Sterowniki LED zestawy]]></cat>
+    <name><![CDATA[Sterownik LED RGBW 12A touch RF komplet z pilotem czarnym 5-24V Prescot PR-RGBW-12A]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/63592.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63593.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63594.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63595.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63596.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/68990.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/68989.jpg" />
+    </imgs>
+    <desc><![CDATA[
+<h2>Co to jest: Sterownik LED RGBW 12A touch RF komplet z pilotem czarnym 5-24V Prescot</h2>
+<p>Opis dotyczy produktu Sterownik LED RGBW 12A touch RF komplet z pilotem czarnym 5-24V Prescot. Jest to element systemu sterowania oświetleniem LED.</p>
+<h3>Zastosowanie i dobór</h3>
+<ul><li>Do sterowania zgodnym systemem LED w zakresie funkcji przewidzianych dla tego wariantu</li><li>Przy doborze porównaj napięcie pracy, typ sygnału, liczbę kanałów, obciążalność oraz zgodne akcesoria</li></ul>
+<h3>Parametry produktu</h3>
+<ul><li>Indeks handlowy: PR-RGBW-12A</li><li>Napięcie: 24V</li><li>Prąd znamionowy: 12A</li></ul>
+<h3>Dobór i bezpieczeństwo</h3>
+<ul><li>Przed zakupem porównaj indeks handlowy i parametry techniczne z dokumentacją producenta</li><li>Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach przewidzianych przez producenta</li><li>Montaż, podłączenie i uruchomienie elementów instalacji elektrycznej powinny być wykonane przez osobę z odpowiednimi kwalifikacjami</li></ul>
+]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[STR000009]]></a>
+      <a name="EAN"><![CDATA[5905475368042]]></a>
+      <a name="Kod producenta"><![CDATA[PR-RGBW-12A]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP20]]></a>
+      <a name="Prąd na 1 kanał"><![CDATA[6A]]></a>
+      <a name="Prąd maksymalny"><![CDATA[12A]]></a>
+      <a name="Wymiar"><![CDATA[140,5x37,5x15mm pilot, 74,5x35,6x16,5mm sterownik]]></a>
+      <a name="Kolor"><![CDATA[Czarny]]></a>
+      <a name="Zasilanie pilota"><![CDATA[DC 3V (AAA*2szt)]]></a>
+      <a name="Zasięg"><![CDATA[30m]]></a>
+      <a name="Sterowanie"><![CDATA[RF]]></a>
+      <a name="Zestaw zawiera"><![CDATA[Pilot, sterownik, uchwyt magnetyczny]]></a>
+      <a name="Gwarancja"><![CDATA[24 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19003" url="https://prescot.com.pl/pl/p/Sterownik-LED-RGBCCT-12A-touch-RF-komplet-z-pilotem-czarnym-5-24V-Prescot/19003" price="48.00" avail="1" set="0" stock="94" basket="1">
+    <cat><![CDATA[Sterowniki LED/Sterowniki LED zestawy]]></cat>
+    <name><![CDATA[Sterownik LED RGBCCT 12A touch RF komplet z pilotem czarnym 5-24V Prescot PR-RGBCCT-12A]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/63587.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63588.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63589.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63590.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63591.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/63613.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/68988.jpg" />
+    </imgs>
+    <desc><![CDATA[
+<h2>Co to jest: Sterownik LED RGBCCT 12A touch RF komplet z pilotem czarnym 5-24V Prescot</h2>
+<p>Opis dotyczy produktu Sterownik LED RGBCCT 12A touch RF komplet z pilotem czarnym 5-24V Prescot. Jest to element systemu sterowania oświetleniem LED.</p>
+<h3>Zastosowanie i dobór</h3>
+<ul><li>Do sterowania zgodnym systemem LED w zakresie funkcji przewidzianych dla tego wariantu</li><li>Przy doborze porównaj napięcie pracy, typ sygnału, liczbę kanałów, obciążalność oraz zgodne akcesoria</li></ul>
+<h3>Parametry produktu</h3>
+<ul><li>Indeks handlowy: PR-RGBCCT-12A</li><li>Napięcie: 24V</li><li>Prąd znamionowy: 12A</li></ul>
+<h3>Dobór i bezpieczeństwo</h3>
+<ul><li>Przed zakupem porównaj indeks handlowy i parametry techniczne z dokumentacją producenta</li><li>Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach przewidzianych przez producenta</li><li>Montaż, podłączenie i uruchomienie elementów instalacji elektrycznej powinny być wykonane przez osobę z odpowiednimi kwalifikacjami</li></ul>
+]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[STR000010]]></a>
+      <a name="EAN"><![CDATA[5905475368035]]></a>
+      <a name="Kod producenta"><![CDATA[PR-RGBCCT-12A]]></a>
+      <a name="Klasa szczelności"><![CDATA[IP20]]></a>
+      <a name="Prąd na 1 kanał"><![CDATA[6A]]></a>
+      <a name="Prąd maksymalny"><![CDATA[12A]]></a>
+      <a name="Wymiar"><![CDATA[140,5x37,5x15mm pilot, 74,5x35,6x16,5mm sterownik]]></a>
+      <a name="Kolor"><![CDATA[Czarny]]></a>
+      <a name="Zasilanie pilota"><![CDATA[DC 3V (AAA*2szt)]]></a>
+      <a name="Zasięg"><![CDATA[30m]]></a>
+      <a name="Sterowanie"><![CDATA[RF]]></a>
+      <a name="Zestaw zawiera"><![CDATA[Pilot, sterownik, uchwyt magnetyczny]]></a>
+      <a name="Gwarancja"><![CDATA[24 miesiące]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+</offers>

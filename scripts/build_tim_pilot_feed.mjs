@@ -39,7 +39,7 @@ function validEan13(value) {
   return (10 - (sum % 10)) % 10 === Number(ean[12]);
 }
 
-const targets = [
+const defaultTargets = [
   "5905475368394",
   "5905475368400",
   "5905475368424",
@@ -51,6 +51,9 @@ const targets = [
   "5999863091049",
   "5905475368349",
 ];
+const targets = argumentValue("--targets")
+  ? argumentValue("--targets").split(",").map(text).filter(Boolean)
+  : defaultTargets;
 
 const sourcePath = resolve(argumentValue("--source", "/tmp/prescot.xml"));
 const manifestPath = resolve(argumentValue("--manifest", "exports/tim/tim-manifest.json"));
