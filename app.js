@@ -1,4 +1,4 @@
-import { generateDescription, normalizeDescriptionIdentity, PLATFORM_NAMES, plainTextFromHtml } from "./description-engine.js";
+import { generateDescription, normalizeDescriptionIdentity, PLATFORM_NAMES, plainTextFromHtml, timTradeIndex } from "./description-engine.js";
 
 const PAGE_SIZE = 30;
 
@@ -237,7 +237,7 @@ function renderFamilyTabs() {
 }
 
 function productIdentifier(product) {
-  return product.code || product.ean || `ID ${product.id}`;
+  return timTradeIndex(product) || "brak indeksu handlowego";
 }
 
 function matchFromName(product, pattern) {
@@ -289,7 +289,7 @@ function parameterSection(product) {
   const params = parameterEntries(product);
   const identity = [
     ["Producent", product.producer],
-    ["Indeks handlowy", product.code],
+    ["Indeks handlowy", timTradeIndex(product)],
     ["EAN", product.ean],
   ].filter(([, value]) => value);
   const entries = [...params, ...identity];
@@ -344,6 +344,7 @@ function productBody(product) {
   return `<div class="product-body">
     <div class="description-preview" data-role="preview">${description}</div>
     ${["shoper", "tim"].includes(state.platform) ? "" : parameterSection(product)}
+    ${timOperationalSection(product)}
     <div class="edit-panel" data-role="editor" hidden>
       <textarea class="edit-textarea" spellcheck="false">${escapeHtml(description)}</textarea>
       <div class="edit-actions">
@@ -468,16 +469,19 @@ function validateTimDraft(product, html) {
   if (textValue.length < 180) errors.push("opis ma mniej niż 180 znaków");
   if (documentNode.querySelectorAll("section").length !== 1) errors.push("opis musi mieć dokładnie jedną sekcję");
   if (documentNode.querySelectorAll("h2").length !== 1 || documentNode.querySelectorAll("h3").length !== 3) errors.push("opis musi mieć jeden nagłówek H2 i trzy nagłówki H3");
-  if (lists.length !== 3 || lists[0]?.querySelectorAll("li").length < 2 || lists[1]?.querySelectorAll("li").length < 1 || lists[2]?.querySelectorAll("li").length < 3) errors.push("opis musi mieć kompletne listy zastosowań, parametrów i porad");
+  const tradeIndex = timTradeIndex(product);
+  const minimumSpecs = tradeIndex ? 1 : 0;
+  if (lists.length !== 3 || lists[0]?.querySelectorAll("li").length < 2 || lists[1]?.querySelectorAll("li").length < minimumSpecs || lists[2]?.querySelectorAll("li").length < 2) errors.push("opis musi mieć kompletne listy zastosowań, parametrów i zasad bezpieczeństwa");
   if (documentNode.querySelector("[style], table")) errors.push("style inline i tabele są niedozwolone");
   const headings = [...documentNode.querySelectorAll("h2, h3")].map((node) => normalize(node.textContent));
   if (!headings.some((heading) => heading.includes("co to jest"))) errors.push("brak wyjaśnienia, co to jest");
   if (!headings.some((heading) => heading.includes("zastosowanie i dobór"))) errors.push("brak zastosowania");
   if (!headings.some((heading) => heading.includes("parametry produktu"))) errors.push("brak parametrów");
-  if (!headings.some((heading) => heading.includes("wskazówki instalacyjne"))) errors.push("brak wskazówek instalacyjnych");
+  if (!headings.some((heading) => heading.includes("dobór i bezpieczeństwo"))) errors.push("brak zasad doboru i bezpieczeństwa");
   if (/Opis wyjaśnia funkcję produktu/i.test(textValue)) errors.push("opis zawiera ogólny tekst zastępczy zamiast definicji produktu");
-  if (product.manufacturerCode && !textValue.includes(product.manufacturerCode)) errors.push("brak kodu producenta");
-  if (product.ean && product.ean !== product.code && product.ean !== product.manufacturerCode && textValue.includes(product.ean)) errors.push("opis powtarza EAN z karty produktu");
+  if (tradeIndex && !textValue.includes(tradeIndex)) errors.push("brak indeksu handlowego producenta");
+  if (product.ean && textValue.includes(product.ean)) errors.push("opis powtarza EAN z karty produktu");
+  if (/\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/iu.test(textValue)) errors.push("opis zawiera wewnętrzny indeks katalogowy");
   return errors;
 }
 
