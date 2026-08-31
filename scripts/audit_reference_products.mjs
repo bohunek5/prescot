@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, plainTextFromHtml } from "../description-engine.js";
+import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, plainTextFromHtml, timTradeIndex } from "../description-engine.js";
 import { validateTimDescription } from "./tim_description_quality.mjs";
 
 const catalog = JSON.parse(await readFile(new URL("../data/catalog.json", import.meta.url), "utf8"));
@@ -59,10 +59,13 @@ for (const [ean, label, markers] of references) {
   assert.ok(!descriptions.shoper.includes('class="blog-grid"'), `${label}: wykryto drugi, doklejony blog`);
   assert.ok(!/\sstyle=/i.test(descriptions.wapro), `${label}: WAPRO zawiera style prezentacyjne`);
   assert.ok(!/\sstyle=/i.test(descriptions.tim), `${label}: TIM zawiera style prezentacyjne`);
+  const tradeIndex = timTradeIndex(product);
   for (const platform of platforms) {
     const text = plainTextFromHtml(descriptions[platform]);
-    if (platform !== "tim") assert.match(text, new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i"), `${label}: brak indeksu handlowego w ${platform}`);
+    if (platform !== "tim" && tradeIndex) assert.match(text, new RegExp(`indeks handlowy\\s*:?\\s*${tradeIndex.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i"), `${label}: brak indeksu handlowego producenta w ${platform}`);
     if (platform !== "tim") assert.doesNotMatch(text, /\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i, `${label}: niedozwolona nazwa identyfikatora w ${platform}`);
+    assert.ok(!(product.ean && text.includes(product.ean)), `${label}: EAN w opisie ${platform}`);
+    assert.doesNotMatch(text, /\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/iu, `${label}: indeks wewnętrzny w opisie ${platform}`);
   }
   const timText = plainTextFromHtml(descriptions.tim);
   assert.deepEqual(validateTimDescription(product, descriptions.tim), [], `${label}: wadliwy opis TIM`);

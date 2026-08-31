@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readFile, writeFile } from "node:fs/promises";
-import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, plainTextFromHtml, PLATFORM_NAMES } from "../description-engine.js";
+import { generateDescription, normalizeDescriptionIdentity, renderSeoDescription, plainTextFromHtml, PLATFORM_NAMES, timTradeIndex } from "../description-engine.js";
 import { timBodyFingerprint, validateTimDescription } from "./tim_description_quality.mjs";
 
 const catalog = JSON.parse(await readFile(new URL("../data/catalog.json", import.meta.url), "utf8"));
@@ -45,6 +45,9 @@ let manualCount = 0;
 let shortestDescription = { length: Number.POSITIVE_INFINITY, product: null, platform: "" };
 let longestDescription = { length: 0, product: null, platform: "" };
 const timBodyFingerprints = new Map();
+let timMissingTradeIndexSources = 0;
+let duplicateDescriptionsWithoutTradeIndex = 0;
+let duplicateDescriptionsSamePublicIdentity = 0;
 
 for (const product of products) {
   for (const platform of platforms) {
@@ -68,7 +71,10 @@ for (const product of products) {
     assert(text.length >= 180, `Zbyt krótki opis: ${product.key} / ${platform} (${text.length} znaków).`);
     assert(!/\b(?:undefined|null|nan)\b/i.test(text), `Niedozwolona wartość w opisie: ${product.key} / ${platform}.`);
     if (platform !== "tim") assert(!/\b(?:kod produktu|kod producenta|numer katalogowy|nr katalogowy)\b/i.test(text), `Niedozwolona nazwa identyfikatora: ${product.key} / ${platform}.`);
-    if (platform !== "tim") assert(new RegExp(`indeks handlowy\\s*:?\\s*${product.code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i").test(text), `Brak indeksu handlowego: ${product.key} / ${platform}.`);
+    const tradeIndex = timTradeIndex(product);
+    if (platform !== "tim" && tradeIndex) assert(new RegExp(`indeks handlowy\\s*:?\\s*${tradeIndex.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i").test(text), `Brak indeksu handlowego producenta: ${product.key} / ${platform}.`);
+    assert(!(product.ean && text.includes(String(product.ean))), `EAN w opisie: ${product.key} / ${platform}.`);
+    assert(!/\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/iu.test(text), `Wewnętrzny indeks katalogowy w opisie: ${product.key} / ${platform}.`);
     assert(occurrences(html, /<section\b/gi) === occurrences(html, /<\/section>/gi), `Niezbilansowane sekcje: ${product.key} / ${platform}.`);
     if (platform === "shoper") {
       assert(occurrences(html, /<section\b/gi) >= 3, `Shoper nie ma pomarańczowego układu sekcji: ${product.key}.`);
@@ -80,7 +86,9 @@ for (const product of products) {
     }
     if (platform === "tim") {
       const timErrors = validateTimDescription(product, html);
-      assert(!timErrors.length, `TIM ma wadliwy opis: ${product.key} — ${timErrors.join(" | ")}.`);
+      const blockingTimErrors = timErrors.filter((error) => error !== "missing_trade_index_source");
+      if (timErrors.includes("missing_trade_index_source")) timMissingTradeIndexSources += 1;
+      assert(!blockingTimErrors.length, `TIM ma wadliwy opis: ${product.key} — ${blockingTimErrors.join(" | ")}.`);
       const bodyFingerprint = timBodyFingerprint(html);
       timBodyFingerprints.set(bodyFingerprint, (timBodyFingerprints.get(bodyFingerprint) || 0) + 1);
     }
@@ -88,14 +96,24 @@ for (const product of products) {
     const fingerprint = text.toLocaleLowerCase("pl").replace(/\s+/g, " ").trim();
     const existing = descriptionFingerprints.get(fingerprint);
     if (existing) {
-      errors.push(`Identyczny opis dla ${existing.label} oraz ${product.key}/${platform}.`);
+      const samePublicIdentity = existing.productKey !== product.key
+        && existing.tradeIndex
+        && tradeIndex
+        && existing.tradeIndex.toLocaleLowerCase("pl") === tradeIndex.toLocaleLowerCase("pl")
+        && existing.productName.toLocaleLowerCase("pl") === product.name.toLocaleLowerCase("pl");
+      if (samePublicIdentity) {
+        duplicateDescriptionsSamePublicIdentity += 1;
+      } else if (existing.productKey !== product.key && !existing.tradeIndex && !tradeIndex) {
+        duplicateDescriptionsWithoutTradeIndex += 1;
+      } else {
+        errors.push(`Identyczny opis dla ${existing.label} oraz ${product.key}/${platform}.`);
+      }
     } else {
-      descriptionFingerprints.set(fingerprint, { label: `${product.key}/${platform}`, platform });
+      descriptionFingerprints.set(fingerprint, { label: `${product.key}/${platform}`, productKey: product.key, productName: product.name, platform, tradeIndex });
     }
 
     if (!manualHtml) {
-      const identifier = product.ean || product.code;
-      if (platform !== "tim") assert(text.includes(identifier), `Brak identyfikatora w opisie: ${product.key} / ${platform}.`);
+      if (platform !== "tim" && tradeIndex) assert(text.includes(tradeIndex), `Brak indeksu handlowego producenta w opisie: ${product.key} / ${platform}.`);
       const name = product.name.toLocaleLowerCase("pl");
       if ((name.includes("bez led") || name.includes("bez źródła")) && /zawiera źródło światła|ze źródłem światła/i.test(text)) {
         errors.push(`Sprzeczność „bez LED” w opisie ${product.key}/${platform}.`);
@@ -132,6 +150,9 @@ const report = {
   timUniqueBodiesIgnoringHeadings: timBodyFingerprints.size,
   timProductsSharingBody: [...timBodyFingerprints.values()].filter((count) => count > 1).reduce((sum, count) => sum + count, 0),
   timLargestSharedBodyGroup: Math.max(...timBodyFingerprints.values()),
+  timMissingTradeIndexSources,
+  duplicateDescriptionsWithoutTradeIndex,
+  duplicateDescriptionsSamePublicIdentity,
   warnings,
   errors,
 };
@@ -145,6 +166,9 @@ console.log(`Opisy sprawdzone: ${report.totalDescriptions}`);
 console.log(`Ręczne: ${report.manualDescriptions}; wygenerowane: ${report.generatedDescriptions}`);
 console.log(`Najkrótszy opis: ${shortestDescription.length} znaków (${shortestDescription.product}/${shortestDescription.platform})`);
 console.log(`Najdłuższy opis: ${longestDescription.length} znaków (${longestDescription.product}/${longestDescription.platform})`);
+if (timMissingTradeIndexSources) console.warn(`OSTRZEŻENIE: ${timMissingTradeIndexSources} opisów TIM nie ma prawidłowego indeksu handlowego w źródle; nie użyto EAN-u ani indeksu wewnętrznego.`);
+if (duplicateDescriptionsWithoutTradeIndex) console.warn(`OSTRZEŻENIE: ${duplicateDescriptionsWithoutTradeIndex} duplikatów treści dotyczy produktów bez prawidłowego indeksu handlowego; EAN nie został użyty do sztucznego różnicowania.`);
+if (duplicateDescriptionsSamePublicIdentity) console.warn(`OSTRZEŻENIE: ${duplicateDescriptionsSamePublicIdentity} duplikatów treści dotyczy zdublowanych rekordów tej samej nazwy i indeksu handlowego.`);
 if (warnings.length) warnings.forEach((warning) => console.warn(`OSTRZEŻENIE: ${warning}`));
 if (errors.length) {
   errors.slice(0, 40).forEach((error) => console.error(`BŁĄD: ${error}`));

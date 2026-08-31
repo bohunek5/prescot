@@ -66,6 +66,8 @@ PIMCORE odrzucił zapis nazw, ponieważ dla tych kart wymaga jednocześnie danyc
 
 Migawka WAPRO zawiera 5910 ofert i 3410 aktywnych produktów. Kontrolowany zakres TIM po wykluczeniu Kaja i Light Prestige obejmuje 2651 produktów, w tym 1742 ze stanem dodatnim i 909 ze stanem zerowym. Cały zakres obejmuje Prescot, Prescot LED, KLUŚ, MiLight/MiBoxer, Scharfer oraz uzgodnione profile aluminiowe i PCV.
 
+W kontrolowanym zakresie 30 produktów nie ma w źródle prawidłowego indeksu handlowego producenta. Pozostają zablokowane do uzupełnienia kodu; walidator nie zastępuje go EAN-em ani indeksem wewnętrznym.
+
 Porównanie cen miało charakter wyłącznie odczytowy. Dodatnią cenę dało się porównać na 1823 kartach: 433 wartości były zgodne bezpośrednio, a 1390 po uwzględnieniu prezentacji netto/VAT 23%. W tej grupie nie wykryto innej różnicy. Dodatkowo 475 kart miało cenę live TIM równą 0, dla 19 kart bufora pole ceny nie było dostępne, a 29 pozycji nie miało dodatniej ceny źródłowej w `prescot.xml`. Niczego cenowego nie poprawiano ręcznie.
 
 Chmura Mamezi zawierała nadal 3410 aktywnych produktów: 0 dodanych, 0 usuniętych i 3384 rekordy z różnicą względem wcześniejszej migawki. Różnice z chmury nie zmieniają zasady źródła ceny TIM.

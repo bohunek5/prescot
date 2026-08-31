@@ -87,6 +87,10 @@ function normalize(value) {
   return String(value ?? "").replace(/\s+/g, " ").trim();
 }
 
+function escapeRegExp(value) {
+  return String(value ?? "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function pillStyle(color = "#e94b25") {
   return STYLE.pill.replaceAll("#e94b25", color);
 }
@@ -126,7 +130,24 @@ function replaceDescriptionIdentity(product, htmlValue, { preserveManufacturerCo
 }
 
 export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIndex = false, preserveManufacturerCode = false } = {}) {
-  return replaceDescriptionIdentity(product, htmlValue, { preserveManufacturerCode });
+  let value = replaceDescriptionIdentity(product, htmlValue, { preserveManufacturerCode });
+  const ean = normalize(product?.ean);
+  const tradeIndex = timTradeIndex(product);
+
+  // Nigdy nie publikuj EAN-u ani wewnętrznych indeksów Prescot jako modelu.
+  if (ean) value = value.replace(new RegExp(`\\b${escapeRegExp(ean)}\\b`, "gu"), "");
+  value = value.replace(/\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/giu, "");
+
+  if (ensureTradeIndex && tradeIndex) {
+    const exactTradeIndex = new RegExp(`Indeks handlowy\\s*:?\\s*${escapeRegExp(tradeIndex)}(?=\\s|<|$)`, "iu");
+    if (!exactTradeIndex.test(value)) {
+      const field = `<p><strong>Indeks handlowy:</strong> ${escapeHtml(tradeIndex)}</p>`;
+      value = /<\/section>\s*$/iu.test(value)
+        ? value.replace(/<\/section>\s*$/iu, `${field}\n</section>`)
+        : `${value}\n${field}`;
+    }
+  }
+  return value;
 }
 
 function leafCategory(product) {
@@ -193,6 +214,18 @@ function seoProductSpecs(product) {
   }
 
   return specs;
+}
+
+function publicEditorialLines(product, values) {
+  const ean = normalize(product?.ean);
+  return (values || []).filter((value) => {
+    const text = normalize(value);
+    if (!text) return false;
+    if (/\b(?:EAN|GTIN|kod[_ ]produktu|kod[_ ]producenta|indeks katalogowy|numer katalogowy|nr katalogowy)\b/iu.test(text)) return false;
+    if (/\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/iu.test(text)) return false;
+    if (ean && text.includes(ean)) return false;
+    return true;
+  });
 }
 
 function renderPillSection(pillText, headingText, paragraphsList, style = STYLE.sectionSub, pillColor = "#e94b25") {
@@ -272,7 +305,8 @@ function renderShoper(product, saved) {
   } else if (kind === "tape") {
     // Dla taśm: akapit o jasności / strumieniu / zasilaniu bez tabeli
     let pill3 = "Jasność i strumień";
-    const lmMatch = product.name.match(/\b\d+\s*lm\/m\b/i);
+    const lmMatch = product.name.match(/\b\d+\s*lm\/m\b/i)
+      || String(product.sourceDescription || "").match(/\b\d+\s*lm\/m\b/i);
     if (lmMatch) pill3 = lmMatch[0];
     const heading3 = sections[2]?.heading || "Mocne i stabilne światło w Twojej instalacji";
     const p3 = sections[2]?.paragraphs || ["Taśma zapewnia równomierny strumień świetlny oraz komfortowe oświetlenie powierzchni użytkowej lub dekoracyjnej."];
@@ -295,9 +329,10 @@ function renderWapro(product, saved) {
   const result = saved?.editorial || saved || {};
   const specs = seoProductSpecs(product).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
   const intro = result.sections?.[0]?.paragraphs?.map(normalize).join(" ") || product.summary || product.name;
-  const features = specs.length ? specs : (result.benefits || []);
+  const benefits = publicEditorialLines(product, result.benefits);
+  const features = specs.length ? specs : benefits;
   const points = (values) => (values || []).map((val) => `<p>- ${escapeHtml(normalize(val).replace(/\.$/, ""))}</p>`).join("");
-  const benefitsBlock = (result.benefits && result.benefits.length) ? `<h3>Dlaczego warto:</h3>\n${points(result.benefits)}` : "";
+  const benefitsBlock = benefits.length ? `<h3>Dlaczego warto:</h3>\n${points(benefits)}` : "";
   return `<section>\n<h2>${escapeHtml(product.name)}</h2>\n<p>${escapeHtml(intro)}</p>\n<h3>Najważniejsze cechy:</h3>\n${points(features)}\n${benefitsBlock}\n<h3>Gdzie użyć:</h3>\n${points(result.applications || [])}\n</section>`;
 }
 
@@ -309,8 +344,9 @@ function renderAllegro(product, saved) {
   const sec1 = renderPillSection("Sprawdź przed zakupem", title, lead, STYLE.sectionSub, "#16a34a");
   
   let sec2 = "";
-  if (result.benefits && result.benefits.length) {
-    const cards = result.benefits.map((point) => (
+  const benefits = publicEditorialLines(product, result.benefits);
+  if (benefits.length) {
+    const cards = benefits.map((point) => (
       `<div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid currentColor;border-radius:10px;"><span style="display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;width:22px;height:22px;border-radius:999px;background:#16a34a!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-weight:800;line-height:1;">✓</span><span style="font-size:14px;line-height:1.45;color:inherit;">${escapeHtml(normalize(point).replace(/\.$/, ""))}</span></div>`
     )).join("");
     sec2 = `<section style="${STYLE.sectionSub}"><span style="${pillStyle("#16a34a")}"><span style="color:#ffffff;">Dlaczego warto</span></span><h3 style="${STYLE.heading}">Najważniejsze korzyści tego wariantu</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:10px;">${cards}</div></section>`;

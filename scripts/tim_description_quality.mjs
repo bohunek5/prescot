@@ -67,7 +67,8 @@ export function validateTimDescription(product, html) {
   if (!String(html).includes(expectedSpecsHeading)) errors.push("missing_specs_heading");
   if (!String(html).includes(expectedSafetyHeading)) errors.push("missing_safety_heading");
   if (occurrences(html, /<h2\b/gi) !== 1 || occurrences(html, /<h3\b/gi) !== 3) errors.push("invalid_heading_count");
-  if (lists.length !== 3 || lists[0] < 2 || lists[1] < 1 || lists[2] < 2) errors.push("invalid_list_structure");
+  const minimumSpecs = timTradeIndex(product) ? 1 : 0;
+  if (lists.length !== 3 || lists[0] < 2 || lists[1] < minimumSpecs || lists[2] < 2) errors.push("invalid_list_structure");
 
   const dangling = danglingTimItems(html);
   if (dangling.length) errors.push(`dangling_sentence:${dangling.join(" | ")}`);
