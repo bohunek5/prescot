@@ -1,9 +1,10 @@
 # Prescot - baza opisów i kontrola kanału TIM
 
-Statyczny panel opisów produktów z feedu WAPRO dla WAPRO ERP, TIM, Allegro i Shopera. Projekt oddziela dane handlowe od treści: `prescotcloud.xml` zasila katalog opisów i cenę sklepową, a `prescot.xml` jest źródłem ceny oraz jednostki dla kanału TIM. Żaden z feedów nie nadpisuje opisów.
+Statyczny panel opisów produktów dla WAPRO ERP, TIM, Allegro i Shopera. Projekt oddziela dane handlowe od treści: feed Mamezi zasila katalog treści, zdjęć i parametrów pomocniczych, a `https://prescot.wapromag.pl/prescot.xml` jest wyłącznym źródłem ceny, stanu oraz jednostki dla kanału TIM. Cena detaliczna z Mamezi nigdy nie jest używana jako cena TIM. Żaden feed nie nadpisuje opisów zapisanych w projekcie.
 
 Aktualny audyt oraz instrukcja pracy:
 
+- [Raport końcowy TIM / Prescot z 31 sierpnia 2026](docs/TIM-LIVE-AUDYT-2026-08-31.md)
 - [Audyt TIM z 30 sierpnia 2026](docs/TIM-AUDYT-2026-08-30.md)
 - [Audyt live Panelu Dostawcy TIM z 30 sierpnia 2026](docs/TIM-LIVE-AUDYT-2026-08-30.md)
 - [Poradnik obsługi oferty TIM](docs/TIM-PORADNIK.md)
@@ -22,7 +23,7 @@ Aktualny audyt oraz instrukcja pracy:
 
 Katalog obejmuje wyłącznie oferty z `avail="1"` i `basket="1"`. Podstawowym identyfikatorem jest EAN; przy braku lub duplikacie używany jest kod produktu i ID oferty.
 
-Opisy są renderowane z warstwy redakcyjnej `data/seo-descriptions.json`. WAPRO otrzymuje prosty HTML, Shoper rozbudowaną kartę, Allegro osobny układ sprzedażowy, a TIM jedną sekcję z definicją produktu, zastosowaniem, parametrami i wskazówkami instalacyjnymi. Opis TIM nie zawiera tabel, stylów inline ani EAN-u; rozróżnia kod producenta od wewnętrznego indeksu Prescot. Ręczne zmiany w przeglądarce trafiają do lokalnego bufora, który można eksportować i importować jako JSON.
+Opisy są renderowane z warstwy redakcyjnej `data/seo-descriptions.json`. WAPRO otrzymuje prosty HTML, Shoper rozbudowaną kartę, Allegro osobny układ sprzedażowy, a TIM konserwatywną sekcję z definicją produktu, zastosowaniem, parametrami potwierdzonymi w nazwie oraz zasadami doboru i bezpieczeństwa. Opis TIM nie zawiera tabel, stylów inline, EAN-u, wewnętrznego indeksu Prescot ani proceduralnych instrukcji montażowych. Pole „Indeks handlowy” korzysta wyłącznie z indeksu producenta.
 
 ## Podstawowe polecenia
 
@@ -41,10 +42,11 @@ Pełna kontrola i czysty build:
 npm run check
 ```
 
-Aktualizacja danych z chmury:
+Aktualizacja katalogu treści z chmury Mamezi:
 
 ```bash
-python3 scripts/sync_cloud_catalog.py
+python3 scripts/sync_cloud_catalog.py \
+  --source "$PRESCOT_MAMEZI_FEED_URL"
 python3 scripts/build_research_queue.py
 python3 scripts/generate_seo_descriptions.py \
   --rules-only \
@@ -56,10 +58,17 @@ python3 scripts/generate_seo_descriptions.py \
 npm run validate -- --write
 ```
 
-Można też wskazać wcześniej pobrany feed:
+Przed eksportem TIM zbuduj oddzielną migawkę ceny, stanu i jednostki z `prescot.xml`:
 
 ```bash
-python3 scripts/sync_cloud_catalog.py --source /tmp/prescotcloud.xml
+python3 scripts/sync_cloud_catalog.py \
+  --source 'https://prescot.wapromag.pl/prescot.xml' \
+  --legacy /dev/null \
+  --existing-overrides data/manual-overrides.json \
+  --output-dir /tmp/prescot-tim-commercial
+node scripts/build_tim_commercial_snapshot.mjs \
+  --input /tmp/prescot-tim-commercial/catalog.json \
+  --output data/tim-commercial-catalog.json
 ```
 
 ## Podgląd lokalny

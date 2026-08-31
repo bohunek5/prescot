@@ -31,6 +31,7 @@ function csv(rows) {
     "kategoria",
     "cena_zrodlowa_wapro_xml",
     "stan_zrodlowy_wapro_xml",
+    "jednostka_zrodlowa_wapro_xml",
     "eprel_pdf_zweryfikowany",
     "opis_html_tim",
     "blokady",
@@ -49,6 +50,7 @@ function csv(rows) {
       row.category,
       row.price,
       row.stock,
+      row.measureUnit,
       row.verifiedEprelUrl,
       row.descriptionHtml,
       row.hardBlocks.join(" | "),
@@ -143,8 +145,12 @@ function markdownReport(report) {
 const outputDir = resolve(argumentValue("--output-dir", "exports/tim"));
 const statusOutput = resolve(argumentValue("--status-output", "data/tim-status.json"));
 const editsPath = argumentValue("--edits");
+const commercialCatalogPath = argumentValue("--commercial-catalog");
+if (!commercialCatalogPath) {
+  throw new Error("Podaj --commercial-catalog z aktualną migawką prescot.xml. Cena TIM nie może pochodzić z katalogu treści.");
+}
 
-const [catalog, generated, researchQueue, resolutions, eprelCandidates] = await Promise.all([
+const [catalog, generated, researchQueue, resolutions, eprelCandidates, commercialCatalog] = await Promise.all([
   readFile(new URL("../data/catalog.json", import.meta.url), "utf8").then(JSON.parse),
   readFile(new URL("../data/seo-descriptions.json", import.meta.url), "utf8").then(JSON.parse),
   readFile(new URL("../data/source-research-queue.json", import.meta.url), "utf8").then(JSON.parse),
@@ -152,7 +158,9 @@ const [catalog, generated, researchQueue, resolutions, eprelCandidates] = await 
   readFile(new URL("../data/eprel-candidates.json", import.meta.url), "utf8")
     .then((value) => JSON.parse(value))
     .catch(() => ({ meta: { status: "not_available" }, products: {} })),
+  readFile(resolve(commercialCatalogPath), "utf8").then(JSON.parse),
 ]);
+const commercialByKey = new Map((commercialCatalog.products || []).map((product) => [product.key, product]));
 const edits = editsPath ? editMap(JSON.parse(await readFile(resolve(editsPath), "utf8"))) : new Map();
 const unresolvedResearch = new Set(researchQueue.products
   .filter((item) => resolutions.products?.[item.key]?.status !== "verified")
@@ -181,6 +189,7 @@ for (const product of catalog.products) {
 
   const descriptionHtml = renderTimDescription(product, generated.products?.[product.key], edits.get(product.key) || "");
   const descriptionErrors = validateTimDescription(product, descriptionHtml);
+  const commercial = commercialByKey.get(product.key);
   const hardBlocks = [];
   const reviewFlags = [];
   const information = [];
@@ -189,9 +198,10 @@ for (const product of catalog.products) {
 
   if (!/^\d{13}$/.test(product.ean || "")) hardBlocks.push("missing_or_invalid_ean");
   if (product.ean && (eanCounts.get(product.ean) || 0) > 1) hardBlocks.push("duplicate_ean");
-  if (numericValue(product.price) <= 0) hardBlocks.push("nonpositive_price");
+  if (!commercial) hardBlocks.push("missing_tim_commercial_source_record");
+  if (numericValue(commercial?.price) <= 0) hardBlocks.push("nonpositive_price");
   if (descriptionErrors.length) hardBlocks.push(...descriptionErrors.map((error) => `invalid_tim_description:${error}`));
-  if (numericValue(product.stock) <= 0) reviewFlags.push("zero_stock");
+  if (numericValue(commercial?.stock) <= 0) reviewFlags.push("zero_stock");
   if (unresolvedResearch.has(product.key)) reviewFlags.push("source_research_pending");
   if (!String(product.sourceDescription || "").trim()) reviewFlags.push("source_description_empty");
   if (eprel?.status === "review_variant_model") reviewFlags.push("eprel_variant_requires_evidence");
@@ -211,8 +221,9 @@ for (const product of catalog.products) {
     name: product.name,
     category: product.category,
     categoryRoot: product.categoryRoot,
-    price: product.price,
-    stock: product.stock,
+    price: commercial?.price || "",
+    stock: commercial?.stock || "",
+    measureUnit: commercial?.measureUnit || "",
     verifiedEprelUrl: eprel?.status === "verified_exact_model" ? eprel.productInformationSheetPl : "",
     eprelStatus: eprel?.status || "not_assigned",
     productUrl: product.url,
@@ -256,6 +267,7 @@ const report = {
   statusCounts,
   descriptionsInReadyPackage: ready.length,
   officialImportReady: false,
+  commercialSource: commercialCatalog.meta || {},
   editsApplied: edits.size,
   byProducer: groupCounts(entries, (entry) => entry.producer),
   byCategoryRoot: groupCounts(entries, (entry) => entry.categoryRoot),

@@ -19,9 +19,14 @@ const captureResourcePattern = argumentValue("--capture-resource-pattern", "");
 const pimcoreIntrospect = process.argv.includes("--pimcore-introspect");
 const pimcoreFulltextSearch = argumentValue("--pimcore-fulltext-search", "");
 const pimcoreFulltextSearchFile = argumentValue("--pimcore-fulltext-search-file", "");
+const pimcoreFulltextSearchStage = argumentValue("--pimcore-fulltext-search-stage", "");
 let pimcoreFulltextTerms = pimcoreFulltextSearch.split(",").map((value) => value.trim()).filter(Boolean);
 if (pimcoreFulltextSearchFile) {
-  const source = JSON.parse(await readFile(resolve(pimcoreFulltextSearchFile), "utf8"));
+  const document = JSON.parse(await readFile(resolve(pimcoreFulltextSearchFile), "utf8"));
+  const source = pimcoreFulltextSearchStage ? document?.stages?.[pimcoreFulltextSearchStage] : document;
+  if (pimcoreFulltextSearchStage && !Array.isArray(source)) {
+    throw new Error(`Nie znaleziono etapu ${pimcoreFulltextSearchStage} w pliku wyszukiwania.`);
+  }
   const discovered = [];
   const visit = (value) => {
     if (!value || typeof value !== "object") return;

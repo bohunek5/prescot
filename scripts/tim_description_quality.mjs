@@ -3,9 +3,10 @@ import {
   plainTextFromHtml,
   renderSeoDescription,
   timDescriptionName,
+  timTradeIndex,
 } from "../description-engine.js";
 
-const FORBIDDEN_TEXT = /\bopis\b|\bopisu\b|\bopisem\b|\bopisie\b|\bopisuje\b|Opis dla TIM\.pl|Dane techniczne|Producent\s*:|\bEAN\b|\bGTIN\b|\bKod produktu\b|\bKod producenta\b|\bIndeks katalogowy\b|\bNumer katalogowy\b|Dane służą do porównania wariantu|Opis wyjaśnia funkcję produktu|Kliknij tutaj/i;
+const FORBIDDEN_TEXT = /Opis dla TIM\.pl|Dane techniczne|Producent\s*:|\bEAN\b|\bGTIN\b|\bKod produktu\b|\bKod producenta\b|\bIndeks katalogowy\b|\bNumer katalogowy\b|\bwyc\.?\b|Dane służą do porównania wariantu|Opis wyjaśnia funkcję produktu|Kliknij tutaj/i;
 const PROCEDURAL_INSTALLATION_TEXT = /\b(?:przyklej|doci(?:ąć|nij)|zetnij|zaciśnij|wsuń|wciśnij|ściągnij izolację|odizoluj|przylutuj|lutuj|wywierć|przewierć|wkręć|podłącz kanał|połącz kanał)\b/iu;
 const DANGLING_WORDS = new Set(["przy", "do", "od", "w", "we", "na", "z", "ze", "o", "dla", "pod", "ponad", "między", "oraz", "i", "lub", "przez"]);
 
@@ -50,7 +51,8 @@ export function validateTimDescription(product, html) {
   const errors = [];
   const text = plainTextFromHtml(html);
   const expectedUseHeading = "<h3>Zastosowanie i dobór</h3>";
-  const expectedSafetyHeading = "<h3>Wskazówki dla instalatora</h3>";
+  const expectedSpecsHeading = "<h3>Parametry produktu</h3>";
+  const expectedSafetyHeading = "<h3>Dobór i bezpieczeństwo</h3>";
   const lists = [...String(html || "").matchAll(/<ul>([\s\S]*?)<\/ul>/gi)]
     .map((match) => occurrences(match[1], /<li\b/gi));
 
@@ -62,13 +64,21 @@ export function validateTimDescription(product, html) {
   if (FORBIDDEN_TEXT.test(text)) errors.push("repeated_card_identity_or_forbidden_word");
   if (PROCEDURAL_INSTALLATION_TEXT.test(text)) errors.push("procedural_installation_instruction");
   if (!String(html).includes(expectedUseHeading)) errors.push("missing_use_heading");
+  if (!String(html).includes(expectedSpecsHeading)) errors.push("missing_specs_heading");
   if (!String(html).includes(expectedSafetyHeading)) errors.push("missing_safety_heading");
-  if (occurrences(html, /<h2\b/gi) !== 1 || occurrences(html, /<h3\b/gi) !== 2) errors.push("invalid_heading_count");
-  if (lists.length !== 2 || lists[0] < 2 || lists[1] < 2) errors.push("invalid_list_structure");
+  if (occurrences(html, /<h2\b/gi) !== 1 || occurrences(html, /<h3\b/gi) !== 3) errors.push("invalid_heading_count");
+  if (lists.length !== 3 || lists[0] < 2 || lists[1] < 1 || lists[2] < 2) errors.push("invalid_list_structure");
 
   const dangling = danglingTimItems(html);
   if (dangling.length) errors.push(`dangling_sentence:${dangling.join(" | ")}`);
   if (product.ean && text.includes(String(product.ean))) errors.push("ean_repeated_in_description");
+  const tradeIndex = timTradeIndex(product);
+  if (!tradeIndex) {
+    errors.push("missing_trade_index_source");
+  } else {
+    const expectedTradeIndex = `Indeks handlowy: ${tradeIndex}`;
+    if (!text.includes(expectedTradeIndex)) errors.push("missing_or_wrong_trade_index");
+  }
   if (product.code && product.manufacturerCode && String(product.code).toLocaleLowerCase("pl") !== String(product.manufacturerCode).toLocaleLowerCase("pl")) {
     const escapedCatalogIndex = String(product.code).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     if (new RegExp(`(?:Indeks handlowy|model|kod)\\s*:\\s*${escapedCatalogIndex}(?:\\s|$)`, "iu").test(text)) errors.push("catalog_index_used_as_trade_index");

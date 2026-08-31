@@ -22,6 +22,11 @@ function descriptionsEqual(left, right) {
   return normalizedStoredDescription(left) === normalizedStoredDescription(right);
 }
 
+function stockValue(stockLevel) {
+  if (!Array.isArray(stockLevel)) return 0;
+  return Math.max(0, ...stockLevel.map((row) => Number(row?.stockTotalQuantityMz) || 0));
+}
+
 function comparableFields(fields) {
   const copy = JSON.parse(JSON.stringify(fields || {}));
   for (const stock of copy.stockLevel || []) {
@@ -79,6 +84,7 @@ function saveGeneral(general) {
 }
 
 const profileDir = argumentValue("--profile-dir");
+const cdpUrl = argumentValue("--cdp-url");
 const pilotJsonPath = resolve(argumentValue("--pilot-json", "exports/tim/pilots/active-description-pilot.json"));
 const pilotStage = argumentValue("--pilot-stage", "pilot500");
 const outputPath = resolve(argumentValue("--output", "/tmp/tim-pimcore-description-api-batch.json"));
@@ -87,8 +93,23 @@ const limit = Math.max(1, Number(argumentValue("--limit", "500")) || 500);
 const maxWrites = Math.max(0, Number(argumentValue("--max-writes", "0")) || 0);
 const allowedStates = argumentValue("--allowed-states", "active").split(",").map((value) => value.trim()).filter(Boolean);
 const applySave = process.argv.includes("--apply");
-if (!profileDir) throw new Error("Podaj --profile-dir z izolowaną kopią profilu Chrome.");
+const allowZeroStock = process.argv.includes("--allow-zero-stock");
+const expectedBufferState = pilotStage === "bufferNewNeedsUpdate"
+  ? "new"
+  : pilotStage === "bufferApprovalNeedsUpdate"
+    ? "new_for_approval"
+    : "";
+if (!profileDir && !cdpUrl) throw new Error("Podaj --profile-dir albo --cdp-url z zalogowaną sesją Chrome.");
 if (applySave && maxWrites < 1) throw new Error("Tryb --apply wymaga dodatniego --max-writes.");
+if (pilotStage === "activeZeroNeedsUpdate" && !allowZeroStock) {
+  throw new Error("Etap activeZeroNeedsUpdate wymaga jawnego --allow-zero-stock.");
+}
+if (allowZeroStock && pilotStage !== "activeZeroNeedsUpdate") {
+  throw new Error("--allow-zero-stock jest dozwolone wyłącznie dla etapu activeZeroNeedsUpdate.");
+}
+if (expectedBufferState && (allowedStates.length !== 1 || allowedStates[0] !== expectedBufferState)) {
+  throw new Error(`Etap ${pilotStage} wymaga dokładnie --allowed-states ${expectedBufferState}.`);
+}
 
 const pilotDocument = JSON.parse(await readFile(pilotJsonPath, "utf8"));
 const fullStage = pilotDocument?.stages?.[pilotStage];
@@ -109,6 +130,7 @@ const report = () => ({
   limit,
   maxWrites,
   applySave,
+  allowZeroStock,
   allowedStates,
   queueLength: queue.length,
   writes,
@@ -129,16 +151,28 @@ const report = () => ({
 const persist = async () => writeFile(outputPath, `${JSON.stringify(report(), null, 2)}\n`, "utf8");
 
 console.log(`Uruchamianie sesji PIMCORE dla ${queue.length} pozycji od indeksu ${startIndex}...`);
-const context = await chromium.launchPersistentContext(profileDir, {
-  headless: true,
-  executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-  args: ["--profile-directory=Default"],
-  viewport: { width: 1600, height: 1100 },
-  serviceWorkers: "block",
-  timeout: 45_000,
-});
+let browser = null;
+let context = null;
+let page = null;
+let frame = null;
+if (cdpUrl) {
+  browser = await chromium.connectOverCDP(cdpUrl);
+  context = browser.contexts()[0];
+  page = context.pages().find((candidate) => candidate.frames().some((item) => item.url() === "https://dostawca.tim.pl/pimcore/admin/"));
+  frame = page?.frames().find((item) => item.url() === "https://dostawca.tim.pl/pimcore/admin/") || null;
+  if (!frame) throw new Error("Nie znaleziono zalogowanej ramki PIMCORE w sesji CDP.");
+} else {
+  context = await chromium.launchPersistentContext(profileDir, {
+    headless: true,
+    executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    args: ["--profile-directory=Default"],
+    viewport: { width: 1600, height: 1100 },
+    serviceWorkers: "block",
+    timeout: 45_000,
+  });
+}
 
-await context.route("**/*", async (route) => {
+if (!cdpUrl) await context.route("**/*", async (route) => {
   const request = route.request();
   const method = request.method().toUpperCase();
   const url = request.url();
@@ -180,17 +214,19 @@ await context.route("**/*", async (route) => {
   return route.abort("blockedbyclient");
 });
 
-const page = context.pages()[0] || await context.newPage();
-console.log("Otwieranie PIMCORE...");
-await page.goto("https://dostawca.tim.pl/pimcore/", { waitUntil: "domcontentloaded", timeout: 45_000 });
-console.log("PIMCORE otwarty; sprawdzanie sesji...");
-let frame = page.frames().find((item) => item.url().includes("/pimcore/admin/"));
-for (let attempt = 0; !frame && attempt < 15; attempt += 1) {
-  await page.waitForTimeout(1_000);
+if (!cdpUrl) {
+  page = context.pages()[0] || await context.newPage();
+  console.log("Otwieranie PIMCORE...");
+  await page.goto("https://dostawca.tim.pl/pimcore/", { waitUntil: "domcontentloaded", timeout: 45_000 });
+  console.log("PIMCORE otwarty; sprawdzanie sesji...");
   frame = page.frames().find((item) => item.url().includes("/pimcore/admin/"));
+  for (let attempt = 0; !frame && attempt < 15; attempt += 1) {
+    await page.waitForTimeout(1_000);
+    frame = page.frames().find((item) => item.url().includes("/pimcore/admin/"));
+  }
+  if (!frame) throw new Error("Nie znaleziono ramki PIMCORE.");
+  await page.waitForTimeout(4_000);
 }
-if (!frame) throw new Error("Nie znaleziono ramki PIMCORE.");
-await page.waitForTimeout(4_000);
 
 let readSequence = 0;
 const readObject = async (objectId) => {
@@ -198,10 +234,16 @@ const readObject = async (objectId) => {
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
       readSequence += 1;
-      const response = await context.request.get(`https://dostawca.tim.pl/pimcore/admin/object/get?id=${objectId}&_=${Date.now()}-${readSequence}`, {
-        timeout: 30_000,
-        headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
-      });
+      const url = `https://dostawca.tim.pl/pimcore/admin/object/get?id=${objectId}&_=${Date.now()}-${readSequence}`;
+      if (cdpUrl) {
+        return await frame.evaluate(async (target) => {
+          const response = await fetch(target, { method: "GET", credentials: "same-origin", cache: "no-store" });
+          let object = null;
+          try { object = JSON.parse(await response.text()); } catch {}
+          return { status: response.status, object, error: null };
+        }, url);
+      }
+      const response = await context.request.get(url, { timeout: 30_000, headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } });
       let object = null;
       try { object = await response.json(); } catch {}
       return { status: response.status(), object, error: null };
@@ -240,12 +282,23 @@ for (let offset = 0; offset < queue.length; offset += 1) {
     const before = snapshot(beforeObject);
     item.beforeVersionCount = before.general.versionCount;
     item.timIndex = before.fields.timIndex;
+    item.liveStock = stockValue(before.fields.stockLevel);
+    const stockMatchesStage = pilotStage === "activeZeroNeedsUpdate"
+      ? item.liveStock === 0
+      : pilotStage === "activePositiveNeedsUpdate"
+        ? item.liveStock > 0
+        : true;
+    const pathMatchesStage = expectedBufferState
+      ? String(before.general.fullpath || "").startsWith("/Produkty/Bufor/PRESCOT SPÓŁKA Z-00060865/")
+      : true;
     const identityMatches = beforeRead.status === 200
       && Number(before.general.id) === objectId
       && String(before.fields.ean || "") === String(product.ean)
       && String(before.fields.manufacturerIndex || "") === String(product.manufacturerCode)
       && allowedStates.includes(String(before.fields.state || ""))
-      && before.general.published === true;
+      && before.general.published === true
+      && stockMatchesStage
+      && pathMatchesStage;
     if (!identityMatches) {
       item.status = "skipped";
       item.reason = "live_identity_or_state_mismatch";
@@ -283,6 +336,17 @@ for (let offset = 0; offset < queue.length; offset += 1) {
       },
     };
     currentGuard = { objectId, expectedHtml, versionCount: Number(before.general.versionCount) };
+    if (cdpUrl) {
+      allowedWrites.push({
+        objectId,
+        versionCount: currentGuard.versionCount,
+        method: "PUT",
+        url: "https://dostawca.tim.pl/pimcore/admin/object/save?task=undefined",
+        dirtyFields: ["productDescriptions"],
+        descriptionLength: expectedHtml.length,
+        guard: "exact_payload_constructed_in_process",
+      });
+    }
     const saveResponse = await frame.evaluate(async ({ id, dataPayload, generalPayload }) => new Promise((resolveRequest) => {
       window.Ext.Ajax.request({
         url: "/pimcore/admin/object/save?task=undefined",
@@ -374,7 +438,8 @@ for (let offset = 0; offset < queue.length; offset += 1) {
 }
 
 await persist();
-await context.close();
+if (cdpUrl) await browser.close();
+else await context.close();
 console.log(`Zapisane: ${writes}; sprawdzone: ${results.length}; błąd krytyczny: ${fatalError || "brak"}.`);
 console.log(`Raport: ${outputPath}`);
 if (fatalError) process.exitCode = 1;

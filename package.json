@@ -7,7 +7,7 @@
     "validate": "node scripts/validate_catalog.mjs",
     "audit:refs": "node scripts/audit_reference_products.mjs",
     "test:scope": "node scripts/test_tim_scope.mjs",
-    "export:tim": "node scripts/export_tim_catalog.mjs",
+    "export:tim": "node scripts/export_tim_catalog.mjs --commercial-catalog data/tim-commercial-catalog.json",
     "validate:tim": "node scripts/validate_tim_export.mjs",
     "build:site": "node scripts/build_site.mjs",
     "test:ui": "node scripts/visual_smoke.mjs",

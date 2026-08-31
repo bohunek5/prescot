@@ -2,14 +2,15 @@
 
 ## 1. Zasada nadrzędna
 
-`prescotcloud.xml` zasila katalog opisów, nazwę, cenę sklepową i stan. `prescot.xml` zasila aktywny schemat TIM i jest źródłem ceny kanału TIM oraz jednostki. Opisy są utrzymywane w tym projekcie. Żaden plik z katalogu `exports/tim` nie jest automatycznie wysyłany do TIM.
+Feed Mamezi zasila katalog treści, zdjęć i parametrów pomocniczych. `https://prescot.wapromag.pl/prescot.xml` zasila aktywny schemat TIM i jest wyłącznym źródłem ceny kanału TIM, stanu oraz jednostki. Cena detaliczna Mamezi nie może trafić do TIM. Opisy są utrzymywane w tym projekcie. Żaden plik z katalogu `exports/tim` nie jest automatycznie wysyłany do TIM.
 
 Status `ready` znaczy „opis przeszedł kontrolę treści”. Nie znaczy „produkt jest gotowy do wgrania w MarketTIM”. Oficjalny import wymaga aktualnego szablonu i pól, których nie ma w feedzie WAPRO.
 
 ## 2. Odświeżenie katalogu
 
 ```bash
-python3 scripts/sync_cloud_catalog.py
+python3 scripts/sync_cloud_catalog.py \
+  --source "$PRESCOT_MAMEZI_FEED_URL"
 python3 scripts/build_research_queue.py
 python3 scripts/generate_seo_descriptions.py \
   --rules-only \
@@ -64,10 +65,12 @@ Powody są widoczne na każdej karcie w kanale TIM oraz w `data/tim-status.json`
 
 Bufor jest zapisany w `localStorage` przeglądarki. Wyczyszczenie danych witryny usuwa go, dlatego po każdej większej sesji trzeba wykonać eksport JSON.
 
-Aby zastosować bufor podczas budowania paczki treści:
+Aby zastosować bufor podczas budowania paczki treści, najpierw odśwież `data/tim-commercial-catalog.json` z `prescot.xml`, a potem uruchom:
 
 ```bash
-node scripts/export_tim_catalog.mjs --edits /sciezka/do/prescot-opisy-YYYY-MM-DD.json
+node scripts/export_tim_catalog.mjs \
+  --commercial-catalog data/tim-commercial-catalog.json \
+  --edits /sciezka/do/prescot-opisy-YYYY-MM-DD.json
 node scripts/validate_tim_export.mjs
 ```
 
@@ -87,9 +90,9 @@ Powstaną:
 - `tim-manifest.json` - pełny ślad decyzji;
 - `TIM-RAPORT.md` - podsumowanie.
 
-Pliki mają kolumnę z ceną i stanem źródłowym WAPRO. Cena źródłowa nie może zostać uznana za cenę netto dla TIM bez potwierdzenia handlowego.
+Pliki mają kolumny ceny, stanu i jednostki z aktualnej migawki `prescot.xml`. Eksport nie uruchamia importu i pozostaje paczką kontrolną, dopóki nie ma pełnego mapowania MarketTIM.
 
-Opis TIM musi zawierać: proste wyjaśnienie produktu, zastosowanie i dobór, parametry w punktach oraz wskazówki instalacyjne. Walidator odrzuca tabele, style inline, EAN w treści, brak kodu producenta oraz ogólne teksty zastępcze.
+Opis TIM musi zawierać: proste wyjaśnienie produktu, zastosowanie i dobór, potwierdzone parametry w punktach oraz zasady doboru i bezpieczeństwa. Walidator odrzuca tabele, style inline, EAN, wewnętrzny indeks katalogowy, znacznik `wyc.`, brak indeksu handlowego producenta i proceduralne instrukcje montażowe.
 
 ## 7. Trzy osobne kolejki wdrożeniowe
 
@@ -111,7 +114,7 @@ node scripts/prepare_tim_pilot_queue.mjs \
 
 Generator wyklucza Kaja i Light Prestige po wcześniejszym manifeście zakresu, odrzuca znane aktywne karty z kolejki nowych produktów oraz usuwa z partii aktualizacji wszystkie kolizje ID PIMCORE. Dopasowanie samej nazwy nie jest wystarczające do masowego dodania nowych produktów.
 
-Cena i jednostka dla nowego produktu mogą zostać uzupełnione automatycznie wyłącznie z aktualnego `prescot.xml`. Kolumna `wapro_price_reference_only` pochodzi z `prescotcloud.xml` i nie może być kopiowana do ceny TIM.
+Cena, stan i jednostka dla nowego produktu mogą zostać uzupełnione automatycznie wyłącznie z aktualnego `prescot.xml`. Cena detaliczna z Mamezi nie może być kopiowana do ceny TIM.
 
 Nigdy nie używaj opcji wymuszonego otwarcia karty, jeśli panel zgłasza aktywną edycję, bez wyraźnej zgody właściciela sesji.
 

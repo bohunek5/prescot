@@ -56,9 +56,12 @@ const outputPath = resolve(argumentValue("--output", "/tmp/tim-pimcore-name-clea
 const startIndex = Math.max(0, Number(argumentValue("--start-index", "0")) || 0);
 const limit = Math.max(1, Number(argumentValue("--limit", "10")) || 10);
 const maxWrites = Math.max(0, Number(argumentValue("--max-writes", "0")) || 0);
+const allowZeroStock = process.argv.includes("--allow-zero-stock");
 const applySave = process.argv.includes("--apply");
 if (!profileDir) throw new Error("Podaj --profile-dir.");
 if (applySave && maxWrites < 1) throw new Error("Tryb --apply wymaga dodatniego --max-writes.");
+if (stage === "activeZero" && !allowZeroStock) throw new Error("Etap activeZero wymaga --allow-zero-stock.");
+if (allowZeroStock && stage !== "activeZero") throw new Error("--allow-zero-stock jest dozwolone wyłącznie dla etapu activeZero.");
 const queueDocument = JSON.parse(await readFile(queuePath, "utf8"));
 const fullQueue = queueDocument?.stages?.[stage];
 if (!Array.isArray(fullQueue)) throw new Error(`Brak etapu ${stage}.`);
@@ -70,7 +73,7 @@ let currentGuard = null;
 let writes = 0;
 let fatalError = "";
 const report = () => ({
-  generatedAt: new Date().toISOString(), stage, startIndex, limit, maxWrites, applySave, queueLength: queue.length,
+  generatedAt: new Date().toISOString(), stage, startIndex, limit, maxWrites, allowZeroStock, applySave, queueLength: queue.length,
   writes,
   counts: {
     checked: results.length,
@@ -149,13 +152,14 @@ for (let offset = 0; offset < queue.length; offset += 1) {
     const beforeObject = beforeRead.object;
     const data = beforeObject?.data || {};
     const liveStock = Math.max(0, ...(data.stockLevel || []).map((entry) => Number(entry.stockTotalQuantityMz) || 0));
+    const stockMatchesStage = allowZeroStock ? liveStock === 0 : liveStock > 0;
     const stableIdentityMatches = beforeRead.status === 200
       && Number(beforeObject?.general?.id) === objectId
       && String(data.timIndex || "") === String(product.timIndex)
       && String(data.manufacturerIndex || "") === String(product.manufacturerCode)
       && String(data.ean || "") === String(product.ean || "")
       && data.state === "active"
-      && liveStock > 0
+      && stockMatchesStage
       && beforeObject?.general?.published === true;
     if (stableIdentityMatches && String(data.timName || "") === String(product.afterName)) {
       item.status = "already_current";
@@ -170,7 +174,7 @@ for (let offset = 0; offset < queue.length; offset += 1) {
       && String(data.ean || "") === String(product.ean || "")
       && String(data.timName || "") === String(product.beforeName)
       && data.state === "active"
-      && liveStock > 0
+      && stockMatchesStage
       && beforeObject?.general?.published === true;
     if (!identityMatches) {
       item.status = "skipped";

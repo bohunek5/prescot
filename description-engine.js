@@ -330,17 +330,26 @@ function renderAllegro(product, saved) {
   return [sec1, sec2, sec3, sec4].filter(Boolean).join("\n");
 }
 
-function timTradeIndex(product) {
+export function timTradeIndex(product) {
   const code = normalize(product?.manufacturerCode);
   const ean = normalize(product?.ean);
-  if (code && code !== ean && !/^\d{13}$/.test(code) && !/^(?:pre[-_]|taś\d|pro\d|kat\d|wyp[-_]|\d{4,6}$)/i.test(code)) {
+  if (code && code !== ean && !/^\d{13}$/.test(code) && !/^(?:pre[-_]|taś\d|pro\d|kat\d|wyp[-_])/i.test(code)) {
     return code;
   }
   return "";
 }
 
 export function timDescriptionName(product) {
-  const name = normalize(product?.name);
+  // "wyc." is an internal assortment marker, not part of the customer-facing
+  // product identity. Keep it out of TIM descriptions even when an old card
+  // name cannot yet be saved because unrelated mandatory fields are missing.
+  const name = normalize(product?.name)
+    .replace(/(^|\s)wyc\.?(?=\s|$)/giu, " ")
+    .replace(/\s+\./gu, ".")
+    .replace(/\.{2,}/gu, ".")
+    .replace(/\s{2,}/gu, " ")
+    .trim()
+    .replace(/[.]+$/u, "");
   const catalogIndex = normalize(product?.code);
   const tradeIndex = timTradeIndex(product);
   if (!catalogIndex || !tradeIndex || catalogIndex.toLocaleLowerCase("pl") === tradeIndex.toLocaleLowerCase("pl")) return name;
@@ -374,38 +383,35 @@ function timProductFamily(product) {
 const TIM_IDENTITY_ATTRIBUTE = /^(?:producent|ean|gtin|kod(?: produktu| producenta)?|indeks(?: handlowy| katalogowy| producenta)?|model|numer katalogowy|nr katalogowy|nazwa galerii)$/iu;
 const TIM_ADMIN_ATTRIBUTE = /^(?:producent odpowiedzialny|podmiot odpowiedzialny|informacje o bezpieczeństwie)$/iu;
 
-function timSafeSpecs(product) {
+function timSafeSpecs(product, family) {
   const specs = [];
   const seenLabels = new Set();
-  const ean = normalize(product?.ean);
-  const catalogIndex = normalize(product?.code);
-  const tradeIndex = timTradeIndex(product);
   const add = (rawLabel, rawValue) => {
     const label = normalize(rawLabel).replaceAll("_", " ");
     const value = normalize(rawValue);
     const identity = label.toLocaleLowerCase("pl");
     if (!label || !value || value === "-" || seenLabels.has(identity)) return;
-    if (TIM_IDENTITY_ATTRIBUTE.test(identity) || TIM_ADMIN_ATTRIBUTE.test(identity)) return;
-    if (/https?:\/\/|www\.|kliknij|<[^>]+>/iu.test(value)) return;
-    if (ean && value.includes(ean)) return;
-    if (catalogIndex && tradeIndex && catalogIndex.toLocaleLowerCase("pl") !== tradeIndex.toLocaleLowerCase("pl") && value.toLocaleLowerCase("pl").includes(catalogIndex.toLocaleLowerCase("pl"))) return;
-    if (value.length > 120) return;
     seenLabels.add(identity);
     specs.push([label, value]);
   };
 
-  for (const [label, value] of Object.entries(product?.attributes || {})) add(label, value);
-
-  if (specs.length < 2) {
-    const name = normalize(product?.name);
-    const inferred = [
-      ["Moc", name.match(/\b\d+(?:[.,]\d+)?\s*W(?:\/m)?\b/iu)?.[0]],
-      ["Napięcie", name.match(/\b\d+(?:[.,]\d+)?\s*V(?:\s*(?:AC|DC))?\b/iu)?.[0]],
-      ["Stopień ochrony", name.match(/\bIP\d{2}\b/iu)?.[0]],
-      ["Temperatura barwowa", name.match(/\b\d{4}\s*K\b/iu)?.[0]],
-      ["Długość", name.match(/\b\d+(?:[.,]\d+)?\s*(?:mm|cm|m)\b/iu)?.[0]],
-    ];
-    for (const [label, value] of inferred) if (value) add(label, value);
+  // TIM receives only parameters visible in the verified product name. Source
+  // attributes are intentionally excluded here: historic category migrations
+  // can leave technically valid but semantically foreign attributes on a card.
+  const name = normalize(product?.name);
+  const inferred = [
+    ["Moc", name.match(/\b\d+(?:[.,]\d+)?\s*W(?:\/m)?\b/iu)?.[0]],
+    ["Napięcie", name.match(/\b\d+(?:[.,]\d+)?\s*V(?:\s*(?:AC|DC))?\b/iu)?.[0]],
+    ["Prąd znamionowy", name.match(/\b\d+(?:[.,]\d+)?\s*A\b/iu)?.[0]],
+    ["Stopień ochrony", name.match(/\bIP\d{2}\b/iu)?.[0]],
+    ["Temperatura barwowa", name.match(/\b\d{4}(?:\s*[–-]\s*\d{4})?\s*K\b/iu)?.[0]],
+    ["Strumień świetlny", name.match(/\b\d+(?:[.,]\d+)?\s*lm(?:\/m)?\b/iu)?.[0]],
+    ["Długość", name.match(/\b\d+(?:[.,]\d+)?\s*(?:mm|cm|m)\b/iu)?.[0]],
+  ];
+  for (const [label, value] of inferred) {
+    if (!value) continue;
+    if (label === "Długość" && !["tape", "profile", "profile_cover", "profile_accessory", "led_set", "light_source"].includes(family)) continue;
+    add(label, value);
   }
 
   return specs.slice(0, 7);
@@ -426,63 +432,130 @@ function timSafetyNotes(family) {
   return notes;
 }
 
-function renderTim(product, saved) {
-  const result = saved?.editorial || saved || {};
-  const points = (values) => (values || []).map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("");
-  const paragraphs = (values) => (values || []).map((value) => `<p>${escapeHtml(normalize(value))}</p>`).join("\n");
-  const displayName = timDescriptionName(product);
-
-  // 1. O produkcie: rich, human-like product narrative WITHOUT the word "opis"
-  let rawIntro = result.sections?.[0]?.paragraphs || [];
-  let introP = rawIntro.map((p) => {
-    let s = normalize(p);
-    s = s.replace(/(?:Więcej informacji|więcej informacji|Kliknij tutaj|kliknij tutaj)[^.]*\.?/gi, "").trim();
-    s = s.replace(/\b(?:przyklej|docinaj|dociąć|dociśnij|zetnij|zaciśnij|wsuń|wciśnij|odizoluj|przylutuj|lutuj|wywierć|przewierć|wkręć)\w*\b/gi, "zamontuj");
-    s = s.replace(/\b(?:opis\w*|Opis\w*)\b/gi, "charakterystyka");
-    s = s.replace(/\b(?:Kod produktu|Kod producenta|EAN|GTIN|Indeks katalogowy)\b/gi, "model");
-    return s.trim();
-  }).filter((s) => s.length >= 20);
-
-  if (!introP.length) {
-    introP = [`${displayName} to profesjonalny element oświetleniowy z oferty Prescot, zapewniający wysokie parametry świetlne oraz trwałość w instalacjach budynkowych.`];
-  }
-
-  // 2. Zastosowanie i dobór: List 1 (>= 2 items)
-  let rawApps = (result.applications || []).filter(Boolean);
-  let applications = rawApps.map((a) => {
-    let s = normalize(a).replace(/\.$/, "");
-    s = s.replace(/\b(?:opis\w*|Opis\w*)\b/gi, "zastosowanie");
-    return s;
-  }).filter(Boolean);
-  if (applications.length < 2) {
-    applications = [
-      `Zastosowanie w instalacjach oświetleniowych w kategorii ${leafCategory(product)}`,
-      "Przeznaczony do obiektów mieszkalnych, biur oraz przestrzeni komercyjnych",
-    ];
-  }
-
-  // 3. Wskazówki dla instalatora: List 2 (>= 2 items)
-  const rawNotes = [...(result.selection_checks || []), ...(result.installation_notes || [])];
-  const DANGLING_WORDS = new Set(["przy", "do", "od", "w", "we", "na", "z", "ze", "o", "dla", "pod", "ponad", "między", "oraz", "i", "lub", "przez"]);
-  const cleanNote = (n) => {
-    let s = normalize(n).replace(/\.$/, "");
-    s = s.replace(/\b(?:przyklej|docinaj|dociąć|dociśnij|zetnij|zaciśnij|wsuń|wciśnij|odizoluj|przylutuj|lutuj|wywierć|przewierć|wkręć)\w*\b/gi, "zamontuj");
-    s = s.replace(/\b(?:opis\w*|Opis\w*)\b/gi, "montaż");
-    const words = s.split(" ");
-    while (words.length && DANGLING_WORDS.has(words.at(-1)?.toLowerCase())) {
-      words.pop();
-    }
-    return words.join(" ");
+function timFamilyCopy(product, family) {
+  const category = leafCategory(product);
+  const generic = {
+    intro: `Jest to produkt z kategorii ${category}.`,
+    applications: [
+      `Do zastosowania zgodnego z przeznaczeniem kategorii ${category} i dokumentacją producenta`,
+      "Przy doborze porównaj wariant, parametry techniczne, wymiary i zgodność z pozostałymi elementami systemu",
+    ],
   };
-  let notes = rawNotes.map(cleanNote).filter((n) => n.length >= 10);
-  if (notes.length < 2) {
-    notes = [
-      "Przed przystąpieniem do prac instalacyjnych odłącz napięcie zasilające w obwodzie",
-      "Dobierz kompatybilne elementy zasilające oraz profile chłodzące zgodnie z wymogami producenta",
-    ];
-  }
+  const copy = {
+    tape: {
+      intro: "Jest to taśma LED do tworzenia liniowego oświetlenia.",
+      applications: [
+        "Do oświetlenia liniowego lub dekoracyjnego w instalacji zgodnej z parametrami tego wariantu",
+        "Przy doborze porównaj napięcie, moc na metr, barwę lub typ światła, szerokość taśmy i stopień ochrony",
+      ],
+    },
+    profile: {
+      intro: "Jest to profil do budowy liniowego systemu oświetleniowego z taśmą LED.",
+      applications: [
+        "Do wykonania oprawy liniowej z kompatybilną taśmą LED, osłoną i akcesoriami systemowymi",
+        "Przy doborze porównaj serię profilu, długość, wymiary oraz zgodność osłon, zaślepek i uchwytów",
+      ],
+    },
+    profile_cover: {
+      intro: "Jest to osłona przeznaczona do kompatybilnego profilu LED.",
+      applications: [
+        "Do osłonięcia przestrzeni świetlnej w zgodnym profilu LED",
+        "Przy doborze porównaj serię profilu, długość, sposób osadzenia oraz wykończenie osłony",
+      ],
+    },
+    profile_endcap: {
+      intro: "Jest to zaślepka przeznaczona do kompatybilnego profilu LED.",
+      applications: [
+        "Do wykończenia odpowiedniego wariantu profilu LED",
+        "Przy doborze porównaj serię profilu, stronę lub wariant oraz obecność otworu, jeśli dotyczy",
+      ],
+    },
+    profile_accessory: {
+      intro: "Jest to element kompatybilnego systemu profili LED.",
+      applications: [
+        "Do kompletacji systemu profilu LED wskazanego przez producenta",
+        "Przy doborze porównaj serię, przeznaczenie, wymiary oraz zgodność z pozostałymi elementami systemu",
+      ],
+    },
+    power: {
+      intro: "Jest to zasilacz przeznaczony do zasilania zgodnych odbiorników LED.",
+      applications: [
+        "Do zasilania urządzeń LED zgodnych z napięciem i zakresem mocy tego wariantu",
+        "Przy doborze porównaj napięcie wejściowe i wyjściowe, moc, stopień ochrony oraz warunki pracy",
+      ],
+    },
+    control: {
+      intro: "Jest to element systemu sterowania oświetleniem LED.",
+      applications: [
+        "Do sterowania zgodnym systemem LED w zakresie funkcji przewidzianych dla tego wariantu",
+        "Przy doborze porównaj napięcie pracy, typ sygnału, liczbę kanałów, obciążalność oraz zgodne akcesoria",
+      ],
+    },
+    led_accessory: {
+      intro: "Jest to element przeznaczony do kompletacji zgodnego systemu LED.",
+      applications: [
+        "Do łączenia, zasilania albo uzupełnienia instalacji LED zgodnie z funkcją podaną w nazwie produktu",
+        "Przy doborze porównaj typ złącza, liczbę torów, wymiary, przekrój przewodu i zgodność z urządzeniem",
+      ],
+    },
+    module: {
+      intro: "Jest to moduł LED przeznaczony do zgodnej oprawy lub instalacji oświetleniowej.",
+      applications: [
+        "Do budowy lub uzupełnienia systemu oświetleniowego zgodnego z parametrami modułu",
+        "Przy doborze porównaj napięcie lub prąd pracy, moc, barwę światła, wymiary i warunki zastosowania",
+      ],
+    },
+    led_set: {
+      intro: "Jest to zestaw LED zawierający elementy wskazane w nazwie i parametrach produktu.",
+      applications: [
+        "Do wykonania kompletnego rozwiązania oświetleniowego zgodnie z przeznaczeniem zestawu",
+        "Przy doborze porównaj długość, napięcie, moc, rodzaj światła, sposób sterowania i stopień ochrony",
+      ],
+    },
+    luminaire: {
+      intro: "Jest to oprawa lub element systemu oświetleniowego.",
+      applications: [
+        "Do oświetlenia przestrzeni zgodnej z przeznaczeniem i warunkami pracy podanymi przez producenta",
+        "Przy doborze porównaj moc, barwę światła, wymiary, sposób montażu, stopień ochrony i wymagane zasilanie",
+      ],
+    },
+    light_source: {
+      intro: "Jest to źródło światła przeznaczone do kompatybilnej oprawy.",
+      applications: [
+        "Do zastosowania w oprawie zgodnej z trzonkiem, napięciem i parametrami źródła światła",
+        "Przy doborze porównaj trzonek, napięcie, moc, strumień świetlny, barwę światła i wymiary",
+      ],
+    },
+    ballast: {
+      intro: "Jest to element układu zasilania zgodnego źródła światła.",
+      applications: [
+        "Do pracy z urządzeniem o parametrach zgodnych z zakresem statecznika",
+        "Przy doborze porównaj typ źródła, moc, napięcie, sposób sterowania i wymagany układ połączeń",
+      ],
+    },
+    electrical_accessory: {
+      intro: "Jest to element osprzętu elektrycznego.",
+      applications: [
+        "Do kompletacji instalacji elektrycznej w zakresie funkcji wskazanej w nazwie produktu",
+        "Przy doborze porównaj serię, funkcję, parametry znamionowe, wymiary i zgodność mechanizmu z osprzętem",
+      ],
+    },
+  };
+  return copy[family] || generic;
+}
 
-  return `<section>\n<h2>${escapeHtml(displayName)}</h2>\n${paragraphs(introP)}\n<h3>Zastosowanie i dobór</h3>\n<ul>${points(applications)}</ul>\n<h3>Wskazówki dla instalatora</h3>\n<ul>${points(notes.slice(0, 4))}</ul>\n</section>`;
+function renderTim(product) {
+  const points = (values) => (values || []).map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("");
+  const displayName = timDescriptionName(product);
+  const tradeIndex = timTradeIndex(product);
+  const family = timProductFamily(product);
+  const copy = timFamilyCopy(product, family);
+  const specifications = [
+    [`Indeks handlowy`, tradeIndex],
+    ...timSafeSpecs(product, family),
+  ].filter(([, value]) => normalize(value));
+
+  return `<section>\n<h2>Co to jest: ${escapeHtml(displayName)}</h2>\n<p>Opis dotyczy produktu ${escapeHtml(displayName)}. ${escapeHtml(copy.intro)}</p>\n<h3>Zastosowanie i dobór</h3>\n<ul>${points(copy.applications)}</ul>\n<h3>Parametry produktu</h3>\n<ul>${specifications.map(([label, value]) => `<li>${escapeHtml(label)}: ${escapeHtml(value)}</li>`).join("")}</ul>\n<h3>Dobór i bezpieczeństwo</h3>\n<ul>${points(timSafetyNotes(family))}</ul>\n</section>`;
 }
 
 export function generateDescription(product, platform = "shoper", saved = null) {
