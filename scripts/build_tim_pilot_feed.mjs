@@ -55,6 +55,55 @@ const targets = argumentValue("--targets")
   ? argumentValue("--targets").split(",").map(text).filter(Boolean)
   : defaultTargets;
 
+const priorityNameOverrides = new Map([
+  ["5905475368011", "Sterownik LED MONO 12A touch RF komplet z pilotem czarnym 12-24V Prescot"],
+  ["5905475368004", "Sterownik LED CCT 12A touch RF komplet z pilotem czarnym 12-24V Prescot"],
+  ["5905475368028", "Sterownik LED RGB 12A touch RF komplet z pilotem czarnym 12-24V Prescot"],
+  ["5905475368042", "Sterownik LED RGBW 12A touch RF komplet z pilotem czarnym 12-24V Prescot"],
+  ["5905475368035", "Sterownik LED RGBCCT 12A touch RF komplet z pilotem czarnym 12-24V Prescot"],
+]);
+
+const priorityCurrentPerChannelOverrides = new Map([
+  ["5905475368011", "12A"],
+  ["5905475368004", "6A"],
+  ["5905475368028", "4A"],
+  ["5905475368042", "3A"],
+  ["5905475368035", "2,4A"],
+]);
+
+const priorityDescriptionOverrides = new Map([
+  ["5905475368011", `<h2>Sterownik LED MONO 12A z pilotem RF PR-MONO-12A</h2>
+<p>Zestaw do sterowania jednobarwnym oświetleniem LED. Obejmuje odbiornik oraz czarny pilot dotykowy RF.</p>
+<h3>Zastosowanie i parametry</h3>
+<ul><li>Sterowanie i ściemnianie jednobarwnych taśm LED</li><li>Napięcie wejściowe i wyjściowe: 12 V lub 24 V DC</li><li>Jeden kanał; maksymalnie 12 A</li><li>Stopień ochrony: IP20</li></ul>
+<h3>Dobór i montaż</h3>
+<p>Dobierz zasilacz i taśmę LED o zgodnym napięciu. Nie przekraczaj dopuszczalnego prądu sterownika. Przed podłączeniem wyłącz zasilanie i sprawdź polaryzację oraz schemat w instrukcji.</p>`],
+  ["5905475368004", `<h2>Sterownik LED CCT 12A z pilotem RF PR-CCT-12A</h2>
+<p>Zestaw do sterowania taśmami LED CCT ze zmianą temperatury barwowej. Obejmuje odbiornik oraz czarny pilot dotykowy RF.</p>
+<h3>Zastosowanie i parametry</h3>
+<ul><li>Sterowanie jasnością i temperaturą barwową zgodnej taśmy CCT</li><li>Napięcie wejściowe i wyjściowe: 12 V lub 24 V DC</li><li>Dwa kanały; maksymalnie 12 A łącznie i 6 A na kanał</li><li>Stopień ochrony: IP20</li></ul>
+<h3>Dobór i montaż</h3>
+<p>Dobierz zasilacz i taśmę CCT o zgodnym napięciu oraz układzie przewodów. Nie przekraczaj dopuszczalnego prądu sterownika. Przed podłączeniem wyłącz zasilanie i sprawdź schemat w instrukcji.</p>`],
+  ["5905475368028", `<h2>Sterownik LED RGB 12A z pilotem RF PR-RGB-12A</h2>
+<p>Zestaw do sterowania wielokolorową taśmą LED RGB. Obejmuje trzykanałowy odbiornik oraz czarny pilot dotykowy RF 2,4 GHz.</p>
+<h3>Parametry</h3>
+<ul><li>Napięcie wejściowe i wyjściowe: 12 V lub 24 V DC</li><li>Trzy kanały; maksymalnie 12 A łącznie i 4 A na kanał</li><li>Zakres ściemniania: 0–100%</li><li>Zasięg sterowania: do 30 m</li><li>Stopień ochrony: IP20</li></ul>
+<h3>Dobór i montaż</h3>
+<p>Dobierz zasilacz i taśmę RGB o zgodnym napięciu. Nie przekraczaj obciążenia całkowitego ani obciążenia pojedynczego kanału. Przed podłączeniem wyłącz zasilanie i sprawdź przewody zgodnie z instrukcją.</p>`],
+  ["5905475368042", `<h2>Sterownik LED RGBW 12A z pilotem RF PR-RGBW-12A</h2>
+<p>Zestaw do sterowania taśmą LED RGBW z oddzielnym kanałem światła białego. Obejmuje czterokanałowy odbiornik oraz czarny pilot dotykowy RF 2,4 GHz.</p>
+<h3>Parametry</h3>
+<ul><li>Napięcie wejściowe i wyjściowe: 12 V lub 24 V DC</li><li>Cztery kanały; maksymalnie 12 A łącznie i 3 A na kanał</li><li>Zakres ściemniania: 0–100%</li><li>Zasięg sterowania: do 30 m</li><li>Stopień ochrony: IP20</li></ul>
+<h3>Dobór i montaż</h3>
+<p>Dobierz zasilacz i taśmę RGBW o zgodnym napięciu. Nie przekraczaj obciążenia całkowitego ani obciążenia pojedynczego kanału. Przed podłączeniem wyłącz zasilanie i sprawdź przewody zgodnie z instrukcją.</p>`],
+  ["5905475368035", `<h2>Sterownik LED RGBCCT 12A z pilotem RF PR-RGBCCT-12A</h2>
+<p>Zestaw do sterowania wielokolorową taśmą LED RGBCCT ze zmianą temperatury barwowej. Obejmuje pięciokanałowy odbiornik oraz czarny pilot dotykowy RF 2,4 GHz.</p>
+<h3>Parametry</h3>
+<ul><li>Napięcie wejściowe i wyjściowe: 12 V lub 24 V DC</li><li>Pięć kanałów; maksymalnie 12 A łącznie i 2,4 A na kanał</li><li>Zakres ściemniania: 0–100%</li><li>Zasięg sterowania: do 30 m</li><li>Stopień ochrony: IP20</li></ul>
+<h3>Dobór i montaż</h3>
+<p>Dobierz zasilacz i taśmę RGBCCT o zgodnym napięciu. Nie przekraczaj obciążenia całkowitego ani obciążenia pojedynczego kanału. Przed podłączeniem wyłącz zasilanie i sprawdź przewody zgodnie z instrukcją.</p>`],
+]);
+
 const sourcePath = resolve(argumentValue("--source", "/tmp/prescot.xml"));
 const manifestPath = resolve(argumentValue("--manifest", "exports/tim/tim-manifest.json"));
 const outputPath = resolve(argumentValue("--output", "tim-import/pilot-10.xml"));
@@ -91,7 +140,8 @@ for (const ean of targets) {
   }
   const id = text(sourceOffer.match(/^  <o id="([^"]+)"/)?.[1]);
   const sourcePrice = text(sourceOffer.match(/\bprice="([^"]+)"/)?.[1]);
-  const price = Number(sourcePrice).toFixed(2);
+  const sourcePriceNumber = Number(sourcePrice);
+  const price = sourcePriceNumber.toFixed(2);
   const stock = text(sourceOffer.match(/\bstock="([^"]+)"/)?.[1]);
   const category = extractCdata(sourceOffer, /<cat><!\[CDATA\[([\s\S]*?)\]\]><\/cat>/);
   const producer = attribute(sourceOffer, "Producent");
@@ -99,20 +149,24 @@ for (const ean of targets) {
   const unit = attribute(sourceOffer, "Jednostka");
   const sourceName = extractCdata(sourceOffer, /<name><!\[CDATA\[([\s\S]*?)\]\]><\/name>/);
   const mainImage = decodeXml(text(sourceOffer.match(/<main url="([^"]+)"\s*\/>/)?.[1]));
-  const normalizedBaseName = text(product.name || sourceName).replace(/\s+/g, " ").replace(/\bwyc\.?\b/gi, "").replace(/\s+/g, " ").trim();
+  const normalizedBaseName = text(priorityNameOverrides.get(ean) || product.name || sourceName).replace(/\s+/g, " ").replace(/\bwyc\.?\b/gi, "").replace(/\s+/g, " ").trim();
   const name = new RegExp(`${manufacturerCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i").test(normalizedBaseName)
     ? normalizedBaseName
     : `${normalizedBaseName} ${manufacturerCode}`;
-  const description = text(product.descriptionHtml).replace(/^<section>/i, "").replace(/<\/section>$/i, "");
+  const description = text(priorityDescriptionOverrides.get(ean) || product.descriptionHtml).replace(/^<section>/i, "").replace(/<\/section>$/i, "");
   for (const idMatch of sourceOffer.matchAll(/Producent odpowiedzialny"><!\[CDATA\[(producer_\d+)\]\]>/g)) referencedProducerIds.add(idMatch[1]);
   for (const idMatch of sourceOffer.matchAll(/Podmiot odpowiedzialny"><!\[CDATA\[(responsible_\d+)\]\]>/g)) referencedPersonIds.add(idMatch[1]);
 
   if (!validEan13(ean)) errors.push(`${ean}: nieprawidłowa suma kontrolna EAN`);
   if (!(Number(price) > 0)) errors.push(`${ean}: cena TIM nie jest dodatnia`);
+  if (!Number.isFinite(sourcePriceNumber) || Number(price) !== sourcePriceNumber) errors.push(`${ean}: cena po przygotowaniu nie jest dokładnie równa cenie netto z prescot.xml`);
   if (!(Number(stock) > 0)) errors.push(`${ean}: stan TIM nie jest dodatni`);
   if (!unit) errors.push(`${ean}: brak jednostki w aktualnym prescot.xml`);
   if (!mainImage) errors.push(`${ean}: brak zdjęcia głównego`);
   if (!description) errors.push(`${ean}: brak opisu TIM`);
+  if (/\b\d{13}\b/.test(description)) errors.push(`${ean}: opis zawiera EAN`);
+  if (/\b(?:PRE|STR|ZAS)\d+\b/i.test(description)) errors.push(`${ean}: opis zawiera wewnętrzny indeks katalogowy`);
+  if (!description.includes(manufacturerCode)) errors.push(`${ean}: opis nie zawiera indeksu handlowego producenta`);
   if (!manufacturerCode) errors.push(`${ean}: brak kodu producenta`);
   if (name.length > 128) errors.push(`${ean}: nazwa ma ${name.length} znaków`);
   if (/kaja|light\s*prestige/i.test(`${producer} ${name} ${category}`)) errors.push(`${ean}: produkt spoza zakresu`);
@@ -120,6 +174,13 @@ for (const ean of targets) {
   let updatedOffer = sourceOffer.replace(/\bprice="[^"]+"/, `price="${price}"`);
   updatedOffer = updatedOffer.replace(/<name><!\[CDATA\[[\s\S]*?\]\]><\/name>/, `<name>${cdata(name)}</name>`);
   updatedOffer = updatedOffer.replace(/<desc><!\[CDATA\[[\s\S]*?\]\]><\/desc>/, `<desc>${cdata(description)}</desc>`);
+  const currentPerChannel = priorityCurrentPerChannelOverrides.get(ean);
+  if (currentPerChannel) {
+    updatedOffer = updatedOffer.replace(
+      /(<a name="Prąd na 1 kanał"><!\[CDATA\[)[\s\S]*?(\]\]><\/a>)/,
+      `$1${currentPerChannel}$2`,
+    );
+  }
   offers.push(updatedOffer);
   auditProducts.push({
     order: auditProducts.length + 1,

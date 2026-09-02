@@ -208,6 +208,7 @@ for (const product of catalog.products) {
   if (eprel?.status === "blocked_model_mismatch") reviewFlags.push("eprel_candidate_model_mismatch");
   if (eprel?.status === "blocked_missing_official_pdf") reviewFlags.push("eprel_official_pdf_missing");
   if (eprel?.status === "verified_exact_model") information.push("eprel_exact_model_verified");
+  if (eprel?.status === "verified_packaging_variant") information.push("eprel_packaging_variant_verified");
   if (edits.has(product.key)) information.push("browser_edit_applied");
 
   const status = hardBlocks.length ? "blocked" : reviewFlags.length ? "review" : "ready";
@@ -224,7 +225,9 @@ for (const product of catalog.products) {
     price: commercial?.price || "",
     stock: commercial?.stock || "",
     measureUnit: commercial?.measureUnit || "",
-    verifiedEprelUrl: eprel?.status === "verified_exact_model" ? eprel.productInformationSheetPl : "",
+    verifiedEprelUrl: ["verified_exact_model", "verified_packaging_variant"].includes(eprel?.status)
+      ? eprel.productInformationSheetPl
+      : "",
     eprelStatus: eprel?.status || "not_assigned",
     productUrl: product.url,
     descriptionHtml,

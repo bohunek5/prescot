@@ -47,7 +47,10 @@ for (const entry of manifest.products) {
     usableEans.add(entry.ean);
   }
   if (entry.verifiedEprelUrl) {
-    assert.equal(entry.eprelStatus, "verified_exact_model", `${entry.productKey}: link EPREL bez dokładnej zgodności modelu.`);
+    assert.ok(
+      ["verified_exact_model", "verified_packaging_variant"].includes(entry.eprelStatus),
+      `${entry.productKey}: link EPREL bez dokładnej zgodności lub zatwierdzonego wariantu długościowego.`,
+    );
     assert.match(entry.verifiedEprelUrl, /^https:\/\/eprel\.ec\.europa\.eu\/fiches\/lightsources\/Fiche_\d+_PL\.pdf$/i);
   }
 }

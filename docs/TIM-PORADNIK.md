@@ -154,7 +154,7 @@ Po imporcie ponownie pobierz raport procesu. Brak pliku w master XML nie dowodzi
 
 ETIM uzupełniaj tylko na podstawie danych technicznych produktu. Brak danych zostaw pusty; nie zgaduj wartości.
 
-Link EPREL wolno przenieść tylko, gdy status w manifeście wynosi `verified_exact_model`. Status `review_variant_model` wymaga dokumentu producenta, a `blocked_model_mismatch` oznacza zakaz użycia tego powiązania.
+Link EPREL wolno przenieść, gdy status w manifeście wynosi `verified_exact_model` albo `verified_packaging_variant`. Drugi status oznacza jawnie zatwierdzony wariant długości handlowej tej samej taśmy, której dane EPREL zweryfikowano na odcinku 500 mm. Sama podobna końcówka kodu nie wystarcza: powiązanie musi znajdować się w `data/eprel-model-aliases.json`. Status `review_variant_model` wymaga dowodu producenta, a `blocked_model_mismatch` oznacza zakaz użycia powiązania.
 
 Odświeżenie kandydatów EPREL z pliku źródłowego wygląda tak:
 

@@ -178,7 +178,7 @@ function descriptionFor(product, platform = state.platform) {
   if (!html && overrideId && state.overrides.descriptions?.[overrideId]) html = state.overrides.descriptions[overrideId];
   const saved = state.generated.products?.[product.key];
   if (!html) html = generateDescription(product, platform, saved?.editorial || saved);
-  return normalizeDescriptionIdentity(product, html, { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim" });
+  return normalizeDescriptionIdentity(product, html, { ensureTradeIndex: false, preserveManufacturerCode: platform === "tim" });
 }
 
 function descriptionOrigin(product) {
@@ -286,56 +286,11 @@ function parameterEntries(product) {
 }
 
 function parameterSection(product) {
-  const params = parameterEntries(product);
-  const identity = [
-    ["Producent", product.producer],
-    ["Indeks handlowy", timTradeIndex(product)],
-    ["EAN", product.ean],
-  ].filter(([, value]) => value);
-  const entries = [...params, ...identity];
-  if (!entries.length) return "";
-  return `<section class="parameter-section"><span class="parameter-label">Atrybuty</span><div class="parameter-grid">${entries.map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join("")}</div></section>`;
-}
-
-function sourceNumber(value, suffix = "") {
-  const number = Number(String(value ?? "").replace(",", "."));
-  if (!Number.isFinite(number)) return display(value) || "brak";
-  return `${new Intl.NumberFormat("pl-PL", { maximumFractionDigits: 4 }).format(number)}${suffix}`;
-}
-
-function timReasonLabel(reason) {
-  if (reason.startsWith("invalid_tim_description:")) return `opis TIM: ${reason.split(":").slice(1).join(":")}`;
-  return TIM_REASON_LABELS[reason] || reason.replaceAll("_", " ");
+  return "";
 }
 
 function timOperationalSection(product) {
-  if (state.platform !== "tim") return "";
-  const status = timStateFor(product);
-  const reasons = [...(status.hardBlocks || []), ...(status.reviewFlags || [])];
-  const reasonList = reasons.length
-    ? `<ul>${reasons.map((reason) => `<li>${escapeHtml(timReasonLabel(reason))}</li>`).join("")}</ul>`
-    : "<p>Brak blokad treści. Przed importem nadal wymagane jest mapowanie w aktualnym szablonie MarketTIM.</p>";
-  const eprelLabels = {
-    verified_exact_model: "zweryfikowany dokładny model",
-    review_variant_model: "wariant do potwierdzenia",
-    blocked_model_mismatch: "niedopasowany - zablokowany",
-    blocked_missing_official_pdf: "brak oficjalnego PDF",
-    not_assigned: "brak powiązania",
-  };
-  const eprelValue = status.verifiedEprelUrl
-    ? `<a href="${escapeHtml(status.verifiedEprelUrl)}" target="_blank" rel="noopener">${escapeHtml(eprelLabels[status.eprelStatus] || status.eprelStatus)} ↗</a>`
-    : escapeHtml(eprelLabels[status.eprelStatus] || status.eprelStatus || "brak");
-  return `<section class="tim-operational tim-status-${escapeHtml(status.status)}">
-    <div class="tim-operational-head"><strong>Kontrola TIM</strong><span>${escapeHtml(TIM_STATUS_LABELS[status.status] || status.status)}</span></div>
-    <div class="tim-operational-grid">
-      <div><span>EAN</span><strong>${escapeHtml(product.ean || "brak")}</strong></div>
-      <div><span>Producent XML</span><strong>${escapeHtml(product.producer || "brak")}</strong></div>
-      <div><span>Cena źródłowa WAPRO</span><strong>${escapeHtml(sourceNumber(product.price, " zł"))}</strong></div>
-      <div><span>Stan źródłowy WAPRO</span><strong>${escapeHtml(sourceNumber(product.stock))}</strong></div>
-      <div><span>EPREL</span><strong>${eprelValue}</strong></div>
-    </div>
-    <div class="tim-reasons">${reasonList}</div>
-  </section>`;
+  return "";
 }
 
 function productBody(product) {
@@ -343,8 +298,6 @@ function productBody(product) {
   const [originLabel, originClass] = descriptionOrigin(product);
   return `<div class="product-body">
     <div class="description-preview" data-role="preview">${description}</div>
-    ${["shoper", "tim"].includes(state.platform) ? "" : parameterSection(product)}
-    ${timOperationalSection(product)}
     <div class="edit-panel" data-role="editor" hidden>
       <textarea class="edit-textarea" spellcheck="false">${escapeHtml(description)}</textarea>
       <div class="edit-actions">
@@ -464,22 +417,14 @@ async function copyDescription(product, button, status) {
 function validateTimDraft(product, html) {
   const documentNode = new DOMParser().parseFromString(String(html || ""), "text/html");
   const textValue = display(documentNode.body.textContent);
-  const lists = [...documentNode.querySelectorAll("ul")];
   const errors = [];
-  if (textValue.length < 180) errors.push("opis ma mniej niż 180 znaków");
+  if (textValue.length < 140) errors.push("opis ma mniej niż 140 znaków");
   if (documentNode.querySelectorAll("section").length !== 1) errors.push("opis musi mieć dokładnie jedną sekcję");
-  if (documentNode.querySelectorAll("h2").length !== 1 || documentNode.querySelectorAll("h3").length !== 3) errors.push("opis musi mieć jeden nagłówek H2 i trzy nagłówki H3");
-  const tradeIndex = timTradeIndex(product);
-  const minimumSpecs = tradeIndex ? 1 : 0;
-  if (lists.length !== 3 || lists[0]?.querySelectorAll("li").length < 2 || lists[1]?.querySelectorAll("li").length < minimumSpecs || lists[2]?.querySelectorAll("li").length < 2) errors.push("opis musi mieć kompletne listy zastosowań, parametrów i zasad bezpieczeństwa");
   if (documentNode.querySelector("[style], table")) errors.push("style inline i tabele są niedozwolone");
   const headings = [...documentNode.querySelectorAll("h2, h3")].map((node) => normalize(node.textContent));
-  if (!headings.some((heading) => heading.includes("co to jest"))) errors.push("brak wyjaśnienia, co to jest");
-  if (!headings.some((heading) => heading.includes("zastosowanie i dobór"))) errors.push("brak zastosowania");
-  if (!headings.some((heading) => heading.includes("parametry produktu"))) errors.push("brak parametrów");
-  if (!headings.some((heading) => heading.includes("dobór i bezpieczeństwo"))) errors.push("brak zasad doboru i bezpieczeństwa");
+  if (!headings.some((heading) => heading.includes("zastosowanie"))) errors.push("brak sekcji zastosowania");
+  if (!headings.some((heading) => heading.includes("bezpieczeństwo") || heading.includes("montaż") || heading.includes("warto"))) errors.push("brak sekcji zasad bezpieczeństwa lub korzyści");
   if (/Opis wyjaśnia funkcję produktu/i.test(textValue)) errors.push("opis zawiera ogólny tekst zastępczy zamiast definicji produktu");
-  if (tradeIndex && !textValue.includes(tradeIndex)) errors.push("brak indeksu handlowego producenta");
   if (product.ean && textValue.includes(product.ean)) errors.push("opis powtarza EAN z karty produktu");
   if (/\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/iu.test(textValue)) errors.push("opis zawiera wewnętrzny indeks katalogowy");
   return errors;
@@ -591,7 +536,7 @@ async function importEdits(file) {
       rejected += 1;
       continue;
     }
-    state.localEdits[editKey(product, platform)] = normalizeDescriptionIdentity(product, description, { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim" });
+    state.localEdits[editKey(product, platform)] = normalizeDescriptionIdentity(product, description, { ensureTradeIndex: false, preserveManufacturerCode: platform === "tim" });
     imported += 1;
   }
   persistLocalEdits();

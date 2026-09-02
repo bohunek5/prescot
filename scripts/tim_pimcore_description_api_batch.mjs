@@ -67,6 +67,14 @@ function snapshot(object) {
       productAvailableForSale: pick(data.productAvailableForSale),
       mainPhoto: pick(data.mainPhoto),
       assignedCategory24: pick(data.assignedCategory24),
+      category: pick(data.category),
+      categoryB24: pick(data.categoryB24),
+      dataSheet: pick(data.dataSheet),
+      certifications: pick(data.certifications),
+      instructions: pick(data.instructions),
+      energyClass: pick(data.energyClass),
+      energyClassLabels: pick(data.energyClassLabels),
+      energyTechnicalCards: pick(data.energyTechnicalCards),
     },
     description: String(data.productDescriptions?.data?.longMarketingDescription || ""),
     workflowManagement: pick(object?.workflowManagement),
@@ -87,6 +95,7 @@ const profileDir = argumentValue("--profile-dir");
 const cdpUrl = argumentValue("--cdp-url");
 const pilotJsonPath = resolve(argumentValue("--pilot-json", "exports/tim/pilots/active-description-pilot.json"));
 const pilotStage = argumentValue("--pilot-stage", "pilot500");
+const seriesFilter = argumentValue("--series", "");
 const outputPath = resolve(argumentValue("--output", "/tmp/tim-pimcore-description-api-batch.json"));
 const startIndex = Math.max(0, Number(argumentValue("--start-index", "0")) || 0);
 const limit = Math.max(1, Number(argumentValue("--limit", "500")) || 500);
@@ -114,7 +123,10 @@ if (expectedBufferState && (allowedStates.length !== 1 || allowedStates[0] !== e
 const pilotDocument = JSON.parse(await readFile(pilotJsonPath, "utf8"));
 const fullStage = pilotDocument?.stages?.[pilotStage];
 if (!Array.isArray(fullStage)) throw new Error(`Nie ma etapu ${pilotStage}.`);
-const queue = fullStage.slice(startIndex, startIndex + limit);
+const filteredStage = seriesFilter
+  ? fullStage.filter((item) => String(item?.series || "") === seriesFilter)
+  : fullStage;
+const queue = filteredStage.slice(startIndex, startIndex + limit);
 const results = [];
 const allowedWrites = [];
 const blockedWrites = [];
@@ -126,6 +138,7 @@ const report = () => ({
   generatedAt: new Date().toISOString(),
   mode: "pimcore_ext_ajax_exact_field_save",
   pilotStage,
+  seriesFilter,
   startIndex,
   limit,
   maxWrites,
@@ -228,6 +241,17 @@ if (!cdpUrl) {
   await page.waitForTimeout(4_000);
 }
 
+if (cdpUrl && applySave && page.url().includes("/pimcore/admin/")) {
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForTimeout(2_000);
+  frame = page.mainFrame();
+  const refreshed = await frame.evaluate(() => Boolean(window.Ext)
+    && Boolean(window.pimcore?.settings?.csrfToken)
+    && Number(window.pimcore?.currentuser?.id) > 0
+    && window.pimcore?.currentuser?.active === true).catch(() => false);
+  if (!refreshed) throw new Error("Nie udało się odświeżyć uwierzytelnionej sesji PIMCORE.");
+}
+
 let readSequence = 0;
 const readObject = async (objectId) => {
   let lastError = "read_timeout";
@@ -253,6 +277,25 @@ const readObject = async (objectId) => {
     if (attempt < 3) await page.waitForTimeout(3_000);
   }
   throw new Error(`read_failed_after_retries:${lastError}`);
+};
+
+const verifyWritableSession = async (objectId, classId) => {
+  const response = await frame.evaluate(async ({ id, classIdValue }) => {
+    const body = new URLSearchParams({ ctype: "object", cid: String(id), classId: String(classIdValue) });
+    const result = await fetch(`/pimcore/admin/workflow/actions/${id}`, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "X-Pimcore-CSRF-Token": window.pimcore.settings.csrfToken,
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      },
+      body,
+    });
+    return { success: result.ok, status: result.status };
+  }, { id: objectId, classIdValue: classId });
+  if (response.status !== 200 || response.success !== true) {
+    throw new Error(`pimcore_writable_session_unavailable:http_${response.status}`);
+  }
 };
 
 for (let offset = 0; offset < queue.length; offset += 1) {
@@ -328,6 +371,8 @@ for (let offset = 0; offset < queue.length; offset += 1) {
       continue;
     }
 
+    await verifyWritableSession(objectId, beforeObject.general?.classId);
+
     const general = saveGeneral(beforeObject.general);
     const data = {
       productDescriptions: {
@@ -347,25 +392,28 @@ for (let offset = 0; offset < queue.length; offset += 1) {
         guard: "exact_payload_constructed_in_process",
       });
     }
-    const saveResponse = await frame.evaluate(async ({ id, dataPayload, generalPayload }) => new Promise((resolveRequest) => {
-      window.Ext.Ajax.request({
-        url: "/pimcore/admin/object/save?task=undefined",
-        method: "PUT",
-        timeout: 45_000,
-        headers: { "X-Pimcore-CSRF-Token": window.pimcore.settings.csrfToken },
-        params: {
-          id,
-          data: JSON.stringify(dataPayload),
-          general: JSON.stringify(generalPayload),
-          dirtyFields: JSON.stringify(["productDescriptions"]),
-        },
-        callback: (_options, success, response) => resolveRequest({
-          success,
-          status: response?.status || 0,
-          body: String(response?.responseText || "").slice(0, 100_000),
-        }),
+    const saveResponse = await frame.evaluate(async ({ id, dataPayload, generalPayload }) => {
+      const body = new URLSearchParams({
+        id: String(id),
+        data: JSON.stringify(dataPayload),
+        general: JSON.stringify(generalPayload),
+        dirtyFields: JSON.stringify(["productDescriptions"]),
       });
-    }), { id: objectId, dataPayload: data, generalPayload: general });
+      const response = await fetch("/pimcore/admin/object/save?task=undefined", {
+        method: "PUT",
+        credentials: "same-origin",
+        headers: {
+          "X-Pimcore-CSRF-Token": window.pimcore.settings.csrfToken,
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        },
+        body,
+      });
+      return {
+        success: response.ok,
+        status: response.status,
+        body: String(await response.text()).slice(0, 100_000),
+      };
+    }, { id: objectId, dataPayload: data, generalPayload: general });
     item.saveResponseStatus = saveResponse.status;
     item.saveResponseBody = saveResponse.body;
     let savePayload = null;
@@ -394,6 +442,16 @@ for (let offset = 0; offset < queue.length; offset += 1) {
       if (attempt < 6) await page.waitForTimeout(attempt * 700);
     }
     item.verificationAttempts = verificationAttempts;
+    item.postSaveDiagnostics = {
+      responseAccepted,
+      descriptionApplied,
+      protectedFieldsUnchanged,
+      identityUnchanged,
+      workflowUnchanged,
+      versionDelta,
+      afterVersionCount: after?.general?.versionCount ?? null,
+      liveStockAfter: stockValue(after?.fields?.stockLevel),
+    };
     if (!descriptionApplied) {
       if (saveResponse.status === 422) {
         item.status = "skipped";
@@ -419,6 +477,7 @@ for (let offset = 0; offset < queue.length; offset += 1) {
     item.protectedFieldsUnchanged = protectedFieldsUnchanged;
     item.identityUnchanged = identityUnchanged;
     item.workflowUnchanged = workflowUnchanged;
+    delete item.postSaveDiagnostics;
     if (verificationAttempts === 1) delete item.verificationAttempts;
     writes += 1;
     results.push(item);
@@ -438,8 +497,8 @@ for (let offset = 0; offset < queue.length; offset += 1) {
 }
 
 await persist();
-if (cdpUrl) await browser.close();
-else await context.close();
+if (!cdpUrl) await context.close();
 console.log(`Zapisane: ${writes}; sprawdzone: ${results.length}; błąd krytyczny: ${fatalError || "brak"}.`);
 console.log(`Raport: ${outputPath}`);
 if (fatalError) process.exitCode = 1;
+if (cdpUrl) process.exit(process.exitCode || 0);

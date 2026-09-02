@@ -138,15 +138,7 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
   if (ean) value = value.replace(new RegExp(`\\b${escapeRegExp(ean)}\\b`, "gu"), "");
   value = value.replace(/\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/giu, "");
 
-  if (ensureTradeIndex && tradeIndex) {
-    const exactTradeIndex = new RegExp(`Indeks handlowy\\s*:?\\s*${escapeRegExp(tradeIndex)}(?=\\s|<|$)`, "iu");
-    if (!exactTradeIndex.test(value)) {
-      const field = `<p><strong>Indeks handlowy:</strong> ${escapeHtml(tradeIndex)}</p>`;
-      value = /<\/section>\s*$/iu.test(value)
-        ? value.replace(/<\/section>\s*$/iu, `${field}\n</section>`)
-        : `${value}\n${field}`;
-    }
-  }
+  // Karol nakazał: zero indeksu handlowego wklejanego automatycznie do opisu
   return value;
 }
 
@@ -327,13 +319,18 @@ function renderShoper(product, saved) {
 
 function renderWapro(product, saved) {
   const result = saved?.editorial || saved || {};
-  const specs = seoProductSpecs(product).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
-  const intro = result.sections?.[0]?.paragraphs?.map(normalize).join(" ") || product.summary || product.name;
+  const heading = result.sections?.[0]?.heading || "Profesjonalne oświetlenie liniowe LED";
+  const introParas = result.sections?.[0]?.paragraphs || [result.sections?.[0]?.content || product.summary || product.name];
+  const introHtml = introParas.map((p) => `<p>${escapeHtml(normalize(p))}</p>`).join("\n");
+
   const benefits = publicEditorialLines(product, result.benefits);
-  const features = specs.length ? specs : benefits;
-  const points = (values) => (values || []).map((val) => `<p>- ${escapeHtml(normalize(val).replace(/\.$/, ""))}</p>`).join("");
-  const benefitsBlock = benefits.length ? `<h3>Dlaczego warto:</h3>\n${points(benefits)}` : "";
-  return `<section>\n<h2>${escapeHtml(product.name)}</h2>\n<p>${escapeHtml(intro)}</p>\n<h3>Najważniejsze cechy:</h3>\n${points(features)}\n${benefitsBlock}\n<h3>Gdzie użyć:</h3>\n${points(result.applications || [])}\n</section>`;
+  const applications = result.applications || result.sections?.[1]?.paragraphs || [];
+
+  const points = (values) => (values || []).map((val) => `<p>- ${escapeHtml(normalize(val).replace(/\.$/, ""))}</p>`).join("\n");
+  const benefitsBlock = benefits.length ? `<h3>Dlaczego warto:</h3>\n${points(benefits)}\n` : "";
+  const appsBlock = applications.length ? `<h3>Zastosowanie i miejsce montażu:</h3>\n${points(applications)}\n` : "";
+
+  return `<section>\n<h2>${escapeHtml(heading)}</h2>\n${introHtml}\n${benefitsBlock}${appsBlock}</section>`;
 }
 
 function renderAllegro(product, saved) {
@@ -580,18 +577,32 @@ function timFamilyCopy(product, family) {
   return copy[family] || generic;
 }
 
-function renderTim(product) {
-  const points = (values) => (values || []).map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("");
-  const displayName = timDescriptionName(product);
-  const tradeIndex = timTradeIndex(product);
+function renderTim(product, saved) {
+  const result = saved?.editorial || saved || {};
+  const points = (values) => (values || []).map((value) => `<li>${escapeHtml(normalize(value).replace(/\.$/, ""))}</li>`).join("\n");
   const family = timProductFamily(product);
   const copy = timFamilyCopy(product, family);
-  const specifications = [
-    [`Indeks handlowy`, tradeIndex],
-    ...timSafeSpecs(product, family),
-  ].filter(([, value]) => normalize(value));
 
-  return `<section>\n<h2>Co to jest: ${escapeHtml(displayName)}</h2>\n<p>Opis dotyczy produktu ${escapeHtml(displayName)}. ${escapeHtml(copy.intro)}</p>\n<h3>Zastosowanie i dobór</h3>\n<ul>${points(copy.applications)}</ul>\n<h3>Parametry produktu</h3>\n<ul>${specifications.map(([label, value]) => `<li>${escapeHtml(label)}: ${escapeHtml(value)}</li>`).join("")}</ul>\n<h3>Dobór i bezpieczeństwo</h3>\n<ul>${points(timSafetyNotes(family))}</ul>\n</section>`;
+  // Wycofaj nazwę produktu z nagłówka! TIM wyświetla nazwę produktu w interfejsie sklepu.
+  // Zgodnie z wytycznymi TIM i ściągą SEO:
+  // Opis zaczyna się OD RAZU tekstem akapitowym (1-2 zdania: co to jest, 1-2 zdania: do czego służy/gdzie montować).
+  const paragraphs = result.sections?.[0]?.paragraphs || [];
+  let introHtml = "";
+  if (paragraphs.length >= 2) {
+    introHtml = `<p>${escapeHtml(paragraphs[0])}</p>\n<p>${escapeHtml(paragraphs[1])}</p>\n`;
+  } else if (paragraphs.length === 1) {
+    introHtml = `<p>${escapeHtml(paragraphs[0])}</p>\n`;
+  } else {
+    introHtml = `<p>${escapeHtml(copy.intro)}</p>\n`;
+  }
+
+  const applications = result.applications?.length ? result.applications : (result.sections?.[1]?.paragraphs || copy.applications);
+  const benefits = publicEditorialLines(product, result.benefits);
+  const benefitsBlock = benefits.length ? `<h3>Dlaczego warto:</h3>\n<ul>\n${points(benefits)}\n</ul>\n` : "";
+  const safety = timSafetyNotes(family);
+  const safetyBlock = safety.length ? `<h3>Wskazówki montażowe i bezpieczeństwo:</h3>\n<ul>\n${points(safety)}\n</ul>\n` : "";
+
+  return `<section>\n${introHtml}<h3>Zastosowanie i dobór:</h3>\n<ul>\n${points(applications)}\n</ul>\n${benefitsBlock}${safetyBlock}</section>`;
 }
 
 export function generateDescription(product, platform = "shoper", saved = null) {

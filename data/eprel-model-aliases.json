@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "policy": "A commercial tape-length suffix may reuse the EPREL model of the same physical LED strip only through an explicit, reviewed mapping. The 500 mm value is the verification length, not the commercial package length.",
+    "source": "EPREL_BADANIA_tasmy.xlsx and supplier confirmation"
+  },
+  "aliases": {
+    "24d004-050-8-nw50": {
+      "eprelId": "1965854",
+      "modelIdentifier": "24D004-050-8-NW",
+      "reason": "Commercial 50 m length variant of the same strip registered and verified at 500 mm."
+    }
+  }
+}

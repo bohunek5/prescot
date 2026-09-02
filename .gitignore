@@ -3,3 +3,6 @@ data/seo-descriptions-draft.json
 data/seo-pilot*.json
 dist/
 exports/tim/
+tmp/
+output/
+--output

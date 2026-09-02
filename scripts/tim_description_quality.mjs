@@ -50,6 +50,9 @@ export function renderTimDescription(product, saved, editedHtml = "") {
 export function validateTimDescription(product, html) {
   const errors = [];
   const text = plainTextFromHtml(html);
+  const productName = String(product?.name || "").toLocaleLowerCase("pl");
+  const naturalTape = String(product?.categoryRoot || "") === "Taśmy LED"
+    && !(/\bzestaw\b.*\bzaślep/u.test(productName) || /\bzaślepk(?:a|i|ę|ą|ami)?\b.*\bklej/u.test(productName));
   const expectedUseHeading = "<h3>Zastosowanie i dobór</h3>";
   const expectedSpecsHeading = "<h3>Parametry produktu</h3>";
   const expectedSafetyHeading = "<h3>Dobór i bezpieczeństwo</h3>";
@@ -63,22 +66,34 @@ export function validateTimDescription(product, html) {
   if (/<a\b/i.test(html)) errors.push("link_not_allowed");
   if (FORBIDDEN_TEXT.test(text)) errors.push("repeated_card_identity_or_forbidden_word");
   if (PROCEDURAL_INSTALLATION_TEXT.test(text)) errors.push("procedural_installation_instruction");
-  if (!String(html).includes(expectedUseHeading)) errors.push("missing_use_heading");
-  if (!String(html).includes(expectedSpecsHeading)) errors.push("missing_specs_heading");
-  if (!String(html).includes(expectedSafetyHeading)) errors.push("missing_safety_heading");
-  if (occurrences(html, /<h2\b/gi) !== 1 || occurrences(html, /<h3\b/gi) !== 3) errors.push("invalid_heading_count");
-  const minimumSpecs = timTradeIndex(product) ? 1 : 0;
-  if (lists.length !== 3 || lists[0] < 2 || lists[1] < minimumSpecs || lists[2] < 2) errors.push("invalid_list_structure");
+  if (naturalTape) {
+    if (!String(html).includes("<h3>Barwa światła i zastosowanie</h3>")) errors.push("missing_colour_use_heading");
+    if (!String(html).includes(expectedSafetyHeading)) errors.push("missing_safety_heading");
+    if (occurrences(html, /<h2\b/gi) !== 1 || occurrences(html, /<h3\b/gi) !== 2) errors.push("invalid_heading_count");
+    if (occurrences(html, /<p\b/gi) < 4 || lists.length !== 0) errors.push("invalid_natural_tape_structure");
+    if (/Opis dotyczy produktu|Przed zakupem porównaj indeks handlowy|Parametry produktu|Indeks handlowy\s*:|Wariant ma moc|\bEconomic\b/iu.test(text)) {
+      errors.push("generic_or_repeated_tape_content");
+    }
+  } else {
+    if (!String(html).includes(expectedUseHeading)) errors.push("missing_use_heading");
+    if (!String(html).includes(expectedSpecsHeading)) errors.push("missing_specs_heading");
+    if (!String(html).includes(expectedSafetyHeading)) errors.push("missing_safety_heading");
+    if (occurrences(html, /<h2\b/gi) !== 1 || occurrences(html, /<h3\b/gi) !== 3) errors.push("invalid_heading_count");
+    const minimumSpecs = timTradeIndex(product) ? 1 : 0;
+    if (lists.length !== 3 || lists[0] < 2 || lists[1] < minimumSpecs || lists[2] < 2) errors.push("invalid_list_structure");
+  }
 
   const dangling = danglingTimItems(html);
   if (dangling.length) errors.push(`dangling_sentence:${dangling.join(" | ")}`);
   if (product.ean && text.includes(String(product.ean))) errors.push("ean_repeated_in_description");
   const tradeIndex = timTradeIndex(product);
-  if (!tradeIndex) {
-    errors.push("missing_trade_index_source");
-  } else {
-    const expectedTradeIndex = `Indeks handlowy: ${tradeIndex}`;
-    if (!text.includes(expectedTradeIndex)) errors.push("missing_or_wrong_trade_index");
+  if (!naturalTape) {
+    if (!tradeIndex) {
+      errors.push("missing_trade_index_source");
+    } else {
+      const expectedTradeIndex = `Indeks handlowy: ${tradeIndex}`;
+      if (!text.includes(expectedTradeIndex)) errors.push("missing_or_wrong_trade_index");
+    }
   }
   if (product.code && product.manufacturerCode && String(product.code).toLocaleLowerCase("pl") !== String(product.manufacturerCode).toLocaleLowerCase("pl")) {
     const escapedCatalogIndex = String(product.code).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
