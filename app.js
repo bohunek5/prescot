@@ -182,7 +182,7 @@ function descriptionFor(product, platform = state.platform) {
              || state.generated?.products?.[product.code ? `code:${product.code}` : ""]
              || state.generated?.products?.[product.code];
   if (!html) html = generateDescription(product, platform, saved?.editorial || saved);
-  return normalizeDescriptionIdentity(product, html, { ensureTradeIndex: false, preserveManufacturerCode: platform === "tim" });
+  return normalizeDescriptionIdentity(product, html, { ensureTradeIndex: false, preserveManufacturerCode: platform === "tim", platform });
 }
 
 function descriptionOrigin(product) {
@@ -505,7 +505,7 @@ function exportEdits() {
       ean: product?.ean || "",
       tradeIndex: product?.code || "",
       name: product?.name || "",
-      description: product ? normalizeDescriptionIdentity(product, description, { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim" }) : description,
+      description: product ? normalizeDescriptionIdentity(product, description, { ensureTradeIndex: platform !== "tim", preserveManufacturerCode: platform === "tim", platform }) : description,
     };
   });
   const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), edits }, null, 2)], { type: "application/json" });
@@ -541,7 +541,7 @@ async function importEdits(file) {
       rejected += 1;
       continue;
     }
-    state.localEdits[editKey(product, platform)] = normalizeDescriptionIdentity(product, description, { ensureTradeIndex: false, preserveManufacturerCode: platform === "tim" });
+    state.localEdits[editKey(product, platform)] = normalizeDescriptionIdentity(product, description, { ensureTradeIndex: false, preserveManufacturerCode: platform === "tim", platform });
     imported += 1;
   }
   persistLocalEdits();

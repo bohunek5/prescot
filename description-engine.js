@@ -175,10 +175,19 @@ export function getProductAllowedBrand(product) {
   return null;
 }
 
-export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIndex = false, preserveManufacturerCode = false } = {}) {
+export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIndex = false, preserveManufacturerCode = false, platform = null } = {}) {
   let value = replaceDescriptionIdentity(product, htmlValue, { preserveManufacturerCode });
   const ean = normalize(product?.ean);
   const tradeIndex = timTradeIndex(product);
+
+  // Karol nakazał: w opisach Shoper wyjebać podstawowe parametry (cały blok globalnie)
+  const isShoperDesc = platform === "shoper" || /#e94b25/i.test(value);
+  if (isShoperDesc) {
+    value = value.replace(/<section[^>]*>(?:(?!<\/section>)[\s\S])*?(?:Parametry modelu|Kluczowe parametry|Najważniejsze parametry|Parametry techniczne|Dokładne parametry)[\s\S]*?<\/section>/gi, "");
+    value = value.replace(/<h[23][^>]*>(?:Najważniejsze\s+|Dokładne\s+|Kluczowe\s+)?parametry(?:\s+techniczne|\s+modelu|\s+do\s+zamówienia)?:?<\/h[23]>[\s\S]*?(?=<h[1-4]|<\/section>|$)/gi, "");
+    value = value.replace(/<p><strong>(?:Dokładne\s+|Kluczowe\s+)?parametry:?<\/strong>[\s\S]*?(?=<h[1-4]|<\/section>|$)/gi, "");
+    value = value.replace(/<p>Dostępne parametry:?<\/p>[\s\S]*?(?=<h[1-4]|<\/section>|$)/gi, "");
+  }
 
   // Nigdy nie publikuj EAN-u ani wewnętrznych indeksów Prescot jako modelu.
   if (ean) value = value.replace(new RegExp(`\\b${escapeRegExp(ean)}\\b`, "gu"), "");
@@ -443,38 +452,10 @@ function renderShoper(product, saved) {
   const p2 = sections[1]?.paragraphs || (result.applications || ["Sprawdź zastosowanie w specyfikacji."]);
   const sec2 = renderPillSection(pill2, heading2, p2, STYLE.sectionSub);
 
-  // 3. Sekcja Jasność / Parametry (dla zasilaczy) / Wskazówki
-  let sec3 = "";
-  if (kind === "power") {
-    // Siatka parametrów dla zasilaczy
-    const specs = seoProductSpecs(product);
-    const gridCards = specs.slice(0, 6).map(([label, value]) => (
-      `<div style="font-family:inherit;padding:16px;margin:0;background:none!important;background-color:transparent!important;border:1px solid currentColor;border-radius:12px;box-shadow:none!important;color:inherit;"><strong style="font-family:inherit;display:block;color:inherit!important;font-size:15px;line-height:1.35;margin-bottom:6px;font-weight:bold;">${escapeHtml(label)}</strong><small style="font-family:inherit;display:block;color:inherit!important;opacity:.78;font-size:13px;line-height:1.45;">${escapeHtml(value)}</small></div>`
-    )).join("");
-    const gridHtml = `<div style="font-family:inherit;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;background:none!important;background-color:transparent!important;color:inherit;">\n${gridCards}\n</div>`;
-    const note = sections[2]?.paragraphs?.[0] || "Najważniejsze cechy serii: stabilne napięcie wyjściowe, wysoka sprawność oraz zabezpieczenie przed przeciążeniem i zwarciem.";
-    sec3 = `<section style="${STYLE.sectionSub}"><span style="${pillStyle("#e94b25")}"><span style="color:#ffffff;">Parametry modelu</span></span>\n${gridHtml}\n<p style="${STYLE.paragraph};margin-top:16px;">${escapeHtml(normalize(note))}</p>\n</section>`;
-  } else if (kind === "tape") {
-    // Dla taśm: akapit o jasności / strumieniu / zasilaniu bez tabeli
-    let pill3 = "Jasność i strumień";
-    const lmMatch = product.name.match(/\b\d+\s*lm\/m\b/i)
-      || String(product.sourceDescription || "").match(/\b\d+\s*lm\/m\b/i);
-    if (lmMatch) pill3 = lmMatch[0];
-    const heading3 = sections[2]?.heading || "Mocne i stabilne światło w Twojej instalacji";
-    const p3 = sections[2]?.paragraphs || ["Taśma zapewnia równomierny strumień świetlny oraz komfortowe oświetlenie powierzchni użytkowej lub dekoracyjnej."];
-    sec3 = renderPillSection(pill3, heading3, p3, STYLE.sectionSub);
-  } else {
-    // Dla innych: sekcja wskazówek / doboru
-    const pill3 = sections[2]?.label || "Dobór i montaż";
-    const heading3 = sections[2]?.heading || "Co sprawdzić przed montażem";
-    const p3 = sections[2]?.paragraphs || result.installation_notes || ["Przed montażem potwierdź zgodność elementów instalacji."];
-    sec3 = renderPillSection(pill3, heading3, p3, STYLE.sectionSub);
-  }
-
-  // 4. Sekcja Praktyczne poradniki (Blog)
+  // 3. Sekcja Praktyczne poradniki (Blog) — Karol nakazał: wyjebać podstawowe parametry (cały blok) z opisów Shoper globalnie
   const sec4 = renderGuidesSection(product);
 
-  return [sec1, sec2, sec3, sec4].filter(Boolean).join("\n");
+  return [sec1, sec2, sec4].filter(Boolean).join("\n");
 }
 
 function renderWapro(product, saved) {
