@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<offers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+  <responsibleProducers>
+    <p id="producer_1">
+      <name>Prescot Sp. z o.o.</name>
+      <address>
+        <countryCode>PL</countryCode>
+        <street>ul. Wileńska 1</street>
+        <postalCode>11-500</postalCode>
+        <city>Giżycko</city>
+      </address>
+      <contact>
+        <email>komponenty@prescot.pl</email>
+        <phoneNumber>877776482</phoneNumber>
+      </contact>
+    </p>
+  </responsibleProducers>
+  <responsiblePersons>
+    <p id="responsible_1">
+      <name>Prescot</name>
+      <address>
+        <countryCode>PL</countryCode>
+        <street>ul. Wileńska 1, 11-500 Giżycko</street>
+        <postalCode>11-500</postalCode>
+        <city>Giżycko</city>
+      </address>
+      <contact>
+        <email>komponenty@prescot.pl</email>
+        <phoneNumber>+48 87 777 64 82</phoneNumber>
+      </contact>
+    </p>
+  </responsiblePersons>
+  <o id="19282" url="https://prescot.com.pl/pl/p/Rozdzielacz-mocy-LED-Prescot-Mono-1%E2%80%BA9-DC-548V-25A/19282" price="18.00" avail="1" set="0" stock="93" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Rozdzielacze mocy]]></cat>
+    <name><![CDATA[Rozdzielacz mocy LED Prescot Mono 1›9 DC 5–48V 25A RM-MONO-19]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69349.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69350.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69351.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69352.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69353.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69354.png" />
+    </imgs>
+    <desc><![CDATA[<h2>Rozdzielacz mocy LED Mono 1/9 RM-MONO-19</h2>
+<p>Rozdzielacz przeznaczony do uporządkowanego rozprowadzenia zasilania na kilka odcinków jednokolorowej taśmy LED. Jedno wejście i dziewięć wyjść ułatwiają wykonanie większych instalacji, między innymi w zabudowie meblowej, profilach, witrynach i oświetleniu schodów.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Przed montażem należy zsumować obciążenie wszystkich podłączonych odcinków i dobrać odpowiedni zasilacz oraz przekrój przewodów.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zachowując właściwą polaryzację. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot LED]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000748]]></a>
+      <a name="EAN"><![CDATA[5905475368301]]></a>
+      <a name="Kod producenta"><![CDATA[RM-MONO-19]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+</offers>

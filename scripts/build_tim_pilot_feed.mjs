@@ -104,6 +104,39 @@ const priorityDescriptionOverrides = new Map([
 <p>Dobierz zasilacz i taśmę RGBCCT o zgodnym napięciu. Nie przekraczaj obciążenia całkowitego ani obciążenia pojedynczego kanału. Przed podłączeniem wyłącz zasilanie i sprawdź przewody zgodnie z instrukcją.</p>`],
 ]);
 
+const rmDescriptionOverrides = new Map([
+  ["5905475368301", `<h2>Rozdzielacz mocy LED Mono 1/9 RM-MONO-19</h2>
+<p>Rozdzielacz przeznaczony do uporządkowanego rozprowadzenia zasilania na kilka odcinków jednokolorowej taśmy LED. Jedno wejście i dziewięć wyjść ułatwiają wykonanie większych instalacji, między innymi w zabudowie meblowej, profilach, witrynach i oświetleniu schodów.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Przed montażem należy zsumować obciążenie wszystkich podłączonych odcinków i dobrać odpowiedni zasilacz oraz przekrój przewodów.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zachowując właściwą polaryzację. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>`],
+  ["5905475368318", `<h2>Rozdzielacz mocy LED CCT 1/6 RM-CCT-16</h2>
+<p>Rozdzielacz do instalacji z taśmami LED CCT, w których regulowana jest temperatura barwowa światła. Jedno wejście i sześć wyjść pozwalają rozprowadzić zasilanie i sygnał do kilku odcinków z jednego sterownika.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Należy dobrać zgodną taśmę CCT, sterownik, zasilacz oraz przewody odpowiednie do łącznego obciążenia.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zgodnie z oznaczeniem kanałów i polaryzacją. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>`],
+  ["5905475368325", `<h2>Rozdzielacz mocy LED RGB 1/4 RM-RGB-14</h2>
+<p>Rozdzielacz przeznaczony do taśm LED RGB. Jedno wejście i cztery wyjścia pozwalają rozprowadzić kanały R, G i B oraz wspólny przewód do kilku odcinków taśmy bez wykonywania przypadkowych połączeń.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Należy dobrać zgodną taśmę RGB, sterownik, zasilacz oraz przekroje przewodów do łącznego obciążenia.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zachowując kolejność kanałów i właściwą polaryzację. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>`],
+  ["5905475368332", `<h2>Rozdzielacz mocy LED RGBW 1/3 RM-RGBW-13</h2>
+<p>Rozdzielacz do instalacji z taśmami LED RGBW, wyposażonymi w kanały kolorowe i osobny kanał światła białego. Jedno wejście i trzy wyjścia ułatwiają czytelne podłączenie kilku odcinków do wspólnego sterownika.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Należy dobrać zgodną taśmę RGBW, sterownik, zasilacz oraz przewody odpowiednie do łącznego obciążenia.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zgodnie z oznaczeniem kanałów i polaryzacją. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>`],
+  ["5905475368387", `<h2>Rozdzielacz mocy LED RGBCW 1/3 RM-RGBCW-13</h2>
+<p>Rozdzielacz przeznaczony do instalacji LED RGBCW, łączących kanały RGB z dwoma kanałami bieli. Jedno wejście i trzy wyjścia pozwalają uporządkować przewody i rozprowadzić sygnał do kilku odcinków taśmy.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Należy dobrać zgodną taśmę RGBCW, sterownik, zasilacz oraz przewody odpowiednie do łącznego obciążenia.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zgodnie z oznaczeniem kanałów i polaryzacją. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>`],
+]);
+
 const sourcePath = resolve(argumentValue("--source", "/tmp/prescot.xml"));
 const manifestPath = resolve(argumentValue("--manifest", "exports/tim/tim-manifest.json"));
 const outputPath = resolve(argumentValue("--output", "tim-import/pilot-10.xml"));
@@ -153,7 +186,7 @@ for (const ean of targets) {
   const name = new RegExp(`${manufacturerCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i").test(normalizedBaseName)
     ? normalizedBaseName
     : `${normalizedBaseName} ${manufacturerCode}`;
-  const description = text(priorityDescriptionOverrides.get(ean) || product.descriptionHtml).replace(/^<section>/i, "").replace(/<\/section>$/i, "");
+  const description = text(priorityDescriptionOverrides.get(ean) || rmDescriptionOverrides.get(ean) || product.descriptionHtml).replace(/^<section>/i, "").replace(/<\/section>$/i, "");
   for (const idMatch of sourceOffer.matchAll(/Producent odpowiedzialny"><!\[CDATA\[(producer_\d+)\]\]>/g)) referencedProducerIds.add(idMatch[1]);
   for (const idMatch of sourceOffer.matchAll(/Podmiot odpowiedzialny"><!\[CDATA\[(responsible_\d+)\]\]>/g)) referencedPersonIds.add(idMatch[1]);
 

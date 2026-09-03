@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<offers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+  <responsibleProducers>
+    <p id="producer_1">
+      <name>Prescot Sp. z o.o.</name>
+      <address>
+        <countryCode>PL</countryCode>
+        <street>ul. Wileńska 1</street>
+        <postalCode>11-500</postalCode>
+        <city>Giżycko</city>
+      </address>
+      <contact>
+        <email>komponenty@prescot.pl</email>
+        <phoneNumber>877776482</phoneNumber>
+      </contact>
+    </p>
+  </responsibleProducers>
+  <responsiblePersons>
+    <p id="responsible_1">
+      <name>Prescot</name>
+      <address>
+        <countryCode>PL</countryCode>
+        <street>ul. Wileńska 1, 11-500 Giżycko</street>
+        <postalCode>11-500</postalCode>
+        <city>Giżycko</city>
+      </address>
+      <contact>
+        <email>komponenty@prescot.pl</email>
+        <phoneNumber>+48 87 777 64 82</phoneNumber>
+      </contact>
+    </p>
+  </responsiblePersons>
+  <o id="19282" url="https://prescot.com.pl/pl/p/Rozdzielacz-mocy-LED-Prescot-Mono-1%E2%80%BA9-DC-548V-25A/19282" price="18.00" avail="1" set="0" stock="93" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Rozdzielacze mocy]]></cat>
+    <name><![CDATA[Rozdzielacz mocy LED Prescot Mono 1›9 DC 5–48V 25A RM-MONO-19]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69349.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69350.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69351.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69352.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69353.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69354.png" />
+    </imgs>
+    <desc><![CDATA[<h2>Rozdzielacz mocy LED Mono 1/9 RM-MONO-19</h2>
+<p>Rozdzielacz przeznaczony do uporządkowanego rozprowadzenia zasilania na kilka odcinków jednokolorowej taśmy LED. Jedno wejście i dziewięć wyjść ułatwiają wykonanie większych instalacji, między innymi w zabudowie meblowej, profilach, witrynach i oświetleniu schodów.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Przed montażem należy zsumować obciążenie wszystkich podłączonych odcinków i dobrać odpowiedni zasilacz oraz przekrój przewodów.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zachowując właściwą polaryzację. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot LED]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000748]]></a>
+      <a name="EAN"><![CDATA[5905475368301]]></a>
+      <a name="Kod producenta"><![CDATA[RM-MONO-19]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19283" url="https://prescot.com.pl/pl/p/Rozdzielacz-mocy-LED-Prescot-CCT-1%E2%80%BA6-DC-548V-25A/19283" price="19.50" avail="1" set="0" stock="96" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Rozdzielacze mocy]]></cat>
+    <name><![CDATA[Rozdzielacz mocy LED Prescot CCT 1›6 DC 5–48V 25A RM-CCT-16]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69343.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69344.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69345.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69346.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69347.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69348.png" />
+    </imgs>
+    <desc><![CDATA[<h2>Rozdzielacz mocy LED CCT 1/6 RM-CCT-16</h2>
+<p>Rozdzielacz do instalacji z taśmami LED CCT, w których regulowana jest temperatura barwowa światła. Jedno wejście i sześć wyjść pozwalają rozprowadzić zasilanie i sygnał do kilku odcinków z jednego sterownika.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Należy dobrać zgodną taśmę CCT, sterownik, zasilacz oraz przewody odpowiednie do łącznego obciążenia.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zgodnie z oznaczeniem kanałów i polaryzacją. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot LED]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000749]]></a>
+      <a name="EAN"><![CDATA[5905475368318]]></a>
+      <a name="Kod producenta"><![CDATA[RM-CCT-16]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19284" url="https://prescot.com.pl/pl/p/Rozdzielacz-mocy-LED-Prescot-RGB-1%E2%80%BA4-DC-548V-25A/19284" price="20.00" avail="1" set="0" stock="100" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Rozdzielacze mocy]]></cat>
+    <name><![CDATA[Rozdzielacz mocy LED Prescot RGB 1›4 DC 5–48V 25A RM-RGB-14]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69338.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69339.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69340.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69341.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69342.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69571.png" />
+    </imgs>
+    <desc><![CDATA[<h2>Rozdzielacz mocy LED RGB 1/4 RM-RGB-14</h2>
+<p>Rozdzielacz przeznaczony do taśm LED RGB. Jedno wejście i cztery wyjścia pozwalają rozprowadzić kanały R, G i B oraz wspólny przewód do kilku odcinków taśmy bez wykonywania przypadkowych połączeń.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Należy dobrać zgodną taśmę RGB, sterownik, zasilacz oraz przekroje przewodów do łącznego obciążenia.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zachowując kolejność kanałów i właściwą polaryzację. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot LED]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000750]]></a>
+      <a name="EAN"><![CDATA[5905475368325]]></a>
+      <a name="Kod producenta"><![CDATA[RM-RGB-14]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19285" url="https://prescot.com.pl/pl/p/Rozdzielacz-mocy-LED-Prescot-RGBW-1%E2%80%BA3-DC-548V-25A/19285" price="20.50" avail="1" set="0" stock="98" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Rozdzielacze mocy]]></cat>
+    <name><![CDATA[Rozdzielacz mocy LED Prescot RGBW 1›3 DC 5–48V 25A RM-RGBW-13]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69333.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69334.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69335.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69336.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69337.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69572.png" />
+    </imgs>
+    <desc><![CDATA[<h2>Rozdzielacz mocy LED RGBW 1/3 RM-RGBW-13</h2>
+<p>Rozdzielacz do instalacji z taśmami LED RGBW, wyposażonymi w kanały kolorowe i osobny kanał światła białego. Jedno wejście i trzy wyjścia ułatwiają czytelne podłączenie kilku odcinków do wspólnego sterownika.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Należy dobrać zgodną taśmę RGBW, sterownik, zasilacz oraz przewody odpowiednie do łącznego obciążenia.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zgodnie z oznaczeniem kanałów i polaryzacją. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot LED]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000751]]></a>
+      <a name="EAN"><![CDATA[5905475368332]]></a>
+      <a name="Kod producenta"><![CDATA[RM-RGBW-13]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+  <o id="19286" url="https://prescot.com.pl/pl/p/Rozdzielacz-mocy-LED-Prescot-RGBCW-1%E2%80%BA3-DC-548V-25A/19286" price="20.50" avail="1" set="0" stock="95" basket="1">
+    <cat><![CDATA[Akcesoria do zasilaczy i taśm LED/Rozdzielacze mocy]]></cat>
+    <name><![CDATA[Rozdzielacz mocy LED Prescot RGBCW 1›3 DC 5–48V 25A RM-RGBCW-13]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69327.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69328.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69329.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69330.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69331.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69332.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69573.png" />
+    </imgs>
+    <desc><![CDATA[<h2>Rozdzielacz mocy LED RGBCW 1/3 RM-RGBCW-13</h2>
+<p>Rozdzielacz przeznaczony do instalacji LED RGBCW, łączących kanały RGB z dwoma kanałami bieli. Jedno wejście i trzy wyjścia pozwalają uporządkować przewody i rozprowadzić sygnał do kilku odcinków taśmy.</p>
+<h3>Dobór i zastosowanie</h3>
+<p>Model pracuje w instalacjach DC 5–48 V i obsługuje prąd całkowity do 25 A, maksymalnie 10 A na pojedynczą gałąź. Należy dobrać zgodną taśmę RGBCW, sterownik, zasilacz oraz przewody odpowiednie do łącznego obciążenia.</p>
+<h3>Bezpieczeństwo montażu</h3>
+<p>Podłączenie należy wykonać przy wyłączonym zasilaniu, zgodnie z oznaczeniem kanałów i polaryzacją. Nie wolno przekraczać dopuszczalnego prądu rozdzielacza ani poszczególnych wyjść.</p>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot LED]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000757]]></a>
+      <a name="EAN"><![CDATA[5905475368387]]></a>
+      <a name="Kod producenta"><![CDATA[RM-RGBCW-13]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Podmiot odpowiedzialny"><![CDATA[responsible_1]]></a>
+      <a name="Jednostka"><![CDATA[szt.]]></a>
+    </attrs>
+  </o>
+</offers>
