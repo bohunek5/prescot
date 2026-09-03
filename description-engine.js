@@ -233,6 +233,10 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
 
   // Jeśli pilot/sterownik jest czysto RGB (bez RGBW w nazwie), nigdy nie pisz o obsłudze RGBW!
   const nameLow = String(product?.name || "").toLowerCase();
+  const codeLow = String(product?.code || "").toLowerCase();
+  const mfgLow = String(product?.manufacturerCode || "").toLowerCase();
+  const allProd = `${nameLow} ${codeLow} ${mfgLow}`;
+
   const isPureRgb = nameLow.includes("rgb") && !nameLow.includes("rgbw") && !nameLow.includes("cct") && !nameLow.includes("rgbww");
   if (isPureRgb) {
     value = value.replace(/RGB\s*\/\s*RGBW/g, "RGB")
@@ -240,6 +244,36 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
                  .replace(/RGB,\s*RGBW/g, "RGB")
                  .replace(/wielokolorowych\s+RGB\/RGBW/g, "wielokolorowych RGB")
                  .replace(/RGBW/g, "RGB");
+  }
+
+  // Karol nakazał: w PR-MAD oraz Schärfer jak piszesz transformator napisz: zasilacz LED ("transformator")
+  const isMadOrScharfer = /pr-mad|scharfer|schärfer|sch-/i.test(allProd);
+  if (isMadOrScharfer) {
+    value = value.replace(/to\s+transformator\s+wyposażony/gi, 'to zasilacz LED ("transformator") wyposażony');
+    value = value.replace(/to\s+bezkompromisowy\s+transformator\s+impulsowy/gi, 'to bezkompromisowy zasilacz LED ("transformator")');
+    value = value.replace(/to\s+transformator\s+impulsowy/gi, 'to zasilacz LED ("transformator")');
+    value = value.replace(/to\s+transformator\b/gi, 'to zasilacz LED ("transformator")');
+    value = value.replace(/transformator\s+impulsowy/gi, 'zasilacz LED ("transformator")');
+    value = value.replace(/zapasu\s+mocy\s+transformatora/gi, 'zapasu mocy zasilacza LED ("transformatora")');
+    value = value.replace(/z\s+transformatora\s+o\s+odpowiednio/gi, 'z zasilacza LED ("transformatora") o odpowiednio');
+  }
+
+  // Karol nakazał: przy barwie żółtej i pomarańczowej NIE PISAĆ, że jest ciepła! To barwy monochromatyczne, nie biel ciepła.
+  const isYellowOrOrange = /\b(?:żółt\p{L}*|zolt\p{L}*|yellow|pomarańcz\p{L}*|pomarancz\p{L}*|orange|amber|bursztyn\p{L}*)\b|(?:^|-)[YAO](?:\d|$|-)/iu.test(allProd);
+  if (isYellowOrOrange) {
+    value = value.replace(/ciepłe\s+oświetlenie\s+dekoracyjne\s+w\s+barwie\s+żółtej/gi, "Efektowne oświetlenie dekoracyjne w barwie żółtej");
+    value = value.replace(/oświetlenie\s+w\s+barwie\s+bursztynowej/gi, "Klimatyczne oświetlenie w barwie pomarańczowej");
+    value = value.replace(/Żółta\s*\(\s*ciepłe\s+światło\s+akcentowe\s*\)/gi, "Żółta");
+    value = value.replace(/Bursztynowa\s*\(\s*klimatyczne\s+światło\s+bursztynowe\s*\)/gi, "Pomarańczowa");
+    value = value.replace(/ciepłym,\s*słonecznym\s+świetle\s+o\s+wyrazistej\s+żółtej\s+tonacji/gi, "nasyconym świetle o wyrazistej żółtej barwie");
+    value = value.replace(/miękkim,\s*ciepłym\s+świetle\s+bursztynowym\s+sprzyjającym\s+wyciszeniu/gi, "głębokim, nasyconym świetle pomarańczowym");
+    value = value.replace(/Żółte\s+światło\s+tworzy\s+wyraźny,\s*ciepły\s+akcent/gi, "Żółte światło tworzy wyrazisty, nasycony akcent");
+    value = value.replace(/ciepły\s+akcent\s+kolorystyczny/gi, "wyrazisty akcent kolorystyczny");
+    value = value.replace(/ciepł[a-ząćęłńóśźż]*\s+oświetlenie\s+w\s+barwie\s+żółtej/gi, "oświetlenie w barwie żółtej");
+    value = value.replace(/ciepł[a-ząćęłńóśźż]*\s+oświetlenie\s+w\s+barwie\s+pomarańczowej/gi, "oświetlenie w barwie pomarańczowej");
+    value = value.replace(/ciepł[a-ząćęłńóśźż]*\s+światło\s+w\s+barwie\s+żółtej/gi, "światło w barwie żółtej");
+    value = value.replace(/ciepł[a-ząćęłńóśźż]*\s+światło\s+w\s+barwie\s+pomarańczowej/gi, "światło w barwie pomarańczowej");
+    value = value.replace(/Barwa ciepła/gi, "Barwa dekoracyjna");
   }
 
   // Wyczyść podwójne spacje
@@ -379,12 +413,21 @@ function renderShoper(product, saved) {
   // 2. Sekcja Barwa / Gdzie użyć / Zastosowanie
   let pill2 = "Gdzie użyć";
   if (kind === "tape") {
-    if (/3000k|ciepł/i.test(product.name)) pill2 = "Barwa ciepła";
-    else if (/4000k|neutraln/i.test(product.name)) pill2 = "Barwa neutralna";
-    else if (/6000k|6500k|zimn/i.test(product.name)) pill2 = "Barwa zimna";
-    else if (/cct/i.test(product.name)) pill2 = "Regulacja CCT";
-    else if (/rgb\+w|rgbw/i.test(product.name)) pill2 = "Kolory RGB+W";
-    else if (/rgb/i.test(product.name)) pill2 = "Kolory RGB";
+    const n = (product.name || "").toLowerCase();
+    const c = (product.code || "").toLowerCase();
+    const all = `${n} ${c}`;
+    if (/żółt|zolt|yellow/i.test(all) || /(?:^|-)y(?:\d|$|-)/i.test(c)) pill2 = "Barwa żółta";
+    else if (/pomarańcz|pomarancz|orange|amber|bursztyn/i.test(all) || /(?:^|-)o(?:\d|$|-)/i.test(c)) pill2 = "Barwa pomarańczowa";
+    else if (/czerwon|czerw|red/i.test(all) || /(?:^|-)r(?:\d|$|-)/i.test(c)) pill2 = "Barwa czerwona";
+    else if (/zielon|ziel|green/i.test(all) || /(?:^|-)g(?:\d|$|-)/i.test(c)) pill2 = "Barwa zielona";
+    else if (/niebiesk|nieb|blue/i.test(all) || /(?:^|-)b(?:\d|$|-)/i.test(c)) pill2 = "Barwa niebieska";
+    else if (/różow|rozow|róż|pink/i.test(all) || /(?:^|-)p(?:\d|$|-)/i.test(c)) pill2 = "Barwa różowa";
+    else if (/cct/i.test(all)) pill2 = "Regulacja CCT";
+    else if (/rgb\+w|rgbw/i.test(all)) pill2 = "Kolory RGB+W";
+    else if (/rgb/i.test(all)) pill2 = "Kolory RGB";
+    else if (/3000k|2700k|ciepł/i.test(all)) pill2 = "Barwa ciepła";
+    else if (/4000k|neutraln/i.test(all)) pill2 = "Barwa neutralna";
+    else if (/6000k|6500k|zimn/i.test(all)) pill2 = "Barwa zimna";
   }
   const heading2 = sections[1]?.heading || (kind === "power" ? "Do jakich instalacji wybrać ten zasilacz" : "Kiedy i gdzie wybrać ten wariant");
   const p2 = sections[1]?.paragraphs || (result.applications || ["Sprawdź zastosowanie w specyfikacji."]);
@@ -654,7 +697,7 @@ function timFamilyCopy(product, family) {
   if (family === "power" || name.includes("zasilacz")) {
     if (all.includes("mad") || all.includes("auto") || all.includes("1224") || all.includes("12v/24v")) {
       return {
-        intro: "Inteligentny zasilacz impulsowy LED z mikroprocesorem Smart Auto-Identify, który automatycznie wykrywa i stabilizuje napięcie wyjściowe 12V lub 24V DC.",
+        intro: 'Inteligentny zasilacz LED ("transformator") z mikroprocesorem Smart Auto-Identify, który automatycznie wykrywa i stabilizuje napięcie wyjściowe 12V lub 24V DC.',
         applications: [
           "Do bezpiecznego zasilania taśm LED 12V oraz 24V – całkowicie eliminuje ryzyko pomyłki i przypadkowego spalenia taśmy podczas montażu",
           "Konstrukcja Ultra-Slim (wysokość tylko 29 mm) z zalewem termoprzewodzącym Semi-Potted zapewnia bezgłośną pracę (zero pisków cewek) w sypialniach i salonach",
@@ -663,11 +706,11 @@ function timFamilyCopy(product, family) {
       };
     } else if (all.includes("scharfer") || all.includes("schärfer") || all.includes("sch-") || all.includes("ip67") || all.includes("wodoodporn") || all.includes("hermet")) {
       return {
-        intro: "Wodoodporny zasilacz impulsowy LED IP67 w aluminiowej obudowie radiatorowej, objęty 7-letnią gwarancją.",
+        intro: 'Wodoodporny zasilacz LED ("transformator") IP67 w aluminiowej obudowie radiatorowej, objęty 7-letnią gwarancją.',
         applications: [
           "Do instalacji zewnętrznych i narażonych na wilgoć: elewacje budynków, podbitki dachowe, ogrody, łazienki oraz strefy prysznicowe",
           "Pełny zalew żywicą epoksydową zabezpiecza komponenty przed zalaniem, pyłem, kondensacją pary oraz ujemnymi temperaturami",
-          "Przy doborze zachowaj minimum 20% zapasu mocy transformatora względem łącznej mocy zainstalowanego oświetlenia",
+          'Przy doborze zachowaj minimum 20% zapasu mocy zasilacza LED ("transformatora") względem łącznej mocy zainstalowanego oświetlenia',
         ],
       };
     } else if (all.includes("din") || all.includes("szyn") || all.includes("hdr") || all.includes("ndr") || all.includes("edr")) {
@@ -709,6 +752,24 @@ function timFamilyCopy(product, family) {
           "Do reprezentacyjnych instalacji architektonicznych w domach, biurach, hotelach oraz obiektach komercyjnych",
           "Gruby laminat miedziany zapobiega spadkom napięcia na długości taśmy i zapewnia stabilną jasność oraz długą żywotność diod",
           "Zalecany montaż w profilu aluminiowym; linie powyżej 5 m zasilaj w sekcjach lub obustronnie",
+        ],
+      };
+    } else if (all.includes("żółt") || all.includes("zolt") || all.includes("yellow") || /(?:^|-)y(?:\d|$|-)/i.test(code)) {
+      return {
+        intro: "Dekoracyjna taśma LED emitująca intensywne, wyraziste światło w barwie żółtej o jednolitym odcieniu.",
+        applications: [
+          "Do wyrazistego podświetlenia wnęk ściennych, mebli, witryn sklepowych oraz akcentów reklamowych i dekoracyjnych",
+          "Czysty, nasycony żółty kolor światła przyciąga uwagę i idealnie nadaje się do kreowania dynamicznych aranżacji",
+          "Montuj w profilu aluminiowym odprowadzającym ciepło i zasilaj stabilizowanym zasilaczem LED o dobranym napięciu",
+        ],
+      };
+    } else if (all.includes("pomarańcz") || all.includes("pomarancz") || all.includes("orange") || all.includes("amber") || all.includes("bursztyn") || /(?:^|-)o(?:\d|$|-)/i.test(code)) {
+      return {
+        intro: "Nastrojowa taśma LED emitująca głębokie, wyraziste światło w barwie pomarańczowej.",
+        applications: [
+          "Do nastrojowego oświetlenia akcentowego w strefach relaksu, barach, winiarniach, saunach oraz ekspozycjach meblowych",
+          "Nasycona barwa pomarańczowa tworzy unikalny klimat i wyrazisty kontur dekoracyjny",
+          "Wymaga montażu w profilu aluminiowym chłodzącym diody oraz dedykowanego zasilacza z 20% rezerwą mocy",
         ],
       };
     } else if (all.includes("bread") || all.includes("2500k")) {
