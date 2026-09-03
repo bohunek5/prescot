@@ -247,8 +247,12 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
   }
 
   // Karol nakazał: w PR-MAD oraz Schärfer jak piszesz transformator napisz: zasilacz LED ("transformator")
+  // Karol nakazał: ten od auto mad nie ma zaawansowanych technologii, to chip to robi!
   const isMadOrScharfer = /pr-mad|scharfer|schärfer|sch-/i.test(allProd);
   if (isMadOrScharfer) {
+    value = value.replace(/wyposażony w zaawansowaną technologię automatycznego rozpoznawania/gi, 'wyposażony w chip automatycznie rozpoznający');
+    value = value.replace(/zaawansowaną technologię automatycznego rozpoznawania/gi, 'chip automatycznie rozpoznający');
+    value = value.replace(/zaawansowaną technologią automatycznego rozpoznawania/gi, 'chipem automatycznie rozpoznającym');
     value = value.replace(/to\s+transformator\s+wyposażony/gi, 'to zasilacz LED ("transformator") wyposażony');
     value = value.replace(/to\s+bezkompromisowy\s+transformator\s+impulsowy/gi, 'to bezkompromisowy zasilacz LED ("transformator")');
     value = value.replace(/to\s+transformator\s+impulsowy/gi, 'to zasilacz LED ("transformator")');
@@ -257,6 +261,12 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
     value = value.replace(/zapasu\s+mocy\s+transformatora/gi, 'zapasu mocy zasilacza LED ("transformatora")');
     value = value.replace(/z\s+transformatora\s+o\s+odpowiednio/gi, 'z zasilacza LED ("transformatora") o odpowiednio');
   }
+
+  // Karol nakazał: nigdzie nie pisać "sztuka instalatorstwa" ani "ze sztuką instalatorską"
+  value = value.replace(/zgodn[a-ząćęłńóśźż]*\s+ze\s+sztuką\s+instalatorską/gi, "zgodnie ze standardami instalacyjnymi");
+  value = value.replace(/ze\s+sztuką\s+instalatorską/gi, "ze standardami instalacyjnymi");
+  value = value.replace(/sztuką\s+instalatorską/gi, "standardami instalacyjnymi");
+  value = value.replace(/sztuka\s+instalatorstwa/gi, "prawidłowy montaż");
 
   // Karol nakazał: przy barwie żółtej i pomarańczowej NIE PISAĆ, że jest ciepła! To barwy monochromatyczne, nie biel ciepła.
   const isYellowOrOrange = /\b(?:żółt\p{L}*|zolt\p{L}*|yellow|pomarańcz\p{L}*|pomarancz\p{L}*|orange|amber|bursztyn\p{L}*)\b|(?:^|-)[YAO](?:\d|$|-)/iu.test(allProd);
@@ -697,7 +707,7 @@ function timFamilyCopy(product, family) {
   if (family === "power" || name.includes("zasilacz")) {
     if (all.includes("mad") || all.includes("auto") || all.includes("1224") || all.includes("12v/24v")) {
       return {
-        intro: 'Inteligentny zasilacz LED ("transformator") z mikroprocesorem Smart Auto-Identify, który automatycznie wykrywa i stabilizuje napięcie wyjściowe 12V lub 24V DC.',
+        intro: 'Inteligentny zasilacz LED ("transformator") z wbudowanym chipem Smart Auto, który automatycznie wykrywa i stabilizuje napięcie wyjściowe 12V lub 24V DC.',
         applications: [
           "Do bezpiecznego zasilania taśm LED 12V oraz 24V – całkowicie eliminuje ryzyko pomyłki i przypadkowego spalenia taśmy podczas montażu",
           "Konstrukcja Ultra-Slim (wysokość tylko 29 mm) z zalewem termoprzewodzącym Semi-Potted zapewnia bezgłośną pracę (zero pisków cewek) w sypialniach i salonach",
