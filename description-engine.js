@@ -129,6 +129,52 @@ function replaceDescriptionIdentity(product, htmlValue, { preserveManufacturerCo
     .replace(/\b(?:numeru|nr) katalogowego(?: producenta)?\b/gi, "indeksu handlowego");
 }
 
+export function getProductAllowedBrand(product) {
+  if (!product) return null;
+  const name = String(product.name || "").toLowerCase();
+  const code = String(product.code || "").toUpperCase();
+  const mfg = String(product.manufacturerCode || "").toUpperCase();
+  const root = String(product.categoryRoot || "").toLowerCase();
+  const cat = String(product.category || "").toLowerCase();
+
+  // 1. Schärfer
+  if (name.includes("schärfer") || name.includes("scharfer") || mfg.startsWith("SCH-") || code.startsWith("SCH-")) {
+    return "Schärfer";
+  }
+  // 2. MiLight / MiBoxer
+  if (name.includes("miboxer") || name.includes("milight") || name.includes("mi-light") || mfg.startsWith("FUT") || mfg.startsWith("LS")) {
+    return "MiBoxer";
+  }
+  // 3. KLUŚ
+  if (name.includes("kluś") || name.includes("klus") || mfg.startsWith("KLU-") || code.startsWith("KLU-") || cat.includes("kluś")) {
+    return "KLUŚ";
+  }
+  // 4. Taśmy LED - Prescot
+  if (root.includes("taśmy led") || name.includes("taśma") || name.includes("tasma")) {
+    return "Prescot";
+  }
+  // 5. Sterowniki Prescot: TYLKO PR-
+  if (root.includes("sterowniki led") || name.includes("sterownik") || name.includes("pilot") || name.includes("kontroler")) {
+    if (mfg.startsWith("PR-") || code.startsWith("PR-") || name.includes("pr-")) {
+      return "Prescot";
+    }
+    return null; // inne sterowniki nie są Prescot
+  }
+  // 6. Zasilacze Prescot: TYLKO PR-, IP-, PD-, PG-
+  if (root.includes("zasilacze led") || name.includes("zasilacz")) {
+    if (
+      mfg.startsWith("PR-") || code.startsWith("PR-") || name.includes("pr-mad") || name.includes("pr-") ||
+      mfg.startsWith("IP-") || code.startsWith("IP-") || name.includes("ip-") ||
+      mfg.startsWith("PD-") || code.startsWith("PD-") ||
+      mfg.startsWith("PG-") || code.startsWith("PG-")
+    ) {
+      return "Prescot";
+    }
+    return null; // inne zasilacze nie są Prescot
+  }
+  return null;
+}
+
 export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIndex = false, preserveManufacturerCode = false } = {}) {
   let value = replaceDescriptionIdentity(product, htmlValue, { preserveManufacturerCode });
   const ean = normalize(product?.ean);
@@ -145,13 +191,37 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
   // Karol nakazał: wywalić generatywne 'Dlaczego warto:'
   value = value.replace(/<h3>Dlaczego warto:<\/h3>\s*<ul>[\s\S]*?<\/ul>/gi, "");
 
+  // Karol nakazał: nie pisać 'produkt marki [kogo]', dozwolone marki to tylko: taśmy LED (Prescot), Schärfer, MiBoxer, KLUŚ, sterowniki PR-, zasilacze PR-/IP-/PD-/PG-
+  const allowedBrand = getProductAllowedBrand(product);
+  value = value.replace(/Produkt\s+marki\s+[A-Za-z0-9_/.-]+\s+to\s+profesjonalny/gi, "Profesjonalny");
+  value = value.replace(/Produkt\s+marki\s+[A-Za-z0-9_/.-]+\s+to\s+/gi, "");
+  value = value.replace(/Produkt\s+marki\s+[A-Za-z0-9_/.-]+/gi, "");
+  value = value.replace(/\bmarki\s+[A-Za-z0-9_/.-]+\b/gi, "");
+
+  // Jeśli produkt to NIE Prescot ("inne nie są moje"), bezwzględnie usuń Prescot z opisu!
+  if (allowedBrand !== "Prescot") {
+    value = value.replace(/\bPrescot\s+LED\b/gi, "LED");
+    value = value.replace(/\bLED\s+Prescot\b/gi, "LED");
+    value = value.replace(/\bPrescot\b/gi, "");
+  }
+
+  // Karol nakazał: wywalić nawiasy przy gwarancjach — sama liczba lat! (np. '2 lata (seria Prescot Standard)' -> '2 lata')
+  value = value.replace(/(gwarancj[a-ząćęłńóśźż]*:\s*\d+\s+lat(?:a)?)\s*\([^)]*\)/gi, "$1");
+  value = value.replace(/(\d+[- ]letni[ąaeym]\s+gwarancj[ąaęi])\s*\([^)]*\)/gi, "$1");
+  value = value.replace(/(\d+\s+lat(?:a)?\s+gwarancj[iia])\s*\([^)]*\)/gi, "$1");
+  value = value.replace(/gwarancja:\s*(\d+\s+lat(?:a)?)\s*\([^)]*\)/gi, "Gwarancja: $1");
+  value = value.replace(/\s*\(\s*(?:seria\s+Prescot\s+(?:Standard|Premium|Delux)|seria\s+Schärfer|producenta)[^)]*\)/gi, "");
+
   // Karol nakazał: nie pisać nigdzie przy gwarancji producenta/Prescot itp — tylko 'X lat', 'X lat gwarancji'
+  value = value.replace(/Gwarancja:\s*(\d+\s+lat(?:a)?)\s+ochrony\s+producenta(?:\s+Prescot)?/gi, "Gwarancja: $1");
+  value = value.replace(/Gwarancja:\s*(\d+\s+lat(?:a)?)\s+(?:producenta|Prescot)/gi, "Gwarancja: $1");
   value = value.replace(/(\d+[- ]letni[ąaeym]|roczn[ąaeym])\s+gwarancj[ąaęi]\s+(?:producenta|prescot)/gi, "$1 gwarancją");
   value = value.replace(/(\d+\s+lat(?:a)?)\s+gwarancj[iia]\s+(?:producenta|prescot)/gi, "$1 gwarancji");
   value = value.replace(/gwarancj[ąaęi]\s+(?:producenta|prescot)(?:\s+door[- ]to[- ]door)?/gi, "gwarancją");
   value = value.replace(/gwarancja\s+(?:producenta|prescot)(?:\s+door[- ]to[- ]door)?/gi, "gwarancja");
   value = value.replace(/gwarancji\s+(?:producenta|prescot)(?:\s+door[- ]to[- ]door)?/gi, "gwarancji");
   value = value.replace(/gwarancja producenta:\s*/gi, "Gwarancja: ");
+  value = value.replace(/gwarancją:\s*/gi, "Gwarancja: ");
   value = value.replace(/prescot\s+producenta/gi, "Prescot");
 
   // Jeśli pilot/sterownik jest czysto RGB (bez RGBW w nazwie), nigdy nie pisz o obsłudze RGBW!
@@ -164,6 +234,9 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
                  .replace(/wielokolorowych\s+RGB\/RGBW/g, "wielokolorowych RGB")
                  .replace(/RGBW/g, "RGB");
   }
+
+  // Wyczyść podwójne spacje
+  value = value.replace(/[ \t]{2,}/g, " ");
 
   // Karol nakazał: zero indeksu handlowego wklejanego automatycznie do opisu
   return value;
@@ -485,17 +558,41 @@ function timSafeSpecs(product, family) {
   return specs.slice(0, 7);
 }
 
-function timSafetyNotes(family) {
-  const notes = [
-    "Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach zgodnych z parametrami instalacji",
-  ];
-  if (["profile", "profile_cover", "profile_endcap", "profile_accessory"].includes(family)) {
-    notes.push("Przed montażem potwierdź wymiary miejsca zabudowy i komplet zgodnych akcesoriów systemowych");
-  } else if (family === "battery") {
-    notes.push("Sposób wymiany, przechowywania i utylizacji sprawdź w instrukcji urządzenia oraz na oznaczeniach baterii");
+function timSafetyNotes(product, family) {
+  const name = String(product?.name || "").toLowerCase();
+  const code = String(product?.code || "").toLowerCase();
+  const all = `${name} ${code}`;
+  const notes = [];
+
+  if (family === "power" || name.includes("zasilacz")) {
+    if (all.includes("dopuszk") || all.includes("irm") || all.includes("fi 60") || all.includes("puszk")) {
+      notes.push("Przed osadzeniem w puszce fi 60 mm upewnij się, że głębokość puszki pozwala na swobodne ułożenie zasilacza i przewodów bez ich załamywania");
+      notes.push("Podłączenie do instalacji sieciowej 230V wykonaj przy odłączonym napięciu zasilania");
+    } else if (all.includes("hermet") || all.includes("ip67") || all.includes("scharfer") || all.includes("schärfer")) {
+      notes.push("W warunkach zewnętrznych lub podwyższonej wilgotności połączenia kablowe zabezpiecz hermetyczną puszką lub mufą żelową");
+      notes.push("Dla zachowania pełnej bezawaryjności zasilacza zachowaj min. 15-20% rezerwy mocy względem obciążenia");
+    } else {
+      notes.push("Zapewnij swobodną cyrkulację powietrza wokół perforowanej obudowy – unikaj ciasnej zabudowy w wełnie lub piance");
+      notes.push("Zachowaj zalecaną rezerwę mocy minimum 15-20% względem łącznego poboru podłączonych taśm LED");
+    }
+  } else if (family === "tape" || name.includes("taśm") || name.includes("tasma")) {
+    notes.push("Taśmę LED montuj na podłożu odprowadzającym ciepło (profil aluminiowy), co zapobiega przegrzewaniu diod");
+    if (all.includes("12v")) {
+      notes.push("Dla odcinków powyżej 5 m zaleca się zasilenie dwustronne lub w układzie równoległym w celu wyeliminowania spadków jasności");
+    } else {
+      notes.push("Przed przyklejeniem taśmy dokładnie odtłuść i osusz powierzchnię montażową profilu");
+    }
+  } else if (family === "control" || name.includes("sterownik") || name.includes("pilot") || name.includes("kontroler")) {
+    notes.push("Odbiornik radiowy umieść z dala od dużych metalowych powierzchni ekranujących sygnał 2.4 GHz");
+    notes.push("Przed włączeniem zasilania zweryfikuj poprawność biegunowości (V+, V-) oraz przypisanie kanałów barwnych");
+  } else if (["profile", "profile_cover", "profile_endcap", "profile_accessory"].includes(family) || name.includes("profil")) {
+    notes.push("Przed wklejeniem taśmy LED odtłuść powierzchnię profilu preparatem na bazie alkoholu izopropylowego (IPA)");
+    notes.push("Docinanie profilu i osłony wykonuj drobnouzębną piłą do metalu, zabezpieczając krawędzie taśmą malarską");
   } else {
-    notes.push("Montaż, podłączenie i uruchomienie elementów instalacji elektrycznej powinny być wykonane przez osobę z odpowiednimi kwalifikacjami");
+    notes.push("Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach zgodnych z parametrami instalacji");
+    notes.push("Montaż i podłączenie elektryczne powinny być wykonane przez osobę z odpowiednimi kwalifikacjami");
   }
+
   return notes;
 }
 
@@ -693,12 +790,25 @@ function renderTim(product, saved) {
     ? result.applications
     : copy.applications;
 
-  // Wskazówki bezpieczeństwa i montażowe (bez zakazanego porównywania indeksu)
-  const safety = timSafetyNotes(family);
+  // Karol nakazał: przywrócić parametry podstawowe ("czemu wyjebales parametry te podstawoe byly ok")
+  const rawFeatures = result.sections?.[2]?.paragraphs || [];
+  const cleanSpecs = rawFeatures.filter((f) => {
+    const s = String(f).toLowerCase();
+    return !s.startsWith("kod:") && !s.startsWith("kod /") && !s.startsWith("indeks:") && !s.startsWith("nazwa:") && !s.startsWith("model:") && !s.includes("kod produktu") && !s.includes("ean");
+  });
+
+  const specifications = cleanSpecs.length >= 2
+    ? cleanSpecs
+    : seoProductSpecs(product).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
+
+  const specsBlock = specifications.length ? `<h3>Parametry i cechy techniczne:</h3>\n<ul>\n${points(specifications)}\n</ul>\n` : "";
+
+  // Wskazówki bezpieczeństwa i montażowe dopasowane do produktu (bez zakazanego porównywania indeksu)
+  const safety = timSafetyNotes(product, family);
   const safetyBlock = safety.length ? `<h3>Wskazówki montażowe i bezpieczeństwo:</h3>\n<ul>\n${points(safety)}\n</ul>\n` : "";
 
-  // Karol nakazał: wywalić generatywne 'Dlaczego warto:', nie dublować parametrów w opisie (są w ETIM)
-  return `<section>\n${introHtml}<h3>Zastosowanie i dobór:</h3>\n<ul>\n${points(applications)}\n</ul>\n${safetyBlock}</section>`;
+  // Karol nakazał: wywalić generatywne 'Dlaczego warto:', zachować parametry podstawowe
+  return `<section>\n${introHtml}<h3>Zastosowanie i dobór:</h3>\n<ul>\n${points(applications)}\n</ul>\n${specsBlock}${safetyBlock}</section>`;
 }
 
 export function generateDescription(product, platform = "shoper", saved = null) {
