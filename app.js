@@ -176,7 +176,11 @@ function descriptionFor(product, platform = state.platform) {
   if (Object.hasOwn(state.localEdits, key)) html = state.localEdits[key];
   const overrideId = manualOverrideId(product, platform);
   if (!html && overrideId && state.overrides.descriptions?.[overrideId]) html = state.overrides.descriptions[overrideId];
-  const saved = state.generated.products?.[product.key];
+  const saved = state.generated?.products?.[product.key]
+             || state.generated?.products?.[product.ean ? `ean:${product.ean}` : ""]
+             || state.generated?.products?.[product.ean]
+             || state.generated?.products?.[product.code ? `code:${product.code}` : ""]
+             || state.generated?.products?.[product.code];
   if (!html) html = generateDescription(product, platform, saved?.editorial || saved);
   return normalizeDescriptionIdentity(product, html, { ensureTradeIndex: false, preserveManufacturerCode: platform === "tim" });
 }
@@ -423,7 +427,8 @@ function validateTimDraft(product, html) {
   if (documentNode.querySelector("[style], table")) errors.push("style inline i tabele są niedozwolone");
   const headings = [...documentNode.querySelectorAll("h2, h3")].map((node) => normalize(node.textContent));
   if (!headings.some((heading) => heading.includes("zastosowanie"))) errors.push("brak sekcji zastosowania");
-  if (!headings.some((heading) => heading.includes("bezpieczeństwo") || heading.includes("montaż") || heading.includes("warto"))) errors.push("brak sekcji zasad bezpieczeństwa lub korzyści");
+  if (!headings.some((heading) => heading.includes("parametry"))) errors.push("brak sekcji parametrów");
+  if (!headings.some((heading) => heading.includes("bezpieczeństwo") || heading.includes("montaż"))) errors.push("brak sekcji zasad bezpieczeństwa lub montażu");
   if (/Opis wyjaśnia funkcję produktu/i.test(textValue)) errors.push("opis zawiera ogólny tekst zastępczy zamiast definicji produktu");
   if (product.ean && textValue.includes(product.ean)) errors.push("opis powtarza EAN z karty produktu");
   if (/\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/iu.test(textValue)) errors.push("opis zawiera wewnętrzny indeks katalogowy");

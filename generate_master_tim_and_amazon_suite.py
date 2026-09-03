@@ -150,7 +150,7 @@ def process_tape(p):
     if series == "COB":
         uniqueness_points.append("Technologia COB (Chip-on-Board) zapewnia jednolitą, gładką linię światła bez widocznych punktów ledowych, nawet w bardzo płytkich profilach aluminiowych.")
     elif series == "Delux":
-        uniqueness_points.append(f"Elitarna seria Delux na podwójnym podkładzie miedzi PCB {pcb} objęta aż 7-letnią gwarancją producenta — zero przegrzewania i brak spadków jasności.")
+        uniqueness_points.append(f"Elitarna seria Delux na podwójnym podkładzie miedzi PCB {pcb} objęta aż 7-letnią gwarancją — zero przegrzewania i brak spadków jasności.")
     else:
         uniqueness_points.append(f"Miedziany podkład PCB {pcb} skutecznie odprowadza ciepło z diod, co zapobiega ich wypalaniu i zapewnia stabilny strumień światła przez lata.")
 
@@ -323,7 +323,7 @@ def process_zasilacz(p):
         warranty = 7
         housing = "Hermetyczna aluminiowa (IP67)"
         uniqueness = (
-            "Najwyższej klasy zasilacz hermetyczny Schärfer objęty aż 7-letnią gwarancją producenta. "
+            "Najwyższej klasy zasilacz hermetyczny Schärfer objęty aż 7-letnią gwarancją. "
             "Elektronika w 100% zalana masą uszczelniającą w aluminiowej obudowie radiatorowej (IP67), co zapewnia odporność na wodę, pył, mróz oraz zmienne warunki atmosferyczne. "
             "Wysoka sprawność energetyczna (>90%) i bezawaryjna praca ciągła w najbardziej wymagających środowiskach."
         )
@@ -494,7 +494,7 @@ def process_akcesorium(p):
         f"Instrukcja montażu i wskazówki techniczne:\n"
         f"• {step_inst}\n"
         f"• Zgodność: akcesorium w pełni kompatybilne z systemami taśm i profili aluminiowych Prescot.\n"
-        f"• Jakość: produkt objęty 2-letnią gwarancją producenta."
+        f"• Jakość: produkt objęty 2-letnią gwarancją."
     )
     faq_items = [
         (faq_q, faq_a),

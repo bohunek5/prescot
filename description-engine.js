@@ -138,6 +138,33 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
   if (ean) value = value.replace(new RegExp(`\\b${escapeRegExp(ean)}\\b`, "gu"), "");
   value = value.replace(/\b(?:PRE[-_ ]?\d+|TAŚ\d+|PRO\d+|KAT\d+|WYP[-_][\p{L}\p{N}_.-]*)\b/giu, "");
 
+  // Karol nakazał bezwzględnie: wywalić 'Przed zakupem porównaj indeks handlowy...' globalnie
+  value = value.replace(/<li>\s*Przed zakupem porównaj indeks handlowy[^<]*<\/li>/gi, "");
+  value = value.replace(/Przed zakupem porównaj indeks handlowy[^\n.<]*[.]?/gi, "");
+
+  // Karol nakazał: wywalić generatywne 'Dlaczego warto:'
+  value = value.replace(/<h3>Dlaczego warto:<\/h3>\s*<ul>[\s\S]*?<\/ul>/gi, "");
+
+  // Karol nakazał: nie pisać nigdzie przy gwarancji producenta/Prescot itp — tylko 'X lat', 'X lat gwarancji'
+  value = value.replace(/(\d+[- ]letni[ąaeym]|roczn[ąaeym])\s+gwarancj[ąaęi]\s+(?:producenta|prescot)/gi, "$1 gwarancją");
+  value = value.replace(/(\d+\s+lat(?:a)?)\s+gwarancj[iia]\s+(?:producenta|prescot)/gi, "$1 gwarancji");
+  value = value.replace(/gwarancj[ąaęi]\s+(?:producenta|prescot)(?:\s+door[- ]to[- ]door)?/gi, "gwarancją");
+  value = value.replace(/gwarancja\s+(?:producenta|prescot)(?:\s+door[- ]to[- ]door)?/gi, "gwarancja");
+  value = value.replace(/gwarancji\s+(?:producenta|prescot)(?:\s+door[- ]to[- ]door)?/gi, "gwarancji");
+  value = value.replace(/gwarancja producenta:\s*/gi, "Gwarancja: ");
+  value = value.replace(/prescot\s+producenta/gi, "Prescot");
+
+  // Jeśli pilot/sterownik jest czysto RGB (bez RGBW w nazwie), nigdy nie pisz o obsłudze RGBW!
+  const nameLow = String(product?.name || "").toLowerCase();
+  const isPureRgb = nameLow.includes("rgb") && !nameLow.includes("rgbw") && !nameLow.includes("cct") && !nameLow.includes("rgbww");
+  if (isPureRgb) {
+    value = value.replace(/RGB\s*\/\s*RGBW/g, "RGB")
+                 .replace(/RGB\s+i\s+RGBW/g, "RGB")
+                 .replace(/RGB,\s*RGBW/g, "RGB")
+                 .replace(/wielokolorowych\s+RGB\/RGBW/g, "wielokolorowych RGB")
+                 .replace(/RGBW/g, "RGB");
+  }
+
   // Karol nakazał: zero indeksu handlowego wklejanego automatycznie do opisu
   return value;
 }
@@ -161,7 +188,7 @@ function seoProductSpecs(product) {
   const seen = new Set();
   const specs = [];
   const identityLabels = new Set(["producent", "kod produktu", "kod producenta", "ean", "indeks handlowy", "nazwa galerii"]);
-  
+
   // 1. Z atrybutów
   for (const [rawLabel, rawValue] of Object.entries(product.attributes || {})) {
     const label = normalize(rawLabel).replaceAll("_", " ");
@@ -171,7 +198,7 @@ function seoProductSpecs(product) {
     seen.add(identity);
     specs.push([label, value]);
   }
-  
+
   // 2. Z opisu źródłowego (jeśli mało parametrów)
   if (specs.length < 3 && product.sourceDescription) {
     const lines = String(product.sourceDescription).split("\n");
@@ -241,7 +268,7 @@ function renderShoper(product, saved) {
   const result = saved?.editorial || saved || {};
   const kind = productKind(product);
   const sections = result.sections || [];
-  
+
   // 1. Sekcja Opis / Seria
   let pill1 = leafCategory(product);
   if (kind === "tape") {
@@ -323,23 +350,31 @@ function renderWapro(product, saved) {
   const introParas = result.sections?.[0]?.paragraphs || [result.sections?.[0]?.content || product.summary || product.name];
   const introHtml = introParas.map((p) => `<p>${escapeHtml(normalize(p))}</p>`).join("\n");
 
+  const rawFeatures = result.sections?.[2]?.paragraphs || [];
+  const cleanFeatures = rawFeatures.filter((f) => {
+    const s = String(f).toLowerCase();
+    return !s.startsWith("kod:") && !s.startsWith("kod / indeks:") && !s.startsWith("nazwa:") && !s.startsWith("model / oznaczenie:") && !s.includes("kod produktu");
+  });
+
+  const features = cleanFeatures.length ? cleanFeatures : seoProductSpecs(product).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
   const benefits = publicEditorialLines(product, result.benefits);
   const applications = result.applications || result.sections?.[1]?.paragraphs || [];
 
   const points = (values) => (values || []).map((val) => `<p>- ${escapeHtml(normalize(val).replace(/\.$/, ""))}</p>`).join("\n");
+  const featuresBlock = features.length ? `<h3>Najważniejsze cechy:</h3>\n${points(features)}\n` : "";
   const benefitsBlock = benefits.length ? `<h3>Dlaczego warto:</h3>\n${points(benefits)}\n` : "";
   const appsBlock = applications.length ? `<h3>Zastosowanie i miejsce montażu:</h3>\n${points(applications)}\n` : "";
 
-  return `<section>\n<h2>${escapeHtml(heading)}</h2>\n${introHtml}\n${benefitsBlock}${appsBlock}</section>`;
+  return `<section>\n<h2>${escapeHtml(heading)}</h2>\n${introHtml}\n${featuresBlock}${benefitsBlock}${appsBlock}</section>`;
 }
 
 function renderAllegro(product, saved) {
   const result = saved?.editorial || saved || {};
   const lead = result.channel_leads?.allegro || result.seo_title || product.name;
   const title = result.seo_title || product.name;
-  
+
   const sec1 = renderPillSection("Sprawdź przed zakupem", title, lead, STYLE.sectionSub, "#16a34a");
-  
+
   let sec2 = "";
   const benefits = publicEditorialLines(product, result.benefits);
   if (benefits.length) {
@@ -452,8 +487,7 @@ function timSafeSpecs(product, family) {
 
 function timSafetyNotes(family) {
   const notes = [
-    "Przed zakupem porównaj indeks handlowy i parametry techniczne z dokumentacją producenta",
-    "Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach przewidzianych przez producenta",
+    "Produkt stosuj wyłącznie z kompatybilnymi elementami i w warunkach zgodnych z parametrami instalacji",
   ];
   if (["profile", "profile_cover", "profile_endcap", "profile_accessory"].includes(family)) {
     notes.push("Przed montażem potwierdź wymiary miejsca zabudowy i komplet zgodnych akcesoriów systemowych");
@@ -466,115 +500,173 @@ function timSafetyNotes(family) {
 }
 
 function timFamilyCopy(product, family) {
+  const name = String(product?.name || "").toLowerCase();
+  const code = String(product?.code || "").toLowerCase();
+  const all = `${name} ${code}`;
   const category = leafCategory(product);
-  const generic = {
-    intro: `Jest to produkt z kategorii ${category}.`,
+
+  // 1. STEROWNIKI I PILOTY (CONTROL)
+  if (family === "control" || name.includes("pilot") || name.includes("sterownik") || name.includes("kontroler")) {
+    if (all.includes("rgbw") || all.includes("rgb+w") || all.includes("rgbww")) {
+      return {
+        intro: "Elektroniczny kontroler LED z dedykowaną obsługą taśm wielokolorowych RGBW (kolory RGB oraz niezależny kanał czystej bieli użytkowej).",
+        applications: [
+          "Do instalacji oświetleniowych z taśmami LED RGBW, w których zależy Ci na nastrojowych scenach kolorystycznych i jasnym świetle białym",
+          "Do salonów, stref wypoczynku, sufitów podwieszanych oraz zabudów meblowych z niezależną regulacją barwy i jasności",
+          "Przy doborze sprawdź napięcie pracy (12V/24V DC), obciążalność prądową oraz kompatybilność z 5-żyłową taśmą RGBW",
+        ],
+      };
+    } else if (all.includes("rgbcct") || all.includes("rgb+cct") || (all.includes("rgb") && all.includes("cct"))) {
+      return {
+        intro: "Wielokanałowy kontroler radiowy LED RGB+CCT umożliwiający jednoczesne sterowanie pełną paletą kolorów RGB oraz płynną regulację temperatury barwowej bieli.",
+        applications: [
+          "Do zaawansowanych instalacji smart lighting w nowoczesnych domach, apartamentach i przestrzeniach komercyjnych",
+          "Pozwala na płynne przejście od przytulnego ciepłego światła wieczorem, przez chłodną biel do pracy, aż po efektowne sceny barwne",
+          "Przy doborze zweryfikuj zgodność z 6-żyłowymi taśmami RGB+CCT oraz maksymalne dopuszczalne obciążenie na kanał",
+        ],
+      };
+    } else if (all.includes("cct") || all.includes("dual white")) {
+      return {
+        intro: "Dedykowany sterownik do taśm LED CCT umożliwiający płynną regulację temperatury barwowej bieli od ciepłej do zimnej.",
+        applications: [
+          "Do stref, w których oświetlenie dopasowuje się do pory dnia – ciepłe światło do odpoczynku, neutralne lub chłodne do pracy i nauki",
+          "Do montażu w kuchniach nad blatem roboczym, salonach, gabinetach oraz łazienkach z taśmami dwukanałowymi CCT",
+          "Przy doborze upewnij się, że zasilacz i sterownik odpowiadają napięciu (12V lub 24V) podłączanej taśmy",
+        ],
+      };
+    } else if (all.includes("rgb")) {
+      // CZYSTY PILOT / STEROWNIK RGB — BEZWZGLĘDNIE BEZ RGBW!
+      return {
+        intro: "Bezprzewodowy sterownik radiowy przeznaczony do precyzyjnego zarządzania wielokolorowymi taśmami LED RGB.",
+        applications: [
+          "Do sterowania taśmami i modułami wielokolorowymi RGB – wybór barw z palety kolorów, regulacja jasności oraz dynamiczne efekty świetlne",
+          "Do oświetlenia dekoracyjnego w salonach, pokojach gamingowych, sypialniach, strefach RTV oraz niszach sufitowych",
+          "Przy doborze sprawdź napięcie robocze (12V/24V DC) oraz sumaryczny prąd pobierany przez sekcje RGB",
+        ],
+      };
+    } else {
+      // MONO
+      return {
+        intro: "Kompaktowy sterownik i ściemniacz LED przeznaczony do jednokolorowych taśm oraz opraw oświetleniowych.",
+        applications: [
+          "Do płynnego włączania, wyłączania i regulacji natężenia światła jednokolorowego bez migotania (PWM)",
+          "Do oświetlenia podszafkowego w kuchni, sufitów napinanych, wnęk ściennych oraz szaf garderobianych",
+          "Przy doborze dopasuj dopuszczalne natężenie prądu sterownika do łącznego poboru zasilanych taśm",
+        ],
+      };
+    }
+  }
+
+  // 2. ZASILACZE (POWER)
+  if (family === "power" || name.includes("zasilacz")) {
+    if (all.includes("mad") || all.includes("auto") || all.includes("1224") || all.includes("12v/24v")) {
+      return {
+        intro: "Inteligentny zasilacz impulsowy LED z mikroprocesorem Smart Auto-Identify, który automatycznie wykrywa i stabilizuje napięcie wyjściowe 12V lub 24V DC.",
+        applications: [
+          "Do bezpiecznego zasilania taśm LED 12V oraz 24V – całkowicie eliminuje ryzyko pomyłki i przypadkowego spalenia taśmy podczas montażu",
+          "Konstrukcja Ultra-Slim (wysokość tylko 29 mm) z zalewem termoprzewodzącym Semi-Potted zapewnia bezgłośną pracę (zero pisków cewek) w sypialniach i salonach",
+          "Przy doborze zsumuj pobór mocy taśm i zachowaj min. 20% rezerwy mocy (dla wersji 100W ciągłe obciążenie robocze do 80W)",
+        ],
+      };
+    } else if (all.includes("scharfer") || all.includes("schärfer") || all.includes("sch-") || all.includes("ip67") || all.includes("wodoodporn") || all.includes("hermet")) {
+      return {
+        intro: "Wodoodporny zasilacz impulsowy LED IP67 w aluminiowej obudowie radiatorowej, objęty 7-letnią gwarancją.",
+        applications: [
+          "Do instalacji zewnętrznych i narażonych na wilgoć: elewacje budynków, podbitki dachowe, ogrody, łazienki oraz strefy prysznicowe",
+          "Pełny zalew żywicą epoksydową zabezpiecza komponenty przed zalaniem, pyłem, kondensacją pary oraz ujemnymi temperaturami",
+          "Przy doborze zachowaj minimum 20% zapasu mocy transformatora względem łącznej mocy zainstalowanego oświetlenia",
+        ],
+      };
+    } else if (all.includes("din") || all.includes("szyn") || all.includes("hdr") || all.includes("ndr") || all.includes("edr")) {
+      return {
+        intro: "Modułowy zasilacz impulsowy LED przystosowany do montażu na standardowej szynie DIN TS-35 w rozdzielnicy elektrycznej.",
+        applications: [
+          "Do centralnego zasilania obwodów oświetleniowych LED bezpośrednio z tablicy bezpiecznikowej lub szafy automatyki budynkowej",
+          "Pozwala na estetyczne uporządkowanie instalacji elektrycznej bez konieczności ukrywania transformatorów w zabudowach gipsowo-kartonowych",
+          "Przy doborze uwzględnij prąd znamionowy, szerokość modułu w rozdzielnicy oraz wymaganą rezerwę mocy min. 20%",
+        ],
+      };
+    } else {
+      return {
+        intro: "Płaski zasilacz impulsowy LED z serii meblowej Slim, zoptymalizowany do montażu w ograniczonych przestrzeniach zabudowy.",
+        applications: [
+          "Do zasilania taśm i opraw meblowych w cokołach szafek kuchennych, za lustrami, w garderobach oraz płytkich sufitach podwieszanych",
+          "Perforowana obudowa aluminiowa odprowadza ciepło w sposób pasywny, gwarantując cichą i bezawaryjną pracę",
+          "Pamiętaj o zachowaniu min. 20% rezerwy mocy zasilacza względem sumarycznego poboru podłączonych odcinków LED",
+        ],
+      };
+    }
+  }
+
+  // 3. TAŚMY LED (TAPE)
+  if (family === "tape" || name.includes("taśm") || name.includes("tasma")) {
+    if (all.includes("cob")) {
+      return {
+        intro: "Nowoczesna taśma LED w technologii COB (Chip-on-Board), generująca idealnie jednolitą linię światła bez widocznych punktów ledowych.",
+        applications: [
+          "Do montażu w płytkich profilach aluminiowych, na gładkich frontach meblowych oraz w sufitach podwieszanych",
+          "Zapewnia efekt gładkiej smugi świetlnej nawet przy zastosowaniu całkowicie transparentnego klosza",
+          "Wymaga montażu w profilu aluminiowym odprowadzającym ciepło oraz zasilacza o odpowiednim napięciu z 20% zapasem mocy",
+        ],
+      };
+    } else if (all.includes("delux")) {
+      return {
+        intro: "Profesjonalna taśma LED z flagowej serii Delux na podwójnym podkładzie miedzi PCB, objęta 7-letnią gwarancją.",
+        applications: [
+          "Do reprezentacyjnych instalacji architektonicznych w domach, biurach, hotelach oraz obiektach komercyjnych",
+          "Gruby laminat miedziany zapobiega spadkom napięcia na długości taśmy i zapewnia stabilną jasność oraz długą żywotność diod",
+          "Zalecany montaż w profilu aluminiowym; linie powyżej 5 m zasilaj w sekcjach lub obustronnie",
+        ],
+      };
+    } else if (all.includes("bread") || all.includes("2500k")) {
+      return {
+        intro: "Specjalistyczna taśma LED o barwie piekarniczej Bread 2500K, stworzona do efektownego oświetlania pieczywa i wyrobów cukierniczych.",
+        applications: [
+          "Do gablot piekarniczych, ekspozytorów chleba, cukierni oraz stoisk z wypiekami w delikatesach i marketach",
+          "Ciepłe, bursztynowe spektrum światła wydobywa złocistą chrupkość skórki i naturalną świeżość pieczywa",
+          "Montuj w profilu aluminiowym chłodzącym diody i zasilaj z transformatora o odpowiednio dobranej mocy",
+        ],
+      };
+    } else if (all.includes("3000k") || all.includes("ciepł") || all.includes("ciepl")) {
+      return {
+        intro: "Elastyczna taśma LED emitująca ciepłe, przytulne światło białe sprzyjające wypoczynkowi.",
+        applications: [
+          "Do nastrojowego oświetlenia w sypialniach, salonach, strefach relaksu oraz pod szafkami wiszącymi",
+          "Ciepła barwa światła tworzy przyjazną, domową atmosferę i efektownie eksponuje drewno meblowe",
+          "Montuj w profilu aluminiowym odprowadzającym ciepło i zasilaj transformatorem o dobranym napięciu z 20% zapasem mocy",
+        ],
+      };
+    } else if (all.includes("4000k") || all.includes("neutraln")) {
+      return {
+        intro: "Wydajna taśma LED o czystej barwie neutralnej białej (4000K), zbliżonej do naturalnego światła słonecznego.",
+        applications: [
+          "Do oświetlenia zadaniowego nad blat kuchenny, do biur, łazienek, gabinetów oraz korytarzy",
+          "Naturalna biel dzienna wiernie oddaje kolory i sprzyja koncentracji podczas codziennych obowiązków",
+          "Do prawidłowej pracy wymaga montażu na podłożu dobrze odprowadzającym ciepło (profil aluminiowy)",
+        ],
+      };
+    }
+  }
+
+  // 4. PROFILE I AKCESORIA
+  if (family === "profile" || name.includes("profil")) {
+    return {
+      intro: "Profil aluminiowy do profesjonalnego montażu taśm LED, pełniący funkcję estetycznej oprawy oraz radiatora chłodzącego.",
+      applications: [
+        "Do tworzenia trwałych linii świetlnych w zabudowie gipsowo-kartonowej, meblach kuchennych, szafach i schodach",
+        "Chroni taśmę LED przed kurzem, uszkodzeniami mechanicznymi i zapewnia optymalne odprowadzanie ciepła z diod",
+        "Przy doborze sprawdź szerokość wewnętrzną profilu, sposób montażu (nawierzchniowy, wpuszczany) oraz kompatybilne klosze i zaślepki",
+      ],
+    };
+  }
+
+  return {
+    intro: `Produkt z kategorii ${category} przeznaczony do profesjonalnych instalacji oświetleniowych LED.`,
     applications: [
-      `Do zastosowania zgodnego z przeznaczeniem kategorii ${category} i dokumentacją producenta`,
-      "Przy doborze porównaj wariant, parametry techniczne, wymiary i zgodność z pozostałymi elementami systemu",
+      `Do zastosowania w kompatybilnych systemach oświetlenia LED zgodnie z przeznaczeniem wariantu`,
+      "Przy doborze sprawdź parametry elektryczne, wymiary montażowe oraz warunki środowiskowe instalacji",
     ],
   };
-  const copy = {
-    tape: {
-      intro: "Jest to taśma LED do tworzenia liniowego oświetlenia.",
-      applications: [
-        "Do oświetlenia liniowego lub dekoracyjnego w instalacji zgodnej z parametrami tego wariantu",
-        "Przy doborze porównaj napięcie, moc na metr, barwę lub typ światła, szerokość taśmy i stopień ochrony",
-      ],
-    },
-    profile: {
-      intro: "Jest to profil do budowy liniowego systemu oświetleniowego z taśmą LED.",
-      applications: [
-        "Do wykonania oprawy liniowej z kompatybilną taśmą LED, osłoną i akcesoriami systemowymi",
-        "Przy doborze porównaj serię profilu, długość, wymiary oraz zgodność osłon, zaślepek i uchwytów",
-      ],
-    },
-    profile_cover: {
-      intro: "Jest to osłona przeznaczona do kompatybilnego profilu LED.",
-      applications: [
-        "Do osłonięcia przestrzeni świetlnej w zgodnym profilu LED",
-        "Przy doborze porównaj serię profilu, długość, sposób osadzenia oraz wykończenie osłony",
-      ],
-    },
-    profile_endcap: {
-      intro: "Jest to zaślepka przeznaczona do kompatybilnego profilu LED.",
-      applications: [
-        "Do wykończenia odpowiedniego wariantu profilu LED",
-        "Przy doborze porównaj serię profilu, stronę lub wariant oraz obecność otworu, jeśli dotyczy",
-      ],
-    },
-    profile_accessory: {
-      intro: "Jest to element kompatybilnego systemu profili LED.",
-      applications: [
-        "Do kompletacji systemu profilu LED wskazanego przez producenta",
-        "Przy doborze porównaj serię, przeznaczenie, wymiary oraz zgodność z pozostałymi elementami systemu",
-      ],
-    },
-    power: {
-      intro: "Jest to zasilacz przeznaczony do zasilania zgodnych odbiorników LED.",
-      applications: [
-        "Do zasilania urządzeń LED zgodnych z napięciem i zakresem mocy tego wariantu",
-        "Przy doborze porównaj napięcie wejściowe i wyjściowe, moc, stopień ochrony oraz warunki pracy",
-      ],
-    },
-    control: {
-      intro: "Jest to element systemu sterowania oświetleniem LED.",
-      applications: [
-        "Do sterowania zgodnym systemem LED w zakresie funkcji przewidzianych dla tego wariantu",
-        "Przy doborze porównaj napięcie pracy, typ sygnału, liczbę kanałów, obciążalność oraz zgodne akcesoria",
-      ],
-    },
-    led_accessory: {
-      intro: "Jest to element przeznaczony do kompletacji zgodnego systemu LED.",
-      applications: [
-        "Do łączenia, zasilania albo uzupełnienia instalacji LED zgodnie z funkcją podaną w nazwie produktu",
-        "Przy doborze porównaj typ złącza, liczbę torów, wymiary, przekrój przewodu i zgodność z urządzeniem",
-      ],
-    },
-    module: {
-      intro: "Jest to moduł LED przeznaczony do zgodnej oprawy lub instalacji oświetleniowej.",
-      applications: [
-        "Do budowy lub uzupełnienia systemu oświetleniowego zgodnego z parametrami modułu",
-        "Przy doborze porównaj napięcie lub prąd pracy, moc, barwę światła, wymiary i warunki zastosowania",
-      ],
-    },
-    led_set: {
-      intro: "Jest to zestaw LED zawierający elementy wskazane w nazwie i parametrach produktu.",
-      applications: [
-        "Do wykonania kompletnego rozwiązania oświetleniowego zgodnie z przeznaczeniem zestawu",
-        "Przy doborze porównaj długość, napięcie, moc, rodzaj światła, sposób sterowania i stopień ochrony",
-      ],
-    },
-    luminaire: {
-      intro: "Jest to oprawa lub element systemu oświetleniowego.",
-      applications: [
-        "Do oświetlenia przestrzeni zgodnej z przeznaczeniem i warunkami pracy podanymi przez producenta",
-        "Przy doborze porównaj moc, barwę światła, wymiary, sposób montażu, stopień ochrony i wymagane zasilanie",
-      ],
-    },
-    light_source: {
-      intro: "Jest to źródło światła przeznaczone do kompatybilnej oprawy.",
-      applications: [
-        "Do zastosowania w oprawie zgodnej z trzonkiem, napięciem i parametrami źródła światła",
-        "Przy doborze porównaj trzonek, napięcie, moc, strumień świetlny, barwę światła i wymiary",
-      ],
-    },
-    ballast: {
-      intro: "Jest to element układu zasilania zgodnego źródła światła.",
-      applications: [
-        "Do pracy z urządzeniem o parametrach zgodnych z zakresem statecznika",
-        "Przy doborze porównaj typ źródła, moc, napięcie, sposób sterowania i wymagany układ połączeń",
-      ],
-    },
-    electrical_accessory: {
-      intro: "Jest to element osprzętu elektrycznego.",
-      applications: [
-        "Do kompletacji instalacji elektrycznej w zakresie funkcji wskazanej w nazwie produktu",
-        "Przy doborze porównaj serię, funkcję, parametry znamionowe, wymiary i zgodność mechanizmu z osprzętem",
-      ],
-    },
-  };
-  return copy[family] || generic;
 }
 
 function renderTim(product, saved) {
@@ -596,13 +688,17 @@ function renderTim(product, saved) {
     introHtml = `<p>${escapeHtml(copy.intro)}</p>\n`;
   }
 
-  const applications = result.applications?.length ? result.applications : (result.sections?.[1]?.paragraphs || copy.applications);
-  const benefits = publicEditorialLines(product, result.benefits);
-  const benefitsBlock = benefits.length ? `<h3>Dlaczego warto:</h3>\n<ul>\n${points(benefits)}\n</ul>\n` : "";
+  // Zastosowanie i dobór — bierz z unikalnej kopii lub sekcji
+  const applications = (result.applications && result.applications.length > 0 && !result.applications[0].includes("kategorii"))
+    ? result.applications
+    : copy.applications;
+
+  // Wskazówki bezpieczeństwa i montażowe (bez zakazanego porównywania indeksu)
   const safety = timSafetyNotes(family);
   const safetyBlock = safety.length ? `<h3>Wskazówki montażowe i bezpieczeństwo:</h3>\n<ul>\n${points(safety)}\n</ul>\n` : "";
 
-  return `<section>\n${introHtml}<h3>Zastosowanie i dobór:</h3>\n<ul>\n${points(applications)}\n</ul>\n${benefitsBlock}${safetyBlock}</section>`;
+  // Karol nakazał: wywalić generatywne 'Dlaczego warto:', nie dublować parametrów w opisie (są w ETIM)
+  return `<section>\n${introHtml}<h3>Zastosowanie i dobór:</h3>\n<ul>\n${points(applications)}\n</ul>\n${safetyBlock}</section>`;
 }
 
 export function generateDescription(product, platform = "shoper", saved = null) {

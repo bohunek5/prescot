@@ -273,34 +273,29 @@ def generate_tape_3layers_and_faq(spec):
     # -------------------------------------------------------------------------
     # WARSTWA 1: Co to jest? (1–2 zdania prostym językiem)
     # -------------------------------------------------------------------------
-    if series == "Bread" or col_tag == "bread":
+    if series == "Delux":
         v1_opts = [
-            f"Specjalistyczna taśma LED Prescot z serii Bread została zaprojektowana z myślą o profesjonalnym oświetleniu piekarni, cukierni oraz ekspozycji świeżego pieczywa{extra_3m_note}.",
-            f"Dedykowany pasek świetlny Prescot Bread emituje ciepłe, złociste światło o widmie precyzyjnie dobranym do podkreślenia chrupkości i apetycznego wyglądu wypieków{extra_3m_note}."
-        ]
-    elif series == "Delux":
-        v1_opts = [
-            f"Flagowa taśma LED Prescot DELUX 7Y to najwyższej klasy oświetlenie liniowe o {col_desc}, objęte {warr_adj} producenta{extra_3m_note}.",
-            f"Prescot DELUX 7Y to profesjonalny pasek świetlny dla wymagających inwestorów i architektów, gwarantujący perfekcyjne odwzorowanie naturalnych kolorów (CRI Ra > {cri}) i idealną stabilność światła{extra_3m_note}.",
-            f"Taśma LED z elitarnej serii Delux 7Y to bezkompromisowe źródło światła klasy Premium, zapewniające wieloletnią trwałość i najwyższą kulturę termiczną diod{extra_3m_note}."
+            f"Taśma LED Prescot DELUX 7Y ({volt}, {pwm}W/m) to najwyższej klasy oświetlenie liniowe o {col_desc}, zbudowane na wzmocnionym podwójnym podkładzie miedzianym PCB {pcb} i objęte {warr_adj} producenta{extra_3m_note}.",
+            f"Prescot DELUX 7Y {volt} DC to flagowy pasek świetlny na grubym miedzianym podłożu PCB {pcb}, gwarantujący idealne odwzorowanie naturalnych kolorów (CRI Ra > {cri}) bez spadków jasności na długich odcinkach{extra_3m_note}.",
+            f"Wysokosprawna taśma LED z serii Delux 7Y ({col_name}, moc {pwm}W/m, długość {len_m}m) to profesjonalne źródło światła klasy Premium, zapewniające wieloletnią trwałość dzięki miedzi PCB {pcb}{extra_3m_note}."
         ]
     elif series == "COB":
         v1_opts = [
-            f"Bezszwowa taśma LED COB Prescot w technologii Chip-on-Board emituje idealnie gładką, ciągłą linię światła (efekt neonu) bez widocznych pojedynczych punktów ledowych{extra_3m_note}.",
-            f"Taśma oświetleniowa COB marki Prescot tworzy jednolitą wstęgę światła o {col_desc}, całkowicie eliminując efekt kropek nawet w bardzo płytkich profilach aluminiowych{extra_3m_note}.",
-            f"Pasek świetlny COB o szerokim kącie rozsyłu 180° to zaawansowane rozwiązanie do nowoczesnych aranżacji wymagających jednolitej tafli światła{extra_3m_note}."
+            f"Taśma LED COB Prescot {volt} ({pwm}W/m) to nowoczesny pasek świetlny w technologii Chip-on-Board, emitujący idealnie gładką, jednolitą linię światła (efekt neonu) bez widocznych pojedynczych punktów świetlnych{extra_3m_note}.",
+            f"Bezszwowa taśma oświetleniowa COB {volt} DC marki Prescot tworzy ciągłą wstęgę światła o {col_desc}, eliminując efekt kropek nawet w bardzo płytkich profilach aluminiowych.",
+            f"Pasek świetlny COB {volt} DC o mocy {pwm}W/m i szerokim kącie świecenia 180° to doskonały wybór do nowoczesnych aranżacji wymagających perfekcyjnie jednolitego oświetlenia liniowego."
         ]
     elif series == "Premium":
         v1_opts = [
-            f"Taśma LED Prescot PREMIUM to solidne i wydajne źródło światła o {col_desc}, objęte {warr_adj} i przeznaczone do codziennych instalacji meblowych, sufitowych i architektonicznych{extra_3m_note}.",
-            f"Profesjonalna taśma LED z serii Prescot Premium zapewnia mocny, stabilny strumień światła przy zachowaniu optymalnego odprowadzania ciepła{extra_3m_note}.",
-            f"Elastyczny pasek ledowy Prescot Premium to sprawdzone rozwiązanie do estetycznego i trwałego oświetlenia w domach oraz lokalach komercyjnych{extra_3m_note}."
+            f"Taśma LED Prescot PREMIUM {volt} ({pwm}W/m, podkład PCB {pcb}) to solidne i wydajne źródło światła o {col_desc}, objęte {warr_adj} i przeznaczone do codziennych instalacji meblowych, sufitowych i architektonicznych{extra_3m_note}.",
+            f"Profesjonalna taśma LED z serii Prescot Premium {volt} DC na miedzianym podłożu PCB {pcb} zapewnia mocny, stabilny strumień światła przy zachowaniu optymalnego chłodzenia.",
+            f"Elastyczny pasek ledowy Prescot Premium ({volt}, {col_name}, moc {pwm}W/m, szpula {len_m}m) to sprawdzone rozwiązanie do estetycznego oświetlenia w domach i lokalach użytkowych."
         ]
     else:
         v1_opts = [
-            f"Taśma LED Prescot Standard to sprawdzony i funkcjonalny pasek oświetleniowy o {col_desc}, objęty {warr_adj} i stworzony do estetycznych instalacji liniowych oraz doświetlających{extra_3m_note}.",
-            f"Pasek świetlny Prescot Standard to niezawodne i ekonomiczne rozwiązanie do montażu w korytarzach, garderobach i wnękach meblowych{extra_3m_note}.",
-            f"Taśma LED Prescot Standard to uniwersalny pasek oświetleniowy objęty {warr_adj}, przeznaczony do energooszczędnego oświetlenia liniowego i dekoracyjnego{extra_3m_note}."
+            f"Taśma LED Prescot Standard {volt} ({pwm}W/m, szpula {len_m}m) to sprawdzony i funkcjonalny pasek oświetleniowy o {col_desc}, objęty {warr_adj} i stworzony do estetycznych instalacji liniowych i doświetlających{extra_3m_note}.",
+            f"Pasek świetlny Prescot Standard {volt} DC o mocy {pwm}W/m to niezawodne rozwiązanie do montażu w korytarzach, garderobach i wnękach meblowych.",
+            f"Taśma LED Prescot {volt} ({pwm}W/m, {col_name}) to uniwersalny pasek oświetleniowy objęty {warr_adj}, przeznaczony do energooszczędnego oświetlenia liniowego i dekoracyjnego{extra_3m_note}."
         ]
     w1 = pick(uid, "w1", v1_opts)
 
@@ -475,6 +470,12 @@ def build_html_card(idx, p, copy_data, parsed):
             <div class="section-title">WARSTWA 2: ZASTOSOWANIE I MIEJSCE MONTAŻU</div>
             <p>{html.escape(copy_data["w2"])}</p>
           </div>
+          <div class="desc-block params">
+            <div class="section-title">WARSTWA 3: PARAMETRY TECHNICZNE W PUNKTACH</div>
+            <ul>
+              {"".join([f"<li>{html.escape(item)}</li>" for item in copy_data["w3"]])}
+            </ul>
+          </div>
         </div>
       </div>"""
 
@@ -491,6 +492,11 @@ def build_html_card(idx, p, copy_data, parsed):
     faq_html = "\n".join([
         f'              <div class="faq-item"><strong>P: {html.escape(q)}</strong><p>O: {html.escape(a)}</p></div>'
         for q, a in copy_data["faq"]
+    ])
+
+    w3_html = "\n".join([
+        f'              <li>{html.escape(item)}</li>'
+        for item in copy_data["w3"]
     ])
 
     dobor_formatted = html.escape(copy_data["dobor"]).replace("\n\n", "</p><p>")
@@ -526,6 +532,12 @@ def build_html_card(idx, p, copy_data, parsed):
           <div class="desc-block barwa">
             <div class="section-title">WARSTWA 2: ZASTOSOWANIE I MIEJSCE MONTAŻU</div>
             <p>{html.escape(copy_data["w2"])}</p>
+          </div>
+          <div class="desc-block params">
+            <div class="section-title">WARSTWA 3: PARAMETRY TECHNICZNE W PUNKTACH</div>
+            <ul>
+{w3_html}
+            </ul>
           </div>
           <div class="desc-block dobor">
             <div class="section-title">DOBÓR ZASILACZA I PROFILU ALUMINIOWEGO</div>
