@@ -188,8 +188,15 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
   value = value.replace(/<li>\s*Przed zakupem porównaj indeks handlowy[^<]*<\/li>/gi, "");
   value = value.replace(/Przed zakupem porównaj indeks handlowy[^\n.<]*[.]?/gi, "");
 
-  // Karol nakazał: wywalić generatywne 'Dlaczego warto:'
-  value = value.replace(/<h3>Dlaczego warto:<\/h3>\s*<ul>[\s\S]*?<\/ul>/gi, "");
+  // Karol nakazał: wywalić generatywne 'Dlaczego warto:' globalnie ze wszystkich platform
+  value = value.replace(/<section[^>]*>(?:(?!<\/section>)[\s\S])*?Dlaczego warto[\s\S]*?<\/section>/gi, "");
+  value = value.replace(/<h3[^>]*>\s*Dlaczego warto:?\s*<\/h3>[\s\S]*?(?=<h[1-4]|<\/section>|$)/gi, "");
+  value = value.replace(/<h3[^>]*>\s*Najważniejsze korzyści tego wariantu\s*<\/h3>[\s\S]*?(?=<h[1-4]|<\/section>|$)/gi, "");
+  value = value.replace(/<span[^>]*>[^<]*Dlaczego warto[^<]*<\/span>/gi, "");
+  value = value.replace(/<font[^>]*>[^<]*Dlaczego warto[^<]*<\/font>/gi, "");
+  value = value.replace(/<h3>Dlaczego warto:?<\/h3>\s*<ul>[\s\S]*?<\/ul>/gi, "");
+  value = value.replace(/<h3>Dlaczego warto:?<\/h3>/gi, "");
+  value = value.replace(/Dlaczego warto:?/gi, "");
 
   // Karol nakazał: nie pisać 'produkt marki [kogo]', dozwolone marki to tylko: taśmy LED (Prescot), Schärfer, MiBoxer, KLUŚ, sterowniki PR-, zasilacze PR-/IP-/PD-/PG-
   const allowedBrand = getProductAllowedBrand(product);
@@ -430,15 +437,13 @@ function renderWapro(product, saved) {
   });
 
   const features = cleanFeatures.length ? cleanFeatures : seoProductSpecs(product).slice(0, 7).map(([label, value]) => `${label}: ${value}`);
-  const benefits = publicEditorialLines(product, result.benefits);
   const applications = result.applications || result.sections?.[1]?.paragraphs || [];
 
   const points = (values) => (values || []).map((val) => `<p>- ${escapeHtml(normalize(val).replace(/\.$/, ""))}</p>`).join("\n");
   const featuresBlock = features.length ? `<h3>Najważniejsze cechy:</h3>\n${points(features)}\n` : "";
-  const benefitsBlock = benefits.length ? `<h3>Dlaczego warto:</h3>\n${points(benefits)}\n` : "";
   const appsBlock = applications.length ? `<h3>Zastosowanie i miejsce montażu:</h3>\n${points(applications)}\n` : "";
 
-  return `<section>\n<h2>${escapeHtml(heading)}</h2>\n${introHtml}\n${featuresBlock}${benefitsBlock}${appsBlock}</section>`;
+  return `<section>\n<h2>${escapeHtml(heading)}</h2>\n${introHtml}\n${featuresBlock}${appsBlock}</section>`;
 }
 
 function renderAllegro(product, saved) {
@@ -447,15 +452,6 @@ function renderAllegro(product, saved) {
   const title = result.seo_title || product.name;
 
   const sec1 = renderPillSection("Sprawdź przed zakupem", title, lead, STYLE.sectionSub, "#16a34a");
-
-  let sec2 = "";
-  const benefits = publicEditorialLines(product, result.benefits);
-  if (benefits.length) {
-    const cards = benefits.map((point) => (
-      `<div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid currentColor;border-radius:10px;"><span style="display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;width:22px;height:22px;border-radius:999px;background:#16a34a!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-weight:800;line-height:1;">✓</span><span style="font-size:14px;line-height:1.45;color:inherit;">${escapeHtml(normalize(point).replace(/\.$/, ""))}</span></div>`
-    )).join("");
-    sec2 = `<section style="${STYLE.sectionSub}"><span style="${pillStyle("#16a34a")}"><span style="color:#ffffff;">Dlaczego warto</span></span><h3 style="${STYLE.heading}">Najważniejsze korzyści tego wariantu</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:10px;">${cards}</div></section>`;
-  }
 
   const sec3 = result.sections?.[1]
     ? renderPillSection("Gdzie użyć", result.sections[1].heading, result.sections[1].paragraphs, STYLE.sectionSub, "#16a34a")
@@ -468,7 +464,7 @@ function renderAllegro(product, saved) {
     sec4 = `<section style="${STYLE.sectionLast}"><span style="${pillStyle("#16a34a")}"><span style="color:#ffffff;">Wskazówki montażowe</span></span><h3 style="${STYLE.heading}">Co warto wiedzieć przed montażem</h3><ul style="${STYLE.list}">${items}</ul></section>`;
   }
 
-  return [sec1, sec2, sec3, sec4].filter(Boolean).join("\n");
+  return [sec1, sec3, sec4].filter(Boolean).join("\n");
 }
 
 export function timTradeIndex(product) {
