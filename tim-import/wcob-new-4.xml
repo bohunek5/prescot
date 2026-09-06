@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<offers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+  <responsibleProducers>
+    <p id="producer_1">
+      <name>Prescot Sp. z o.o.</name>
+      <address>
+        <countryCode>PL</countryCode>
+        <street>ul. Wileńska 1</street>
+        <postalCode>11-500</postalCode>
+        <city>Giżycko</city>
+      </address>
+      <contact>
+        <email>komponenty@prescot.pl</email>
+        <phoneNumber>877776482</phoneNumber>
+      </contact>
+    </p>
+  </responsibleProducers>
+  <o id="19380" url="https://prescot.com.pl/pl/p/Tasma-LED-Premium-24V-280ledm-WCOB-17Wm-CCT-2600-6000K-IP62-1300lmm-8mm-CRI90-5Y-5m/19380" price="115.00" avail="1" set="0" stock="485" basket="1">
+    <cat><![CDATA[Taśmy LED/Taśmy LED średnia jasność]]></cat>
+    <name><![CDATA[Taśma LED Premium 24V 280led/m WCOB 17W/m CCT 2600-6000K IP62 1300lm/m 8mm CRI90 5Y 5m 24WCOB280CCT5IP62]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69574.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69575.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69576.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69577.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69578.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69579.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69580.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69581.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69582.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69583.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69584.jpg" />
+    </imgs>
+    <desc><![CDATA[<section>
+<p>Bezszwowa taśma LED Prescot w zaawansowanej technologii Chip-on-Board tworzy idealnie ciągłą, jednolitą linię światła o płynnie zmiennej temperaturze barwowej od ciepłego po chłodny odcień bieli bez widocznych pojedynczych punktów ledowych.</p>
+<p>Gęste upakowanie mikrodiod pod wspólną warstwą luminoforu eliminuje efekt kropek nawet w bardzo płytkich profilach aluminiowych, oferując szeroki kąt świecenia 180° i spektakularny efekt nowoczesnego neonu.</p>
+<h3>Zastosowanie i dobór:</h3>
+<ul>
+<li>Przeznaczona do instalacji oświetlenia biofilnego dopasowującego się do pory dnia – pobudzające światło chłodne w dzień i relaksujące ciepłe wieczorem</li>
+</ul>
+<h3>Parametry i cechy techniczne:</h3>
+<ul>
+<li>Napięcie zasilania: 24V DC (napięcie stałe stabilizowane)</li>
+<li>Moc znamionowa: 17.0 W/m (cała rolka 5 m = 85.0 W)</li>
+<li>Długość rolki: 5 m</li>
+<li>Podkład miedziany: PCB 3oz (efektywne odprowadzanie ciepła i brak spadków napięć)</li>
+<li>Wskaźnik oddawania barw: CRI Ra &gt; 90 (naturalna wierność kolorów)</li>
+<li>Barwa światła: CCT regulowana temperatura bieli (2700–6500K)</li>
+<li>Stopień ochrony: IP62 (z cienką powłoką chroniącą przed kurzem i przypadkowym zachlapaniem)</li>
+<li>Gwarancja: 3 lata</li>
+<li>Mocowanie: Fabryczna taśma samoprzylepna na spodzie PCB</li>
+<li>Zalecana moc zasilacza: minimum 120 W 24V DC (z 20% rezerwą mocy dla pełnej rolki 5 m)</li>
+</ul>
+<h3>Wskazówki montażowe i bezpieczeństwo:</h3>
+<ul>
+<li>Taśmę LED montuj na podłożu odprowadzającym ciepło (profil aluminiowy), co zapobiega przegrzewaniu diod</li>
+<li>Przed przyklejeniem taśmy dokładnie odtłuść i osusz powierzchnię montażową profilu</li>
+</ul>
+</section>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000756]]></a>
+      <a name="EAN"><![CDATA[5905475368370]]></a>
+      <a name="Kod producenta"><![CDATA[24WCOB280CCT5IP62]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt]]></a>
+    </attrs>
+  </o>
+  <o id="19377" url="https://prescot.com.pl/pl/p/Tasma-LED-Premium-24V-320ledm-WCOB-10Wm-3000K-IP62-1400lmm-8mm-CRI90-5Y-5m/19377" price="100.00" avail="1" set="0" stock="483" basket="1">
+    <cat><![CDATA[Taśmy LED/Taśmy LED średnia jasność]]></cat>
+    <name><![CDATA[Taśma LED Premium 24V 320led/m WCOB 10W/m 3000K IP62 1400lm/m 8mm CRI90 5Y 5m 24WCOB320WW5IP62]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69594.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69595.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69596.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69597.jpg" />
+    </imgs>
+    <desc><![CDATA[<section>
+<p>Bezszwowa taśma LED Prescot w zaawansowanej technologii Chip-on-Board tworzy idealnie ciągłą, jednolitą linię światła o przyjemnym, ciepłym świetle 3000K sprzyjającym wyciszeniu i relaksowi bez widocznych pojedynczych punktów ledowych.</p>
+<p>Gęste upakowanie mikrodiod pod wspólną warstwą luminoforu eliminuje efekt kropek nawet w bardzo płytkich profilach aluminiowych, oferując szeroki kąt świecenia 180° i spektakularny efekt nowoczesnego neonu.</p>
+<h3>Zastosowanie i dobór:</h3>
+<ul>
+<li>Wprowadza do wnętrza spokój, przytulność i harmonijny nastrój. Doskonale sprawdza się w salonach, sypialniach, strefach relaksu oraz jako nastrojowe podświetlenie półek i sufitów podwieszanych</li>
+</ul>
+<h3>Parametry i cechy techniczne:</h3>
+<ul>
+<li>Napięcie zasilania: 24V DC (napięcie stałe stabilizowane)</li>
+<li>Moc znamionowa: 10.0 W/m (cała rolka 5 m = 50.0 W)</li>
+<li>Długość rolki: 5 m</li>
+<li>Podkład miedziany: PCB 3oz (efektywne odprowadzanie ciepła i brak spadków napięć)</li>
+<li>Wskaźnik oddawania barw: CRI Ra &gt; 90 (naturalna wierność kolorów)</li>
+<li>Barwa światła: ciepła biała 3000K</li>
+<li>Stopień ochrony: IP62 (z cienką powłoką chroniącą przed kurzem i przypadkowym zachlapaniem)</li>
+<li>Gwarancja: 3 lata</li>
+<li>Mocowanie: Fabryczna taśma samoprzylepna na spodzie PCB</li>
+<li>Zalecana moc zasilacza: minimum 60 W 24V DC (z 20% rezerwą mocy dla pełnej rolki 5 m)</li>
+</ul>
+<h3>Wskazówki montażowe i bezpieczeństwo:</h3>
+<ul>
+<li>Taśmę LED montuj na podłożu odprowadzającym ciepło (profil aluminiowy), co zapobiega przegrzewaniu diod</li>
+<li>Przed przyklejeniem taśmy dokładnie odtłuść i osusz powierzchnię montażową profilu</li>
+</ul>
+</section>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000753]]></a>
+      <a name="EAN"><![CDATA[5905475368349]]></a>
+      <a name="Kod producenta"><![CDATA[24WCOB320WW5IP62]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt]]></a>
+    </attrs>
+  </o>
+  <o id="19378" url="https://prescot.com.pl/pl/p/Tasma-LED-Premium-24V-320ledm-WCOB-10Wm-4000K-IP62-1450lmm-8mm-CRI90-5Y-5m/19378" price="100.00" avail="1" set="0" stock="480" basket="1">
+    <cat><![CDATA[Taśmy LED/Taśmy LED średnia jasność]]></cat>
+    <name><![CDATA[Taśma LED Premium 24V 320led/m WCOB 10W/m 4000K IP62 1450lm/m 8mm CRI90 5Y 5m 24WCOB320NW5IP62]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69590.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69591.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69592.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69593.jpg" />
+    </imgs>
+    <desc><![CDATA[<section>
+<p>Bezszwowa taśma LED Prescot w zaawansowanej technologii Chip-on-Board tworzy idealnie ciągłą, jednolitą linię światła o czystym, naturalnym świetle dziennym 4000K niemęczącym wzroku i wiernie oddającym kolory bez widocznych pojedynczych punktów ledowych.</p>
+<p>Gęste upakowanie mikrodiod pod wspólną warstwą luminoforu eliminuje efekt kropek nawet w bardzo płytkich profilach aluminiowych, oferując szeroki kąt świecenia 180° i spektakularny efekt nowoczesnego neonu.</p>
+<h3>Zastosowanie i dobór:</h3>
+<ul>
+<li>Najbardziej uniwersalny odcień światła zbliżony do dziennego. Znakomicie sprawdza się jako oświetlenie robocze i zadaniowe w kuchniach, na blatach roboczych, w łazienkach, biurach i korytarzach</li>
+</ul>
+<h3>Parametry i cechy techniczne:</h3>
+<ul>
+<li>Napięcie zasilania: 24V DC (napięcie stałe stabilizowane)</li>
+<li>Moc znamionowa: 10.0 W/m (cała rolka 5 m = 50.0 W)</li>
+<li>Długość rolki: 5 m</li>
+<li>Podkład miedziany: PCB 3oz (efektywne odprowadzanie ciepła i brak spadków napięć)</li>
+<li>Wskaźnik oddawania barw: CRI Ra &gt; 90 (naturalna wierność kolorów)</li>
+<li>Barwa światła: neutralna biała 4000K</li>
+<li>Stopień ochrony: IP62 (z cienką powłoką chroniącą przed kurzem i przypadkowym zachlapaniem)</li>
+<li>Gwarancja: 3 lata</li>
+<li>Mocowanie: Fabryczna taśma samoprzylepna na spodzie PCB</li>
+<li>Zalecana moc zasilacza: minimum 60 W 24V DC (z 20% rezerwą mocy dla pełnej rolki 5 m)</li>
+</ul>
+<h3>Wskazówki montażowe i bezpieczeństwo:</h3>
+<ul>
+<li>Taśmę LED montuj na podłożu odprowadzającym ciepło (profil aluminiowy), co zapobiega przegrzewaniu diod</li>
+<li>Przed przyklejeniem taśmy dokładnie odtłuść i osusz powierzchnię montażową profilu</li>
+</ul>
+</section>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000754]]></a>
+      <a name="EAN"><![CDATA[5905475368356]]></a>
+      <a name="Kod producenta"><![CDATA[24WCOB320NW5IP62]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt]]></a>
+    </attrs>
+  </o>
+  <o id="19379" url="https://prescot.com.pl/pl/p/Tasma-LED-Premium-24V-320ledm-WCOB-10Wm-6000K-IP62-1350lmm-8mm-CRI90-5Y-5m/19379" price="100.00" avail="1" set="0" stock="500" basket="1">
+    <cat><![CDATA[Taśmy LED/Taśmy LED średnia jasność]]></cat>
+    <name><![CDATA[Taśma LED Premium 24V 320led/m WCOB 10W/m 6000K IP62 1350lm/m 8mm CRI90 5Y 5m 24WCOB320W5IP62]]></name>
+    <imgs>
+      <main url="https://prescot.com.pl/userdata/gfx/69598.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69599.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69600.png" />
+      <i url="https://prescot.com.pl/userdata/gfx/69601.jpg" />
+      <i url="https://prescot.com.pl/userdata/gfx/69602.jpg" />
+    </imgs>
+    <desc><![CDATA[<section>
+<p>Bezszwowa taśma LED Prescot w zaawansowanej technologii Chip-on-Board tworzy idealnie ciągłą, jednolitą linię światła o chłodnym, wyrazistym świetle 6000K o wysokim kontraście i nowoczesnym charakterze bez widocznych pojedynczych punktów ledowych.</p>
+<p>Gęste upakowanie mikrodiod pod wspólną warstwą luminoforu eliminuje efekt kropek nawet w bardzo płytkich profilach aluminiowych, oferując szeroki kąt świecenia 180° i spektakularny efekt nowoczesnego neonu.</p>
+<h3>Zastosowanie i dobór:</h3>
+<ul>
+<li>Zapewnia wysoki kontrast i nowoczesny odbiór wizualny. Doskonale sprawdza się w pracowniach, warsztatach, garażach oraz w nowoczesnych przestrzeniach komercyjnych</li>
+</ul>
+<h3>Parametry i cechy techniczne:</h3>
+<ul>
+<li>Napięcie zasilania: 24V DC (napięcie stałe stabilizowane)</li>
+<li>Moc znamionowa: 10.0 W/m (cała rolka 5 m = 50.0 W)</li>
+<li>Długość rolki: 5 m</li>
+<li>Podkład miedziany: PCB 3oz (efektywne odprowadzanie ciepła i brak spadków napięć)</li>
+<li>Wskaźnik oddawania barw: CRI Ra &gt; 90 (naturalna wierność kolorów)</li>
+<li>Barwa światła: zimna biała 6000K</li>
+<li>Stopień ochrony: IP62 (z cienką powłoką chroniącą przed kurzem i przypadkowym zachlapaniem)</li>
+<li>Gwarancja: 3 lata</li>
+<li>Mocowanie: Fabryczna taśma samoprzylepna na spodzie PCB</li>
+<li>Zalecana moc zasilacza: minimum 60 W 24V DC (z 20% rezerwą mocy dla pełnej rolki 5 m)</li>
+</ul>
+<h3>Wskazówki montażowe i bezpieczeństwo:</h3>
+<ul>
+<li>Taśmę LED montuj na podłożu odprowadzającym ciepło (profil aluminiowy), co zapobiega przegrzewaniu diod</li>
+<li>Przed przyklejeniem taśmy dokładnie odtłuść i osusz powierzchnię montażową profilu</li>
+</ul>
+</section>]]></desc>
+    <attrs>
+      <a name="Producent"><![CDATA[Prescot]]></a>
+      <a name="Kod_produktu"><![CDATA[Taś000755]]></a>
+      <a name="EAN"><![CDATA[5905475368363]]></a>
+      <a name="Kod producenta"><![CDATA[24WCOB320W5IP62]]></a>
+      <a name="Producent odpowiedzialny"><![CDATA[producer_1]]></a>
+      <a name="Jednostka"><![CDATA[szt]]></a>
+    </attrs>
+  </o>
+</offers>
