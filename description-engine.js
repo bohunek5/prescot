@@ -175,6 +175,17 @@ export function getProductAllowedBrand(product) {
   return null;
 }
 
+function prependWaproProfileNotice(product, htmlValue) {
+  const brand = [product?.producer, product?.attributes?.Producent, product?.name].join(" ");
+  const indices = [product?.code, product?.manufacturerCode, product?.attributes?.Kod_produktu, product?.attributes?.Kod_producenta];
+  const isBareKlusProfile = /klu[śs]/iu.test(brand)
+    && /\bprofil\b/iu.test(product?.name || "")
+    && !indices.some((index) => String(index || "").includes("+"));
+  const notice = "Profil sprzedawany bez osłony.";
+  if (!isBareKlusProfile || plainTextFromHtml(htmlValue).startsWith(notice)) return htmlValue;
+  return `<p>${notice}</p>\n${htmlValue}`;
+}
+
 export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIndex = false, preserveManufacturerCode = false, platform = null } = {}) {
   let value = replaceDescriptionIdentity(product, htmlValue, { preserveManufacturerCode });
   const ean = normalize(product?.ean);
@@ -299,7 +310,7 @@ export function normalizeDescriptionIdentity(product, htmlValue, { ensureTradeIn
   value = value.replace(/[ \t]{2,}/g, " ");
 
   // Karol nakazał: zero indeksu handlowego wklejanego automatycznie do opisu
-  return value;
+  return platform === "wapro" ? prependWaproProfileNotice(product, value) : value;
 }
 
 function leafCategory(product) {
@@ -477,7 +488,7 @@ function renderWapro(product, saved) {
   const featuresBlock = features.length ? `<h3>Najważniejsze cechy:</h3>\n${points(features)}\n` : "";
   const appsBlock = applications.length ? `<h3>Zastosowanie i miejsce montażu:</h3>\n${points(applications)}\n` : "";
 
-  return `<section>\n<h2>${escapeHtml(heading)}</h2>\n${introHtml}\n${featuresBlock}${appsBlock}</section>`;
+  return prependWaproProfileNotice(product, `<section>\n<h2>${escapeHtml(heading)}</h2>\n${introHtml}\n${featuresBlock}${appsBlock}</section>`);
 }
 
 function renderAllegro(product, saved) {
